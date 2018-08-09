@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <includedir>
+        <dir name="app/inc"/>
+        <dir name="library/uCGUI_LIB"/>
+        <dir name="app/subsystem"/>
+        <dir name="app/t_unit"/>
+        <dir name="app/shell/ntshell_v030/lib/util"/>
+        <dir name="app/shell/ntshell_v030/lib/core"/>
+        <dir name="app/shell"/>
+        <dir name="app/at"/>
+        <dir name="device"/>
+        <dir name="library/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
+        <dir name="library/FreeRTOS/Source/include"/>
+        <dir name="library/ucGui/config"/>
+        <dir name="library/FreeRTOS/Source/CMSIS_RTOS"/>
+        <dir name="library/ucGui/inc"/>
+        <dir name="library/Glcd"/>
+        <dir name="library/FreeRTOS/include"/>
+        <dir name="library/CPU"/>
+        <dir name="bsp/Inc"/>
+        <dir name="library/STM32_USB_Host_Library/Class/MSC/Inc"/>
+        <dir name="library/STM32_USB_Host_Library/Core/Inc"/>
+        <dir name="library/FATFS/SRC"/>
+        <dir name="library/FATFS/SRC/Drivers"/>
+        <dir name="system/include"/>
+        <dir name="system/include/cmsis"/>
+        <dir name="system/include/ST"/>
+        <dir name="system/include/RTT"/>
+        <dir name="system/include/stm32f4-hal"/>
+        <dir name="library/LwIP/System"/>
+        <dir name="library/LwIP/Src/Include"/>
+        <dir name="library/LwIP/System/arch"/>
+        <dir name="library/LwIP/Src/include/lwip"/>
+        <dir name="library/LwIP/Src/include/lwip/apps"/>
+        <dir name="library/LwIP/Src/include/lwip/priv"/>
+        <dir name="library/LwIP/Src/include/netif"/>
+        <dir name="library/LwIP/Src/include/netif/ppp"/>
+        <dir name="library/LwIP/Src/include/netif/ppp/polarssl"/>
+        <dir name="library/LwIP/Src/include/posix"/>
+        <dir name="library/LwIP/Src/include/posix/sys"/>
+    </includedir>
+    <defines>
+        <define name="__GNUC__"/>
+        <define name="DEBUG"/>
+        <define name="OS_USE_STM32F407xx"/>
+        <define name="RTT USE_FULL_ASSERT"/>
+        <define name="TRACE USE_HAL_DRIVER"/>
+        <define name="HSE_VALUE=25000000"/>
+    </defines>
+    <libraries>
+        <library>gnu</library>
+    </libraries>
+</project>

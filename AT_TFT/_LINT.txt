@@ -1,0 +1,363 @@
+
+--- Module:   bsp\Src\adc.c (C)
+
+--- Module:   bsp\Src\bsp.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+_
+_Noreturn void
+C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h 
+    310  Error 10: Expecting identifier or other declarator
+                             _
+		return malloc(size);
+bsp\Src\bsp.c  66  Warning 586: function 'malloc' is deprecated. [MISRA 2012
+    Directive 4.12, required], [MISRA 2012 Rule 21.3, required]
+                    _
+		free(adr);
+bsp\Src\bsp.c  74  Warning 586: function 'free' is deprecated. [MISRA 2012
+    Directive 4.12, required], [MISRA 2012 Rule 21.3, required]
+
+--- Module:   bsp\Src\bsp_driver_sd.c (C)
+
+--- Module:   bsp\Src\can.c (C)
+   _
+   sFilterConfig.FilterNumber = 0;
+bsp\Src\can.c  83  Warning 539: Did not expect positive indentation from line
+    78
+
+--- Module:   bsp\Src\dma.c (C)
+
+--- Module:   bsp\Src\ethernetif.c (C)
+_
+_Noreturn void
+C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h 
+    310  Error 10: Expecting identifier or other declarator
+_
+{
+bsp\Src\ethernetif.c  193  Warning 578: Declaration of symbol 'heth' hides
+    symbol 'heth' (line 91) [MISRA 2012 Rule 5.3, required], [MISRA 2012 Rule
+    5.6, required], [MISRA 2012 Rule 5.7, required], [MISRA 2012 Rule 5.8,
+    required], [MISRA 2012 Rule 5.9, advisory]
+    _
+    dmarxdesc = heth.RxFrameInfos.FSRxDesc;
+bsp\Src\ethernetif.c  462  Warning 539: Did not expect positive indentation
+    from line 431
+                                              _
+#...  LWIP_PLATFORM_ASSERT("netif != NULL"); } while(0)
+  LWIP_ASSERT("netif != NULL", (netif != NULL));
+bsp\Src\ethernetif.c  555  Warning 548: else expected
+                   _
+  netif->name[0] = IFNAME0;
+bsp\Src\ethernetif.c  562  Warning 613: Possible use of null pointer 'netif' in
+    left argument to operator '->' [Reference: file bsp\Src\ethernetif.c: line
+    555]
+bsp\Src\ethernetif.c  555  Info 831: Reference cited in prior message
+                   _
+  netif->name[1] = IFNAME1;
+bsp\Src\ethernetif.c  563  Warning 613: Possible use of null pointer 'netif' in
+    left argument to operator '->' [Reference: file bsp\Src\ethernetif.c: line
+    555]
+bsp\Src\ethernetif.c  555  Info 831: Reference cited in prior message
+                               _
+  netif->output = etharp_output;
+bsp\Src\ethernetif.c  572  Warning 613: Possible use of null pointer 'netif' in
+    left argument to operator '->' [Reference: file bsp\Src\ethernetif.c: line
+    555]
+bsp\Src\ethernetif.c  555  Info 831: Reference cited in prior message
+                                      _
+  netif->linkoutput = low_level_output;
+bsp\Src\ethernetif.c  584  Warning 613: Possible use of null pointer 'netif' in
+    left argument to operator '->' [Reference: file bsp\Src\ethernetif.c: line
+    555]
+bsp\Src\ethernetif.c  555  Info 831: Reference cited in prior message
+
+--- Module:   bsp\Src\fatfs.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+
+--- Module:   bsp\Src\fatfs_platform.c (C)
+
+--- Module:   bsp\Src\fsmc.c (C)
+
+--- Module:   bsp\Src\gpio.c (C)
+
+--- Module:   bsp\Src\lwip.c (C)
+_
+_Noreturn void
+C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h 
+    310  Error 10: Expecting identifier or other declarator
+                                                                   _
+  netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &tcpip_input);
+bsp\Src\lwip.c  72  Warning 546: Suspicious use of &
+bsp\Src\lwip.c  72  Warning 546: Suspicious use of &
+
+--- Module:   bsp\Src\rtc.c (C)
+                    _
+	delay_us(10);
+bsp\Src\rtc.c  63  Warning 522: Highest operation, function 'delay_us', lacks
+    side-effects [MISRA 2012 Rule 2.2, required]
+                                                 _
+#...                                             ((RCC_TypeDef *) RCC_BASE)
+#...   (((((((((uint8_t)0x41U)) >> 5U) == 1U)? RCC->CR :((((((uint8_t)0x41U)) >
+	while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+bsp\Src\rtc.c  73  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+                                                 _
+#...                                             ((RCC_TypeDef *) RCC_BASE)
+#... CR :((((((uint8_t)0x41U)) >> 5U) == 2U) ? RCC->BDCR :((((((uint8_t)0x41U))
+	while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+bsp\Src\rtc.c  73  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+                                                 _
+#...                                             ((RCC_TypeDef *) RCC_BASE)
+#... DCR :((((((uint8_t)0x41U)) >> 5U) == 3U)? RCC->CSR :RCC->CIR))) & ((uint32
+	while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+bsp\Src\rtc.c  73  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+                                                   _
+#...                                               (((((RCC_TypeDef *) ((((uint
+#... x001F0000)))) | (((0x00000100) & 0xFFFFCFFU))))
+#... , RCC_CFGR_RTCPRE, ((0x00000100) & 0xFFFFCFFU)) : CLEAR_BIT(RCC->CFGR, RCC
+#...     do { __HAL_RCC_RTC_CLKPRESCALER(0x00000100); RCC->BDCR |= ((0x00000100
+	__HAL_RCC_RTC_CONFIG(CFG_DEV_RTC_CLK_SOURCE);
+bsp\Src\rtc.c  77  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+
+--- Module:   bsp\Src\sdio.c (C)
+
+--- Module:   bsp\Src\stm32f4xx_hal_msp.c (C)
+
+--- Module:   bsp\Src\stm32f4xx_it.c (C)
+
+--- Module:   bsp\Src\usart.c (C)
+
+--- Module:   bsp\Src\usbh_conf.c (C)
+         _
+#include "mxconstants.h"
+bsp\Src\usbh_conf.c  36  Warning 537: Repeated include file
+    'bsp\Inc\mxconstants.h'
+
+--- Module:   bsp\Src\usbh_platform.c (C)
+
+--- Module:   bsp\Src\usb_host.c (C)
+
+--- Module:   app\shell\cmd.c (C)
+                          _
+		val_set = strtoul(nptr, NULL, 16);
+app\shell\cmd.c  23  Error 18: Symbol 'strtoul(const char *, char **, int)'
+    redeclared (nominal,signed/unsigned) conflicts with line 164, file
+    C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h,
+    module bsp\Src\lwip.c [MISRA 2012 Rule 8.2, required], [MISRA 2012 Rule
+    8.3, required]
+                          _
+		val_set = atof(nptr);
+app\shell\cmd.c  41  Error 18: Symbol 'atof(const char *)' redeclared (basic)
+    conflicts with line 73, file C:\Program Files (x86)\GNU Tools ARM
+    Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h, module bsp\Src\lwip.c
+    [MISRA 2012 Rule 8.2, required], [MISRA 2012 Rule 8.3, required]
+
+--- Module:   app\shell\Retarget.c (C)
+
+--- Module:   app\shell\shell_io.c (C)
+
+--- Module:   app\src\freertos.c (C)
+
+--- Module:   app\src\main.c (C)
+
+--- Module:   app\src\_initialize_hardware.c (C)
+                   _
+{
+app\src\_initialize_hardware.c  91  Error 14: Symbol 'SystemClock_Config(void)'
+    previously defined (line 51, file bsp\Inc\bsp.h) [MISRA 2012 Rule 5.7,
+    required], [MISRA 2012 Rule 8.6, required]
+
+--- Module:   app\src\_write.c (C)
+
+--- Module:   app\subsystem\Parameter_execute.c (C)
+_
+}
+app\subsystem\Parameter_execute.c  456  Warning 438: Last value assigned to
+    variable 'result' (defined at line 323) not used [MISRA 2012 Rule 2.2,
+    required]
+
+--- Module:   app\subsystem\Parameter_overload.c (C)
+                                _
+				}
+app\subsystem\Parameter_overload.c  195  Warning 438: Last value assigned to
+    variable 'time_len' (defined at line 184) not used [MISRA 2012 Rule 2.2,
+    required]
+                     _
+	return result;
+app\subsystem\Parameter_overload.c  241  Warning 438: Last value assigned to
+    variable 'timeLen' (defined at line 121) not used [MISRA 2012 Rule 2.2,
+    required]
+_
+}
+app\subsystem\Parameter_overload.c  242  Warning 529: Symbol 'timeLen' (line
+    121) not subsequently referenced
+
+--- Module:   app\subsystem\unit_parameter.c (C)
+                                                                                         _
+#... tParameterInitializer), .ptrData.dcDynamic =((void *)(&(parameterWeldSetPa
+    CONSTRUCTOR_DC_DYNAMIC(parameterWeldSetParameter,parameterWeldSetParameterInitializer),
+app\subsystem\unit_parameter.c  129  Warning 651: Potentially confusing
+    initializer
+
+--- Module:   app\subsystem\unit_rtc_cfg.c (C)
+                                                        _
+#... sizeof(rtcValue), (const void *)&(rtcValue_Default), .ptrData.dcDynamic =(
+	CONSTRUCTOR_DC_DYNAMIC(rtcValue,rtcValue_Default),
+app\subsystem\unit_rtc_cfg.c  44  Warning 545: Suspicious use of &
+                                                        _
+#... Value), (const void *)&(rtcValue_Default), .ptrData.dcDynamic =((void *)(&
+	CONSTRUCTOR_DC_DYNAMIC(rtcValue,rtcValue_Default),
+app\subsystem\unit_rtc_cfg.c  44  Warning 651: Potentially confusing
+    initializer
+                                                        _
+#... Default), .ptrData.dcDynamic =((void *)(&(rtcValue))), NULL, LoadRomDefaul
+	CONSTRUCTOR_DC_DYNAMIC(rtcValue,rtcValue_Default),
+app\subsystem\unit_rtc_cfg.c  44  Warning 545: Suspicious use of &
+
+--- Module:   app\t_unit\simple_type.c (C)
+
+--- Module:   app\t_unit\t_dataclass.c (C)
+
+--- Module:   app\t_unit\t_data_obj.c (C)
+
+--- Module:   app\t_unit\t_data_obj_const.c (C)
+
+--- Module:   app\t_unit\t_data_obj_simple.c (C)
+                                                           _
+	assert(myself.ptrDescription > (const void *)ST_NIL);  // check valid enumeration type
+app\t_unit\t_data_obj_simple.c  60  Warning 413: Likely use of null pointer
+    'unknown-name' in right argument to operator '>' [Reference: file
+    app\t_unit\t_data_obj_simple.c: line 60] [MISRA 2012 Rule 1.3, required]
+app\t_unit\t_data_obj_simple.c  60  Info 831: Reference cited in prior message
+                                                                                        _
+				ptrDescriptor->dataType=(uint8_t)(myself.ptrDescription);
+app\t_unit\t_data_obj_simple.c  76  Warning 507: Size incompatibility,
+    converting 4 byte pointer to 1 byte integral
+                                                           _
+	assert(myself.ptrDescription > (const void *)ST_NIL);  // check valid enumeration type
+app\t_unit\t_data_obj_simple.c  116  Warning 413: Likely use of null pointer
+    'unknown-name' in right argument to operator '>' [Reference: file
+    app\t_unit\t_data_obj_simple.c: line 116] [MISRA 2012 Rule 1.3, required]
+app\t_unit\t_data_obj_simple.c  116  Info 831: Reference cited in prior message
+
+--- Module:   app\t_unit\t_unit.c (C)
+                                                        _
+		*me->ptrDataSemaphore = OS_CREATERSEMA();
+app\t_unit\t_unit.c  46  Error 64: Type mismatch (assignment) (OS_RSEMA = int)
+    [MISRA 2012 Rule 1.3, required], [MISRA 2012 Rule 8.4, required]
+
+--- Module:   app\AT\ArcLink_Data.c (C)
+
+--- Module:   app\AT\ArcLink_Rx.c (C)
+
+--- Module:   app\AT\At_File.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+                                                 _
+		filTskLock = OS_CreateSemaphore();
+app\AT\At_File.c  64  Error 64: Type mismatch (assignment) (SemaphoreHandle_t =
+    int) [MISRA 2012 Rule 1.3, required], [MISRA 2012 Rule 8.4, required]
+
+--- Module:   app\AT\At_Gui.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+_
+}
+app\AT\At_Gui.c  409  Warning 438: Last value assigned to variable 'tickTime'
+    (defined at line 324) not used [MISRA 2012 Rule 2.2, required]
+app\AT\At_Gui.c  409  Warning 529: Symbol 'tickTime' (line 324) not
+    subsequently referenced
+        _
+	}
+app\AT\At_Gui.c  604  Warning 529: Symbol 'timevalue' (line 553) not
+    subsequently referenced
+app\AT\At_Gui.c  604  Warning 438: Last value assigned to variable 'timevalue'
+    (defined at line 553) not used [MISRA 2012 Rule 2.2, required]
+_
+}
+app\AT\At_Gui.c  823  Warning 529: Symbol 'tickTime' (line 691) not
+    subsequently referenced
+
+--- Module:   app\AT\CanProcess.c (C)
+_
+}
+app\AT\CanProcess.c  373  Warning 438: Last value assigned to variable
+    'propert' (defined at line 321) not used [MISRA 2012 Rule 2.2, required]
+        _
+	case 6:
+app\AT\CanProcess.c  648  Warning 616: control flows into case/default [MISRA
+    2012 Rule 16.1, required], [MISRA 2012 Rule 16.3, required]
+                _
+	return 0;
+app\AT\CanProcess.c  729  Warning 438: Last value assigned to variable 'len'
+    (defined at line 615) not used [MISRA 2012 Rule 2.2, required]
+                                                _
+					return 1;
+app\AT\CanProcess.c  2505  Warning 438: Last value assigned to variable
+    'timefromsd1000' (defined at line 2435) not used [MISRA 2012 Rule 2.2,
+    required]
+_
+}
+app\AT\CanProcess.c  2689  Warning 550: Symbol 'actiondata517' (line 2568) not
+    accessed
+
+    --- Wrap-up for Module: app\AT\CanProcess.c
+
+Warning 528: Symbol 'ModeExist(uint16_t)' (line 105, file app\AT\CanProcess.c)
+    not referenced
+Warning 528: Symbol 'AnswerRCERP(CanRxMsgTypeDef *, HeadMessage *, uint8_t)'
+    (line 2786, file app\AT\CanProcess.c) not referenced
+Warning 528: Symbol 'SendErrCode(CanRxMsgTypeDef *, HeadMessage *, uint8_t *,
+    uint8_t)' (line 3611, file app\AT\CanProcess.c) not referenced
+Warning 528: Symbol 'SendReqUER(uint16_t, uint8_t *, uint8_t, uint8_t,
+    uint8_t)' (line 2875, file app\AT\CanProcess.c) not referenced
+
+--- Module:   app\AT\Common_Crc.c (C)
+
+--- Module:   app\AT\fileCopy.c (C)
+
+--- Module:   app\AT\sd_file.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+                                                 _
+		sdFileLock = OS_CreateSemaphore();
+app\AT\sd_file.c  37  Error 64: Type mismatch (assignment) (SemaphoreHandle_t =
+    int) [MISRA 2012 Rule 1.3, required], [MISRA 2012 Rule 8.4, required]
+
+--- Module:   app\AT\usb_file.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+                                                  _
+		usbFileLock = OS_CreateSemaphore();
+app\AT\usb_file.c  33  Error 64: Type mismatch (assignment) (SemaphoreHandle_t
+    = int) [MISRA 2012 Rule 1.3, required], [MISRA 2012 Rule 8.4, required]
+
+--- Module:   app\AT\weld_data.c (C)
+_
+	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                                       	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                          	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	                    	  	  	  	  
+    bsp\Inc\ffconf.h  17  Error 91: Line exceeds 598 characters (use +linebuf)
+
+--- Global Wrap-up
+
+Warning 526: Symbol 'xSemaphoreGiveRecursive()' (line 67, file
+    app\AT\usb_file.c) not defined
+Warning 628: no argument information provided for function 'xSemaphoreGiveRecursive()'
+    (line 67, file app\AT\usb_file.c)
+Warning 526: Symbol 'xSemaphoreCreateRecursiveMutex()' (line 33, file
+    app\AT\usb_file.c) not defined
+Warning 628: no argument information provided for function 'xSemaphoreCreateRecursiveMutex()'
+    (line 33, file app\AT\usb_file.c)
+Warning 526: Symbol 'xSemaphoreTakeRecursive()' (line 46, file
+    app\AT\usb_file.c) not defined
+Warning 628: no argument information provided for function 'xSemaphoreTakeRecursive()'
+    (line 46, file app\AT\usb_file.c)
