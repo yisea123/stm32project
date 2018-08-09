@@ -1,0 +1,66 @@
+# Makefile
+
+CFLAGS = -MMD -g -c -Wall
+CC = gcc
+
+OBJ_DIR = obj
+TARGET_NAME = slave1
+
+CO_INC_DIRS = ../../colib/inc ../../colib/src .
+
+CO_OBJECTS = \
+	main.o	\
+	gen_objdict.o	\
+	co_odaccess.o	\
+	co_commtask.o	\
+	co_sdoserv.o	\
+	co_pdo.o	\
+	co_nmt.o	\
+	co_errctrl.o	\
+	co_queue.o	\
+	co_event.o	\
+	co_cobhandler.o	\
+	co_store.o	\
+	co_timer.o	\
+	co_emcy.o	\
+	co_led.o	\
+	cpu_linux.o	\
+	codrv_socketcan.o	\
+
+
+#	co_c4l.o	\
+
+
+VPATH += ../../colib/src
+VPATH += ../../codrv/can4linux
+VPATH += ../../codrv/socketcan
+
+# add -I option
+INC_DIRS = $(addprefix -I,$(CO_INC_DIRS))
+
+# add path obj/
+CO_OBJS         = $(addprefix $(OBJ_DIR)/,$(CO_OBJECTS))
+
+# ------------------------------------------------------------
+# dependencies
+-include $(CO_OBJS:.o=.d)
+
+#---------------------------------------------------------------------------
+.PHONY:$(TARGET_NAME)
+$(TARGET_NAME): $(CO_OBJS) gen_define.h
+	@echo " [LD] $(TARGET_NAME)"
+	@$(CC) $(LDFLAGS) -o $(TARGET_NAME) $(CO_OBJS) -lrt
+
+# ------------------------------------------------------------
+# objects
+#
+#@echo " [CC] $<"
+.SUFFIXES: o
+$(OBJ_DIR)/%.o : %.c gen_define.h
+	$(CC) $(CFLAGS) $(INC_DIRS) -o$@ -c $<
+
+
+all: $(TARGET_NAME)
+
+clean:
+	-rm $(OBJ_DIR)/* $(TARGET_NAME)

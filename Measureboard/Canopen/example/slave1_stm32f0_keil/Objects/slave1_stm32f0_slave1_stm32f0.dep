@@ -1,0 +1,444 @@
+Dependencies for Project 'slave1_stm32f0', Target 'slave1_stm32f0': (DO NOT MODIFY !)
+F (..\..\colib\src\co_cobhandler.c)(0x56E14232)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_cobhandler.o --omf_browse .\objects\co_cobhandler.crf --depend .\objects\co_cobhandler.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+F (..\..\colib\src\co_commtask.c)(0x58B00BE5)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_commtask.o --omf_browse .\objects\co_commtask.crf --depend .\objects\co_commtask.d)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_commtask.h)(0x54B4C0FD)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\src\ico_timer.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_event.h)(0x55914CB5)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+I (..\..\colib\src\ico_pdo.h)(0x560E5A61)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\src\ico_sdo.h)(0x57220893)
+I (..\..\colib\src\ico_sync.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+I (..\..\colib\src\ico_time.h)(0x54B51046)
+F (..\..\colib\src\co_emcy.c)(0x58B00BE5)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_emcy.o --omf_browse .\objects\co_emcy.crf --depend .\objects\co_emcy.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_emcy.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+F (..\..\colib\src\co_errctrl.c)(0x58B008C3)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_errctrl.o --omf_browse .\objects\co_errctrl.crf --depend .\objects\co_errctrl.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_emcy.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+F (..\..\colib\src\co_event.c)(0x58B008C3)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_event.o --omf_browse .\objects\co_event.crf --depend .\objects\co_event.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\src\ico_commtask.h)(0x54B4C0FD)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\src\ico_event.h)(0x55914CB5)
+F (..\..\colib\src\co_led.c)(0x58B008C3)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_led.o --omf_browse .\objects\co_led.crf --depend .\objects\co_led.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_led.h)(0x54B4C232)
+F (..\..\colib\src\co_nmt.c)(0x58B00520)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_nmt.o --omf_browse .\objects\co_nmt.crf --depend .\objects\co_nmt.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_store.h)(0x55DB21F0)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_event.h)(0x55914CB5)
+I (..\..\colib\src\ico_sdo.h)(0x57220893)
+I (..\..\colib\src\ico_pdo.h)(0x560E5A61)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+I (..\..\colib\src\ico_sync.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+I (..\..\colib\src\ico_odaccess.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_time.h)(0x54B51046)
+I (..\..\colib\src\ico_store.h)(0x54B4C0FD)
+F (..\..\colib\src\co_odaccess.c)(0x58B0275E)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_odaccess.o --omf_browse .\objects\co_odaccess.crf --depend .\objects\co_odaccess.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_sdo.h)(0x57220893)
+I (..\..\colib\src\ico_pdo.h)(0x560E5A61)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+I (..\..\colib\src\ico_sync.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+I (..\..\colib\src\ico_time.h)(0x54B51046)
+I (..\..\colib\src\ico_odaccess.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_store.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+F (..\..\colib\src\co_pdo.c)(0x58B0276F)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_pdo.o --omf_browse .\objects\co_pdo.crf --depend .\objects\co_pdo.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_emcy.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+I (..\..\colib\src\ico_odaccess.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_pdo.h)(0x560E5A61)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+F (..\..\colib\src\co_queue.c)(0x58B02C2D)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_queue.o --omf_browse .\objects\co_queue.crf --depend .\objects\co_queue.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+F (..\..\colib\src\co_sdoserv.c)(0x58B02C2D)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_sdoserv.o --omf_browse .\objects\co_sdoserv.crf --depend .\objects\co_sdoserv.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_sdo.h)(0x57E3F8CB)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_odaccess.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+I (..\..\colib\src\ico_event.h)(0x55914CB5)
+I (..\..\colib\src\ico_sdoserver.h)(0x56A1FCFF)
+I (..\..\colib\src\ico_sdo.h)(0x57220893)
+F (..\..\colib\src\co_stackinit.c)(0x58B008C3)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_stackinit.o --omf_browse .\objects\co_stackinit.crf --depend .\objects\co_stackinit.d)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\src\ico_cobhandler.h)(0x56EFFA9A)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\src\ico_queue.h)(0x55914CFA)
+I (..\..\colib\src\ico_pdo.h)(0x560E5A61)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\src\ico_commtask.h)(0x54B4C0FD)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\inc\co_canopen.h)(0x58B02C0B)
+I (..\..\colib\inc\co_emcy.h)(0x55DB21F0)
+I (..\..\colib\inc\co_cfgman.h)(0x57220435)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\inc\co_lss.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_odindex.h)(0x55D44DB7)
+I (..\..\colib\inc\co_sdo.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_store.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sleep.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sync.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_time.h)(0x55DB21F0)
+I (..\..\colib\inc\co_edsparse.h)(0x57480FDA)
+I (..\..\colib\src\ico_emcy.h)(0x56D41CD5)
+I (..\..\colib\src\ico_event.h)(0x55914CB5)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_led.h)(0x54B4C232)
+I (..\..\colib\src\ico_lss.h)(0x553FAAA7)
+I (..\..\colib\src\ico_nmt.h)(0x58B00520)
+I (..\..\colib\src\ico_odaccess.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_sdoserver.h)(0x56A1FCFF)
+I (..\..\colib\src\ico_sdoclient.h)(0x57E4EEEB)
+I (..\..\colib\src\ico_store.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_sync.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_srd.h)(0x562F8936)
+I (..\..\colib\src\ico_sleep.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_time.h)(0x54B51046)
+I (..\..\colib\src\ico_candebug.h)(0x57220A66)
+F (..\..\colib\src\co_store.c)(0x57E4EF1A)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_store.o --omf_browse .\objects\co_store.crf --depend .\objects\co_store.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_store.h)(0x55DB21F0)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\src\ico_indication.h)(0x58B0081A)
+I (..\..\colib\src\ico_odaccess.h)(0x54B4C0FD)
+I (..\..\colib\src\ico_store.h)(0x54B4C0FD)
+F (..\..\colib\src\co_sync.c)(0x560E4911)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_sync.o --omf_browse .\objects\co_sync.crf --depend .\objects\co_sync.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+F (..\..\colib\src\co_timer.c)(0x58B008C3)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\co_timer.o --omf_browse .\objects\co_timer.crf --depend .\objects\co_timer.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\src\ico_commtask.h)(0x54B4C0FD)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\src\ico_timer.h)(0x54B4C0FD)
+F (..\..\codrv\stm32\codrv_bxcan.c)(0x58B00E32)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\codrv_bxcan.o --omf_browse .\objects\codrv_bxcan.crf --depend .\objects\codrv_bxcan.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\codrv\stm32\codrv_error.h)(0x58131C8E)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\codrv\stm32\codrv_bxcan.h)(0x56D816C3)
+F (..\..\codrv\stm32\codrv_canbittiming.c)(0x58B00E32)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\codrv_canbittiming.o --omf_browse .\objects\codrv_canbittiming.crf --depend .\objects\codrv_canbittiming.d)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+F (..\..\codrv\stm32\codrv_error.c)(0x56A213DC)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\codrv_error.o --omf_browse .\objects\codrv_error.crf --depend .\objects\codrv_error.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\codrv\stm32\codrv_error.h)(0x58131C8E)
+F (..\..\codrv\stm32\cpu_stm32f0_keil.c)(0x56D81BA1)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\cpu_stm32f0_keil.o --omf_browse .\objects\cpu_stm32f0_keil.crf --depend .\objects\cpu_stm32f0_keil.d)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\codrv\stm32\codrv_bxcan.h)(0x56D816C3)
+I (..\..\codrv\stm32\cpu_stm32.h)(0x58131C8E)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\gen_objdict.c)(0x56D952F0)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\gen_objdict.o --omf_browse .\objects\gen_objdict.crf --depend .\objects\gen_objdict.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_canopen.h)(0x58B02C0B)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_emcy.h)(0x55DB21F0)
+I (..\..\colib\inc\co_cfgman.h)(0x57220435)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\inc\co_lss.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_odindex.h)(0x55D44DB7)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sdo.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_store.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sleep.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sync.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_time.h)(0x55DB21F0)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_edsparse.h)(0x57480FDA)
+I (.\gen_indication.h)(0x56D952F0)
+F (.\main.c)(0x56D952F0)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
+I (.\gen_define.h)(0x56D952F0)
+I (..\..\colib\inc\co_canopen.h)(0x58B02C0B)
+I (..\..\colib\inc\co_datatype.h)(0x585BC513)
+I (..\..\colib\inc\co_cob.h)(0x54B8FB47)
+I (..\..\colib\inc\co_commtask.h)(0x55DB21F0)
+I (..\..\colib\inc\co_drv.h)(0x5899BB8C)
+I (..\..\colib\inc\co_emcy.h)(0x55DB21F0)
+I (..\..\colib\inc\co_cfgman.h)(0x57220435)
+I (..\..\colib\inc\co_led.h)(0x57E3F8A5)
+I (..\..\colib\inc\co_lss.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_nmt.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_odaccess.h)(0x57E52E70)
+I (..\..\colib\inc\co_odindex.h)(0x55D44DB7)
+I (..\..\colib\inc\co_pdo.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sdo.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_store.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sleep.h)(0x55DB21F0)
+I (..\..\colib\inc\co_sync.h)(0x57E3F8CB)
+I (..\..\colib\inc\co_time.h)(0x55DB21F0)
+I (..\..\colib\inc\co_timer.h)(0x55DB21F0)
+I (..\..\colib\inc\co_edsparse.h)(0x57480FDA)
+I (..\..\codrv\stm32\cpu_stm32.h)(0x58131C8E)
+F (.\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c)(0x54F86604)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\stm32f0xx_hal.o --omf_browse .\objects\stm32f0xx_hal.crf --depend .\objects\stm32f0xx_hal.d)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_cortex.c)(0x54F86604)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\stm32f0xx_hal_cortex.o --omf_browse .\objects\stm32f0xx_hal_cortex.crf --depend .\objects\stm32f0xx_hal_cortex.d)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_gpio.c)(0x54F86604)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\stm32f0xx_hal_gpio.o --omf_browse .\objects\stm32f0xx_hal_gpio.crf --depend .\objects\stm32f0xx_hal_gpio.d)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_rcc.c)(0x54F86604)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\stm32f0xx_hal_rcc.o --omf_browse .\objects\stm32f0xx_hal_rcc.crf --depend .\objects\stm32f0xx_hal_rcc.d)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_rcc_ex.c)(0x54F86604)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\stm32f0xx_hal_rcc_ex.o --omf_browse .\objects\stm32f0xx_hal_rcc_ex.crf --depend .\objects\stm32f0xx_hal_rcc_ex.d)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\system_stm32f0xx.c)(0x54F86604)(-c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I . -I ..\..\colib\inc -I ..\..\codrv\stm32 -I .\STM32F0xx_HAL_Driver\Inc -I .\CMSIS\Device\ST\STM32F0xx\Include-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include-D__UVISION_VERSION="520" -D_RTE_ -DSTM32F072xB -DSTM32F072xB -DNO_PRINTF -DUSE_STDPERIPH_DRIVER -DUSE_HAL_DRIVER-o .\objects\system_stm32f0xx.o --omf_browse .\objects\system_stm32f0xx.crf --depend .\objects\system_stm32f0xx.d)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h)(0x54F86604)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\stm32f072xb.h)(0x54F86604)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm0.h)(0x5735959E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x57352EA6)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x57352EA6)
+I (.\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h)(0x54F86604)
+I (.\stm32f0xx_hal_conf.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_def.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_rcc_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_gpio_ex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_cortex.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash.h)(0x54F86604)
+I (.\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_flash_ex.h)(0x54F86604)
+F (.\startup_stm32f072xb.s)(0x54F86604)(--cpu Cortex-M0 -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Users\pli\Downloads\CANopen\2.6.7\example\slave1_stm32f0_keil\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include--pd "__UVISION_VERSION SETA 520" --pd "_RTE_ SETA 1" --pd "STM32F072xB SETA 1"--list .\listings\startup_stm32f072xb.lst --xref -o .\objects\startup_stm32f072xb.o --depend .\objects\startup_stm32f072xb.d)

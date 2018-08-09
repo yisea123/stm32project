@@ -1,0 +1,16 @@
+.\objects\co_errctrl.o: ..\..\colib\src\co_errctrl.c
+.\objects\co_errctrl.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\co_errctrl.o: .\gen_define.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_datatype.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_timer.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_odaccess.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_emcy.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_drv.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_led.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_nmt.h
+.\objects\co_errctrl.o: ..\..\colib\src\ico_indication.h
+.\objects\co_errctrl.o: ..\..\colib\src\ico_cobhandler.h
+.\objects\co_errctrl.o: ..\..\colib\inc\co_cob.h
+.\objects\co_errctrl.o: ..\..\colib\src\ico_queue.h
+.\objects\co_errctrl.o: ..\..\colib\src\ico_emcy.h
+.\objects\co_errctrl.o: ..\..\colib\src\ico_nmt.h

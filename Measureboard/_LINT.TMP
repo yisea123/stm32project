@@ -1,0 +1,50 @@
+
+--- Module:   device\ad717x.c (C)
+         _
+#include <stdint.h>
+device\AD717x.h  49  Warning 537: Repeated include file 'C:\Program Files
+    (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdint.h'
+         _
+#include "t_data_obj.h"
+device\AD717x.h  50  Warning 537: Repeated include file 'app\t_unit\t_data_obj.h'
+
+--- Module:   device\at24c64.c (C)
+
+--- Module:   device\Communication.c (C)
+         _
+#include "mxconstants.h"
+device\Communication.c  16  Warning 537: Repeated include file
+    'bsp\Inc\mxconstants.h'
+
+--- Module:   device\dev_ad7172.c (C)
+         _
+#include <stdint.h>
+device\AD717x.h  49  Warning 537: Repeated include file 'C:\Program Files
+    (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdint.h'
+         _
+#include "cmsis_os.h"
+device\dev_ad7172.c  14  Warning 537: Repeated include file
+    'library\rtos\cmsis_os.h'
+device\dev_ad7172.c  14  Warning 451: Header file 'library\rtos\cmsis_os.h'
+    repeatedly included but does not have a standard include guard [MISRA 2012
+    Directive 4.10, required]
+         _
+#include "ad717x.h"
+device\ad7172_2_regs.h  44  Warning 537: Repeated include file
+    'device\AD717x.h'
+         _
+#include "shell_io.h"
+device\dev_ad7172.c  21  Warning 537: Repeated include file
+    'app\shell\shell_io.h'
+
+--- Module:   device\dev_can_private.c (C)
+         _
+#include "shell_io.h"
+device\dev_can_private.c  8  Warning 537: Repeated include file
+    'app\shell\shell_io.h'
+
+    
+         _
+#include "can_msg_handle.h"
+device\dev_can_private.c  13  Error 322: Unable to open include file
+    'can_msg_handle.h'

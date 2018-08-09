@@ -1,0 +1,406 @@
+Index,Sub,EDSname,Datatype,Access,Value,varname,LowLimit,UpLimit,hasDefault,hasLimit,refuseRead,refuseWrite,defaultInEDS,ImplementationType,Size,ObjectCode,mapable
+0x1000,0x00,Device Type,UNSIGNED32,ro,0,devType,0,4294967295,yes,no,no,no,0,Variable,0,,mapping
+0x1001,0x00,Error Register,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1005,0x00,COB ID SYNC,UNSIGNED32,rw,1073741952,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1006,0x00,Communication Cycle Period,UNSIGNED32,rw,500000,syncTime_us,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x1008,0x00,Manufacturer Device Name,VISIBLE_STRING,const,Generic IO module according CiA 401,deviceName,0,0,yes,no,no,no,1,Variable,32,,mapping
+0x1012,0x00,COB ID Time Stamp,UNSIGNED32,rw,1073742080,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x00,Consumer Heartbeat Time Number of entries,UNSIGNED8,ro,16,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x1016,0x01,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x02,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x03,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x04,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x05,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x06,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x07,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x08,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x09,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x0a,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x0b,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x0c,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x0d,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x0e,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x0f,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x10,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1017,0x00,Producer Heartbeat Time,UNSIGNED16,rw,1000,heartBeat,0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x1018,0x00,Identity Object Number of entries,UNSIGNED8,ro,4,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1018,0x01,Identity Object Vendor Id,UNSIGNED32,ro,793,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1018,0x02,Identity Object Product Code,UNSIGNED32,ro,2069,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1018,0x03,Identity Object Revision number,UNSIGNED32,ro,65537,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1018,0x04,Identity Object Serial number,UNSIGNED32,ro,1,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1028,0x00,Emergency Consumer Nr of EMCY Consumer,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x1028,0x01,Emergency Consumer EMCYConsumer 1,UNSIGNED32,rw,160,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1028,0x02,Emergency Consumer EMCYConsumer 2,UNSIGNED32,rw,161,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1029,0x00,Error behaviour Nr of Error Classes,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x1029,0x01,Error behaviour Communication Error,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1029,0x02,Error behaviour Specific Error Class,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x102a,0x00,NMT inhibit time,UNSIGNED16,rw,100,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1200,0x00,Server SDO Parameter Number of entries,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1200,0x01,Server SDO Parameter COB ID Client to Server,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1200,0x02,Server SDO Parameter COB ID Server to Client,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1280,0x00,SDO client parameter Highest sub-index supported,UNSIGNED8,const,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1280,0x01,SDO client parameter COB-ID client -> server,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1280,0x02,SDO client parameter COB-ID server -> client,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1280,0x03,SDO client parameter Node-ID of the SDO server,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1281,0x00,SDO client parameter Highest sub-index supported,UNSIGNED8,const,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1281,0x01,SDO client parameter COB-ID client -> server,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1281,0x02,SDO client parameter COB-ID server -> client,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1281,0x03,SDO client parameter Node-ID of the SDO server,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1400,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1400,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1400,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1401,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1401,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1401,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1402,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1402,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1402,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,254,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1403,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1403,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1403,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1404,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1404,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1404,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1405,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1405,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1405,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1406,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1406,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1406,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1407,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1407,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1407,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1408,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1408,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1408,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1409,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1409,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1409,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140a,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x140a,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140a,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140b,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x140b,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140b,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140c,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x140c,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140c,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140d,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x140d,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140d,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140e,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x140e,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140e,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140f,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x140f,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x140f,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1600,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1600,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644167432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1600,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644167688,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1601,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1601,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644167944,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1601,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644168200,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1602,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1602,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644168456,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1602,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644168712,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1603,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1603,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644168968,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1603,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644169224,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1604,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1604,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644169480,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1604,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644169736,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1605,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1605,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644169992,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1605,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644170248,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1606,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1606,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644170504,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1606,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644170760,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1607,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1607,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644171016,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1607,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644171272,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1608,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1608,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644171528,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1608,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644171784,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1609,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1609,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644172040,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1609,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644172296,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160a,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x160a,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644172552,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160a,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644172808,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160b,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x160b,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644173064,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160b,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644173320,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160c,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x160c,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644173576,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160c,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644173832,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160d,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x160d,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644174088,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160d,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644174344,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160e,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x160e,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644174600,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160e,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644174856,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160f,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x160f,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644175112,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x160f,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644175368,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1800,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1800,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1800,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1800,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1800,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1801,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1801,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1801,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1801,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1801,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1802,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1802,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1802,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1802,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1802,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1803,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1803,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1803,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1803,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1803,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1804,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1804,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1804,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1804,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1804,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1805,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1805,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1805,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1805,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1805,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1806,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1806,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1806,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1806,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1806,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1807,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1807,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1807,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1807,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1807,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1808,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1808,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1808,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1808,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1808,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1809,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1809,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1809,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1809,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1809,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180a,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x180a,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180a,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180a,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180a,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180b,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x180b,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180b,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180b,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180b,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180c,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x180c,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180c,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180c,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180c,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180d,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x180d,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180d,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180d,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180d,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180e,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x180e,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180e,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180e,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180e,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180f,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x180f,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180f,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x180f,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x180f,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1a00,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a00,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a00,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a01,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a01,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a01,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a02,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a02,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a02,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a03,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a03,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a03,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a04,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a04,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a04,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a05,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a05,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a05,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a06,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a06,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a06,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a07,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a07,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a07,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a08,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a08,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a08,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a09,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a09,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a09,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0a,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a0a,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0a,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0b,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a0b,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0b,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0c,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a0c,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0c,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0d,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a0d,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0d,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0e,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a0e,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0e,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0f,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a0f,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,536871176,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a0f,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,536871432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+ 
+0x2000,0x00,DO_U8 Highest sub-index supported,UNSIGNED8,ro,32,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x2000,0x01,DO_U8 Subindex 1,UNSIGNED8,rw,0,doValue[0],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x02,DO_U8 Subindex 2,UNSIGNED8,rw,0,doValue[1],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x03,DO_U8 Subindex 3,UNSIGNED8,rw,0,doValue[2],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x04,DO_U8 Subindex 4,UNSIGNED8,rw,0,doValue[3],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x05,DO_U8 Subindex 5,UNSIGNED8,rw,0,doValue[4],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x06,DO_U8 Subindex 6,UNSIGNED8,rw,0,doValue[5],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x07,DO_U8 Subindex 7,UNSIGNED8,rw,0,doValue[6],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x08,DO_U8 Subindex 8,UNSIGNED8,rw,0,doValue[7],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x09,DO_U8 Subindex 9,UNSIGNED8,rw,0,doValue[8],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x0a,DO_U8 Subindex 10,UNSIGNED8,rw,0,doValue[9],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x0b,DO_U8 Subindex 11,UNSIGNED8,rw,0,doValue[10],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x0c,DO_U8 Subindex 12,UNSIGNED8,rw,0,doValue[11],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x0d,DO_U8 Subindex 13,UNSIGNED8,rw,0,doValue[12],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x0e,DO_U8 Subindex 14,UNSIGNED8,rw,0,doValue[13],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x0f,DO_U8 Subindex 15,UNSIGNED8,rw,0,doValue[14],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x10,DO_U8 Subindex 16,UNSIGNED8,rw,0,doValue[15],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x11,DO_U8 Subindex 17,UNSIGNED8,rw,0,doValue[16],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x12,DO_U8 Subindex 18,UNSIGNED8,rw,0,doValue[17],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x13,DO_U8 Subindex 19,UNSIGNED8,rw,0,doValue[18],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x14,DO_U8 Subindex 20,UNSIGNED8,rw,0,doValue[19],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x15,DO_U8 Subindex 21,UNSIGNED8,rw,0,doValue[20],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x16,DO_U8 Subindex 22,UNSIGNED8,rw,0,doValue[21],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x17,DO_U8 Subindex 23,UNSIGNED8,rw,0,doValue[22],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x18,DO_U8 Subindex 24,UNSIGNED8,rw,0,doValue[23],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x19,DO_U8 Subindex 25,UNSIGNED8,rw,0,doValue[24],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x1a,DO_U8 Subindex 26,UNSIGNED8,rw,0,doValue[25],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x1b,DO_U8 Subindex 27,UNSIGNED8,rw,0,doValue[26],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x1c,DO_U8 Subindex 28,UNSIGNED8,rw,0,doValue[27],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x1d,DO_U8 Subindex 29,UNSIGNED8,rw,0,doValue[28],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x1e,DO_U8 Subindex 30,UNSIGNED8,rw,0,doValue[29],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x1f,DO_U8 Subindex 31,UNSIGNED8,rw,0,doValue[30],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2000,0x20,DO_U8 Subindex 32,UNSIGNED8,rw,0,doValue[31],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x00,AO_U16 Highest sub-index supported,UNSIGNED8,ro,32,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x2001,0x01,AO_U16 Subindex 1,UNSIGNED16,rw,0,aoValue[0],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x02,AO_U16 Subindex 2,UNSIGNED16,rw,0,aoValue[1],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x03,AO_U16 Subindex 3,UNSIGNED16,rw,0,aoValue[2],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x04,AO_U16 Subindex 4,UNSIGNED16,rw,0,aoValue[3],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x05,AO_U16 Subindex 5,UNSIGNED16,rw,0,aoValue[4],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x06,AO_U16 Subindex 6,UNSIGNED16,rw,0,aoValue[5],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x07,AO_U16 Subindex 7,UNSIGNED16,rw,0,aoValue[6],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x08,AO_U16 Subindex 8,UNSIGNED16,rw,0,aoValue[7],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x09,AO_U16 Subindex 9,UNSIGNED16,rw,0,aoValue[8],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x0a,AO_U16 Subindex 10,UNSIGNED16,rw,0,aoValue[9],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x0b,AO_U16 Subindex 11,UNSIGNED16,rw,0,aoValue[10],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x0c,AO_U16 Subindex 12,UNSIGNED16,rw,0,aoValue[11],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x0d,AO_U16 Subindex 13,UNSIGNED16,rw,0,aoValue[12],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x0e,AO_U16 Subindex 14,UNSIGNED16,rw,0,aoValue[13],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x0f,AO_U16 Subindex 15,UNSIGNED16,rw,0,aoValue[14],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x10,AO_U16 Subindex 16,UNSIGNED16,rw,0,aoValue[15],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x11,AO_U16 Subindex 17,UNSIGNED16,rw,0,aoValue[16],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x12,AO_U16 Subindex 18,UNSIGNED16,rw,0,aoValue[17],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x13,AO_U16 Subindex 19,UNSIGNED16,rw,0,aoValue[18],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x14,AO_U16 Subindex 20,UNSIGNED16,rw,0,aoValue[19],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x15,AO_U16 Subindex 21,UNSIGNED16,rw,0,aoValue[20],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x16,AO_U16 Subindex 22,UNSIGNED16,rw,0,aoValue[21],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x17,AO_U16 Subindex 23,UNSIGNED16,rw,0,aoValue[22],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x18,AO_U16 Subindex 24,UNSIGNED16,rw,0,aoValue[23],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x19,AO_U16 Subindex 25,UNSIGNED16,rw,0,aoValue[24],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x1a,AO_U16 Subindex 26,UNSIGNED16,rw,0,aoValue[25],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x1b,AO_U16 Subindex 27,UNSIGNED16,rw,0,aoValue[26],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x1c,AO_U16 Subindex 28,UNSIGNED16,rw,0,aoValue[27],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x1d,AO_U16 Subindex 29,UNSIGNED16,rw,0,aoValue[28],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x1e,AO_U16 Subindex 30,UNSIGNED16,rw,0,aoValue[29],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x1f,AO_U16 Subindex 31,UNSIGNED16,rw,0,aoValue[30],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2001,0x20,AO_U16 Subindex 32,UNSIGNED16,rw,0,aoValue[31],0,65535,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x00,DI_U8 Highest sub-index supported,UNSIGNED8,ro,32,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x2002,0x01,DI_U8 Subindex 1,UNSIGNED8,rw,0,diValue[0],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x02,DI_U8 Subindex 2,UNSIGNED8,rw,0,diValue[1],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x03,DI_U8 Subindex 3,UNSIGNED8,rw,0,diValue[2],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x04,DI_U8 Subindex 4,UNSIGNED8,rw,0,diValue[3],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x05,DI_U8 Subindex 5,UNSIGNED8,rw,0,diValue[4],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x06,DI_U8 Subindex 6,UNSIGNED8,rw,0,diValue[5],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x07,DI_U8 Subindex 7,UNSIGNED8,rw,0,diValue[6],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x08,DI_U8 Subindex 8,UNSIGNED8,rw,0,diValue[7],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x09,DI_U8 Subindex 9,UNSIGNED8,rw,0,diValue[8],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x0a,DI_U8 Subindex 10,UNSIGNED8,rw,0,diValue[9],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x0b,DI_U8 Subindex 11,UNSIGNED8,rw,0,diValue[10],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x0c,DI_U8 Subindex 12,UNSIGNED8,rw,0,diValue[11],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x0d,DI_U8 Subindex 13,UNSIGNED8,rw,0,diValue[12],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x0e,DI_U8 Subindex 14,UNSIGNED8,rw,0,diValue[13],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x0f,DI_U8 Subindex 15,UNSIGNED8,rw,0,diValue[14],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x10,DI_U8 Subindex 16,UNSIGNED8,rw,0,diValue[15],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x11,DI_U8 Subindex 17,UNSIGNED8,rw,0,diValue[16],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x12,DI_U8 Subindex 18,UNSIGNED8,rw,0,diValue[17],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x13,DI_U8 Subindex 19,UNSIGNED8,rw,0,diValue[18],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x14,DI_U8 Subindex 20,UNSIGNED8,rw,0,diValue[19],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x15,DI_U8 Subindex 21,UNSIGNED8,rw,0,diValue[20],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x16,DI_U8 Subindex 22,UNSIGNED8,rw,0,diValue[21],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x17,DI_U8 Subindex 23,UNSIGNED8,rw,0,diValue[22],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x18,DI_U8 Subindex 24,UNSIGNED8,rw,0,diValue[23],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x19,DI_U8 Subindex 25,UNSIGNED8,rw,0,diValue[24],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x1a,DI_U8 Subindex 26,UNSIGNED8,rw,0,diValue[25],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x1b,DI_U8 Subindex 27,UNSIGNED8,rw,0,diValue[26],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x1c,DI_U8 Subindex 28,UNSIGNED8,rw,0,diValue[27],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x1d,DI_U8 Subindex 29,UNSIGNED8,rw,0,diValue[28],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x1e,DI_U8 Subindex 30,UNSIGNED8,rw,0,diValue[29],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x1f,DI_U8 Subindex 31,UNSIGNED8,rw,0,diValue[30],0,255,yes,no,no,no,0,Variable,0,,mapping
+0x2002,0x20,DI_U8 Subindex 32,UNSIGNED8,rw,0,diValue[31],0,255,yes,no,no,no,0,Variable,0,,mapping
+ 
+0x6200,0x00,Write Output 8 Bit Number of Elements,UNSIGNED8,ro,32,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6200,0x01,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[0],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x02,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[1],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x03,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[2],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x04,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[3],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x05,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[4],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x06,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[5],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x07,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[6],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x08,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[7],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x09,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[8],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x0a,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[9],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x0b,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[10],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x0c,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[11],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x0d,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[12],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x0e,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[13],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x0f,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[14],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x10,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[15],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x11,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[16],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x12,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[17],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x13,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[18],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x14,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[19],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x15,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[20],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x16,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[21],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x17,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[22],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x18,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[23],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x19,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[24],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x1a,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[25],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x1b,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[26],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x1c,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[27],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x1d,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[28],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x1e,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[29],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x1f,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[30],0,255,yes,no,no,no,1,Variable,0,,mapping
+0x6200,0x20,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,diValue[31],0,255,yes,no,no,no,1,Variable,0,,mapping

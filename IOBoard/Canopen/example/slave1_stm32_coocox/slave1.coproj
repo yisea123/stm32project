@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project version="2G - 1.7.6" name="slave1">
+  <Target name="slave1" isCurrent="1">
+    <Device manufacturerId="9" manufacturerName="ST" chipId="344" chipName="STM32F407VG" boardId="" boardName=""/>
+    <BuildOption>
+      <Compile>
+        <Option name="OptimizationLevel" value="0"/>
+        <Option name="UseFPU" value="0"/>
+        <Option name="UserEditCompiler" value=""/>
+        <Option name="SupportCPlusplus" value="0"/>
+        <Includepaths>
+          <Includepath path="."/>
+        </Includepaths>
+        <DefinedSymbols>
+          <Define name="STM32F407VG"/>
+          <Define name="STM32F4XX"/>
+          <Define name="USE_STDPERIPH_DRIVER"/>
+          <Define name="__ASSEMBLY__"/>
+          <Define name="HSE_VALUE=((uint32_t)8000000)"/>
+        </DefinedSymbols>
+      </Compile>
+      <Link useDefault="0">
+        <Option name="DiscardUnusedSection" value="0"/>
+        <Option name="UserEditLinkder" value=""/>
+        <Option name="UseMemoryLayout" value="1"/>
+        <Option name="nostartfiles" value="1"/>
+        <Option name="LTO" value="0"/>
+        <Option name="IsNewStartupCode" value="1"/>
+        <Option name="Library" value="Not use C Library"/>
+        <LinkedLibraries/>
+        <MemoryAreas debugInFlashNotRAM="1">
+          <Memory name="IROM1" type="ReadOnly" size="0x00100000" startValue="0x08000000"/>
+          <Memory name="IRAM1" type="ReadWrite" size="0x00020000" startValue="0x20000000"/>
+          <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
+          <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
+        </MemoryAreas>
+        <LocateLinkFile path="../../../../coocox/coide/configuration/programdata/slave1/arm-gcc-link.ld" type="0"/>
+      </Link>
+      <Output>
+        <Option name="OutputFileType" value="0"/>
+        <Option name="Path" value="./"/>
+        <Option name="Name" value="slave1"/>
+        <Option name="HEX" value="1"/>
+        <Option name="BIN" value="1"/>
+      </Output>
+      <User>
+        <UserRun name="Run#1" type="Before" checked="0" value=""/>
+        <UserRun name="Run#1" type="After" checked="0" value=""/>
+      </User>
+    </BuildOption>
+    <DebugOption>
+      <Option name="org.coocox.codebugger.gdbjtag.core.adapter" value="ST-Link"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.debugMode" value="SWD"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.clockDiv" value="1M"/>
+      <Option name="org.coocox.codebugger.gdbjtag.corerunToMain" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkgdbserver" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.userDefineGDBScript" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.targetEndianess" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkResetMode" value="Type 0: Normal"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.resetMode" value="SYSRESETREQ"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifSemihost" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifCacheRom" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ipAddress" value="127.0.0.1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.portNumber" value="2009"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F4xx_1024.elf"/>
+    </DebugOption>
+    <ExcludeFile/>
+  </Target>
+  <Components path="./">
+    <Component id="30" name="C Library" path="" type="2"/>
+    <Component id="31" name="Retarget printf" path="" type="2"/>
+    <Component id="54" name="M4 CMSIS Core" path="" type="2"/>
+    <Component id="500" name="CMSIS BOOT" path="" type="2"/>
+    <Component id="501" name="RCC" path="" type="2"/>
+    <Component id="504" name="GPIO" path="" type="2"/>
+    <Component id="517" name="USART" path="" type="2"/>
+    <Component id="524" name="MISC" path="" type="2"/>
+  </Components>
+  <Files>
+    <File name="codrv/stm32/cpu_stm32.h" path="../../codrv/stm32/cpu_stm32.h" type="1"/>
+    <File name="colib/src/ico_nmt.h" path="../../colib/src/ico_nmt.h" type="1"/>
+    <File name="cmsis_lib/source/stm32f4xx_gpio.c" path="cmsis_lib/source/stm32f4xx_gpio.c" type="1"/>
+    <File name="colib/src/ico_emcy.h" path="../../colib/src/ico_emcy.h" type="1"/>
+    <File name="colib/src/ico_sdoserver.h" path="../../colib/src/ico_sdoserver.h" type="1"/>
+    <File name="cmsis_lib/source/stm32f4xx_usart.c" path="cmsis_lib/source/stm32f4xx_usart.c" type="1"/>
+    <File name="colib/src/ico_lss.h" path="../../colib/src/ico_lss.h" type="1"/>
+    <File name="colib/inc/co_pdo.h" path="../../colib/inc/co_pdo.h" type="1"/>
+    <File name="colib/src/co_commtask.c" path="../../colib/src/co_commtask.c" type="1"/>
+    <File name="colib/inc/co_store.h" path="../../colib/inc/co_store.h" type="1"/>
+    <File name="colib/inc/co_candebug.h" path="../../colib/inc/co_candebug.h" type="1"/>
+    <File name="colib/src/ico_pdo.h" path="../../colib/src/ico_pdo.h" type="1"/>
+    <File name="cmsis_boot" path="" type="2"/>
+    <File name="colib/src/co_lss.c" path="../../colib/src/co_lss.c" type="1"/>
+    <File name="colib/inc/co_sleep.h" path="../../colib/inc/co_sleep.h" type="1"/>
+    <File name="cmsis_lib/include/stm32f4xx_usart.h" path="cmsis_lib/include/stm32f4xx_usart.h" type="1"/>
+    <File name="colib/inc" path="" type="2"/>
+    <File name="colib/src/co_pdo.c" path="../../colib/src/co_pdo.c" type="1"/>
+    <File name="colib/src/co_event.c" path="../../colib/src/co_event.c" type="1"/>
+    <File name="colib/inc/co_led.h" path="../../colib/inc/co_led.h" type="1"/>
+    <File name="cmsis_boot/stm32f4xx.h" path="cmsis_boot/stm32f4xx.h" type="1"/>
+    <File name="codrv/stm32/codrv_bxcan.h" path="../../codrv/stm32/codrv_bxcan.h" type="1"/>
+    <File name="colib/src/co_nmt.c" path="../../colib/src/co_nmt.c" type="1"/>
+    <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
+    <File name="cmsis_boot/startup" path="" type="2"/>
+    <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
+    <File name="cmsis/core_cm4.h" path="cmsis/core_cm4.h" type="1"/>
+    <File name="colib/inc/co_nmt.h" path="../../colib/inc/co_nmt.h" type="1"/>
+    <File name="colib/inc/co_odaccess.h" path="../../colib/inc/co_odaccess.h" type="1"/>
+    <File name="colib" path="" type="2"/>
+    <File name="cmsis_lib/source/misc.c" path="cmsis_lib/source/misc.c" type="1"/>
+    <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
+    <File name="colib/inc/co_emcy.h" path="../../colib/inc/co_emcy.h" type="1"/>
+    <File name="colib/src/ico_sdoclient.h" path="../../colib/src/ico_sdoclient.h" type="1"/>
+    <File name="cmsis_lib/source" path="" type="2"/>
+    <File name="colib/src/co_led.c" path="../../colib/src/co_led.c" type="1"/>
+    <File name="colib/src/ico_timer.h" path="../../colib/src/ico_timer.h" type="1"/>
+    <File name="colib/src/ico_store.h" path="../../colib/src/ico_store.h" type="1"/>
+    <File name="cmsis_boot/stm32f4xx_conf.h" path="cmsis_boot/stm32f4xx_conf.h" type="1"/>
+    <File name="cmsis_boot/system_stm32f4xx.h" path="cmsis_boot/system_stm32f4xx.h" type="1"/>
+    <File name="colib/inc/co_time.h" path="../../colib/inc/co_time.h" type="1"/>
+    <File name="codrv/stm32" path="" type="2"/>
+    <File name="gen_define.h" path="gen_define.h" type="1"/>
+    <File name="stdio/printf.c" path="stdio/printf.c" type="1"/>
+    <File name="gen_objdict.c" path="gen_objdict.c" type="1"/>
+    <File name="cmsis_lib/include/stm32f4xx_rcc.h" path="cmsis_lib/include/stm32f4xx_rcc.h" type="1"/>
+    <File name="colib/src/co_timer.c" path="../../colib/src/co_timer.c" type="1"/>
+    <File name="colib/src/co_store.c" path="../../colib/src/co_store.c" type="1"/>
+    <File name="codrv/stm32/cpu_stm32F4_coocox.c" path="../../codrv/stm32/cpu_stm32F4_coocox.c" type="1"/>
+    <File name="codrv" path="" type="2"/>
+    <File name="colib/inc/co_sync.h" path="../../colib/inc/co_sync.h" type="1"/>
+    <File name="colib/src/ico_odaccess.h" path="../../colib/src/ico_odaccess.h" type="1"/>
+    <File name="colib/src/ico_commtask.h" path="../../colib/src/ico_commtask.h" type="1"/>
+    <File name="cmsis_boot/startup/startup_stm32f4xx.c" path="cmsis_boot/startup/startup_stm32f4xx.c" type="1"/>
+    <File name="stdio" path="" type="2"/>
+    <File name="cmsis_lib/source/stm32f4xx_rcc.c" path="cmsis_lib/source/stm32f4xx_rcc.c" type="1"/>
+    <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
+    <File name="colib/src/ico_queue.h" path="../../colib/src/ico_queue.h" type="1"/>
+    <File name="colib/src/ico_time.h" path="../../colib/src/ico_time.h" type="1"/>
+    <File name="colib/src/ico_sleep.h" path="../../colib/src/ico_sleep.h" type="1"/>
+    <File name="colib/src/co_sdoserv.c" path="../../colib/src/co_sdoserv.c" type="1"/>
+    <File name="codrv/stm32/codrv_error.c" path="../../codrv/stm32/codrv_error.c" type="1"/>
+    <File name="colib/src/co_odaccess.c" path="../../colib/src/co_odaccess.c" type="1"/>
+    <File name="cmsis_boot/system_stm32f4xx.c" path="cmsis_boot/system_stm32f4xx.c" type="1"/>
+    <File name="colib/inc/co_commtask.h" path="../../colib/inc/co_commtask.h" type="1"/>
+    <File name="colib/inc/co_timer.h" path="../../colib/inc/co_timer.h" type="1"/>
+    <File name="colib/src/co_stackinit.c" path="../../colib/src/co_stackinit.c" type="1"/>
+    <File name="colib/inc/co_datatype.h" path="../../colib/inc/co_datatype.h" type="1"/>
+    <File name="colib/inc/co_drv.h" path="../../colib/inc/co_drv.h" type="1"/>
+    <File name="cmsis" path="" type="2"/>
+    <File name="colib/inc/co_sdo.h" path="../../colib/inc/co_sdo.h" type="1"/>
+    <File name="cmsis_lib" path="" type="2"/>
+    <File name="colib/inc/co_lss.h" path="../../colib/inc/co_lss.h" type="1"/>
+    <File name="colib/src/ico_cobhandler.h" path="../../colib/src/ico_cobhandler.h" type="1"/>
+    <File name="colib/src/ico_sync.h" path="../../colib/src/ico_sync.h" type="1"/>
+    <File name="colib/src/co_cobhandler.c" path="../../colib/src/co_cobhandler.c" type="1"/>
+    <File name="colib/inc/co_canopen.h" path="../../colib/inc/co_canopen.h" type="1"/>
+    <File name="cmsis_lib/include/stm32f4xx_gpio.h" path="cmsis_lib/include/stm32f4xx_gpio.h" type="1"/>
+    <File name="colib/src/co_emcy.c" path="../../colib/src/co_emcy.c" type="1"/>
+    <File name="syscalls" path="" type="2"/>
+    <File name="colib/src/co_errctrl.c" path="../../colib/src/co_errctrl.c" type="1"/>
+    <File name="cmsis_lib/include/misc.h" path="cmsis_lib/include/misc.h" type="1"/>
+    <File name="codrv/stm32/codrv_bxcan.c" path="../../codrv/stm32/codrv_bxcan.c" type="1"/>
+    <File name="cmsis_lib/include" path="" type="2"/>
+    <File name="colib/src/ico_sdo.h" path="../../colib/src/ico_sdo.h" type="1"/>
+    <File name="colib/src/co_queue.c" path="../../colib/src/co_queue.c" type="1"/>
+    <File name="colib/src" path="" type="2"/>
+    <File name="codrv/stm32/codrv_canbittiming.c" path="../../codrv/stm32/codrv_canbittiming.c" type="1"/>
+    <File name="main.c" path="main.c" type="1"/>
+    <File name="codrv/stm32/codrv_error.h" path="../../codrv/stm32/codrv_error.h" type="1"/>
+    <File name="colib/src/ico_event.h" path="../../colib/src/ico_event.h" type="1"/>
+  </Files>
+</Project>

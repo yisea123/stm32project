@@ -1,0 +1,711 @@
+driver:
+- at90can128
+    - interrupt time reduced
+
+---------------------------------------------------------------------------
+V2.6.6			22.12.16
+---------------------------------------------------------------------------
+colib:
+- refman: correct missing functions
+- improve p404 profil
+
+driver:
+- tms570ls3137
+	- driver and example added
+- xmc4000
+	- XMC4200 example to use with the CANopen Bootloader added
+
+---------------------------------------------------------------------------
+V2.6.5			28.09.16
+---------------------------------------------------------------------------
+colib:
+- move error register 0x1001 to managed variable (TPDO mapping is now possible
+	for static PDOs)
+- correct access to 0x1f80 at local node
+
+driver:
+- rh850f1l
+	- adaption for rh850 1fl with green hills added
+- stm32f303 
+	- Cube HAL driver support added
+	- bootloader example added
+- s12z - mscan v3
+	- new driver package
+	- bootloader example added
+
+---------------------------------------------------------------------------
+V2.6.4			22.09.16
+---------------------------------------------------------------------------
+colib:
+- correct networking handling for dynamic receive PDOs
+- correct handling for SDO queue
+- correct communication events for static indication functions
+- add comments for indication functions
+- use object changed functionality also for MPDOs
+- add SDO client domain indication
+- fixed wrong prefix for store object functions from od to coOd
+
+energyBus:
+- add sync counter to sync indication
+
+driver:
+- tms320f28xxx 
+    - adaptation for derivate 28069f added
+    - boot example for use with the CANopen bootloader added
+- ccan
+   - TX message busy check corrected (critical in polling mode, only)
+- XMC4xxx - MultiCAN
+   - TX IRQ handling corrected
+
+---------------------------------------------------------------------------
+V2.6.3			02.09.16
+---------------------------------------------------------------------------
+only for compatibility with J1939
+
+---------------------------------------------------------------------------
+V2.6.2			14.07.16
+---------------------------------------------------------------------------
+colib:
+- changes for MISRA compatibility
+- add deinitialization function for dynamic object dictionary
+- changes for store flag handling
+- correct indication handling for sdo block transfer
+
+---------------------------------------------------------------------------
+V2.6.1			14.06.16
+---------------------------------------------------------------------------
+colib:
+- add bitwise PDO mapping
+- LSS slave: activate new node id only in state RESET_NODE autonomously
+- add objekt flag for store parameter and provide access functions (odGetObjStoreFlag)
+
+---------------------------------------------------------------------------
+V2.6.0			28.04.16
+---------------------------------------------------------------------------
+colib:
+- add function coNmtNodeIsMaster() to detect master mode
+- correct parameter for GFC indication
+- change parameter for network sdo client indication
+- changes for better misra compatibility
+- correct emcy history save for multi line
+- add profile indication for MPDOs
+- correct limit check for U32 variables
+- block transfer correct last byte counter
+- adapt SRDO handling to actual CDD 
+
+driver:
+- kinetis:
+    k60 tower example created with Kinetis Design Studio added
+    k60 initialization updated for pocessor expert support
+    k60 tower examples for IAR updated
+-V850e2
+    CAN bittiming settings corrected
+    CAN bittiming - SJW configurable
+
+---------------------------------------------------------------------------
+V2.5.1			08.03.16
+---------------------------------------------------------------------------
+Correct CDD Toolversion entry at co_featureinfo.xml
+
+---------------------------------------------------------------------------
+V2.5.0			04.03.16
+---------------------------------------------------------------------------
+colib:
+- sdo server restore saved data also if split indication returns error
+- allow usage of application sdo handler
+- add limit check at putObj() for communication objects
+
+driver:
+- stm32: 
+    error interrupt implemented
+    multiline and singleline use the same codebase
+- dspic33/PIC24:
+    mutliline support
+
+---------------------------------------------------------------------------
+V2.4.6
+---------------------------------------------------------------------------
+colib:
+- correct networking single line and dynamic RPDOs
+- remove old CANFD SDO implementation
+- MPDO: correct DAM receive check for own node id
+- expand example for 443
+
+driver:
+- XMC4000 Bootup/HB filter is enabled when Group Filter is used
+- tms320f28335: adaptation and example added
+
+---------------------------------------------------------------------------
+V2.4.5
+---------------------------------------------------------------------------
+colib:
+- correct ML handling for request NMT
+
+driver:
+- v850e2: receive changed to history list
+- v850e2: example to use with the bootloader added
+- xmc4500: 
+     some diagnostic information
+     SL generated from ML
+     Basic CAN with RX FIFO corrected
+
+---------------------------------------------------------------------------
+V2.4.4
+---------------------------------------------------------------------------
+colib:
+- corrected mpdo for multiline 
+- add sync counter to sync indications
+- correct multiline access for CAN/COMM states
+- add setup of COB-IDs for network sdo read/write
+- add networking client for single line
+- correct address type for MPDOs
+- add sdo function for segmented transfer if block transfer is enabled
+
+driver:
+- socketCAN: new function codrvGetCanFd()
+- socketCAN: codrvWaitForEvent() read from the CAN socket added
+- kinetis/flexcan: access to the MB Code reworked
+- mpc5604: boot example added
+- added driver for Windows ems cpc
+- added driver for Windows esd ntcan
+- changed driver Windows peak basic
+
+---------------------------------------------------------------------------
+V2.4.3
+---------------------------------------------------------------------------
+driver:
+- added driver for tiva tm4c cpu 123
+
+---------------------------------------------------------------------------
+V2.4.2
+---------------------------------------------------------------------------
+colib:
+- correct mpdo access error
+- add C# wrapper
+
+driver:
+- add driver for tiva tm4c
+- add systec multiline driver
+
+---------------------------------------------------------------------------
+V2.4.1
+---------------------------------------------------------------------------
+driver:
+- add kinetis driver for multiline
+- add driver for HCS08
+
+---------------------------------------------------------------------------
+V2.4.0
+---------------------------------------------------------------------------
+colib:
+- correct execute flag for static SDO server indications
+- complete MPDO handling
+- correct comment for time structure
+- ensure const defines are declard as static
+- add function to send/receive other data by application
+- correct object indication for SDO write access
+- add EXTERN_DECL for all public functions (easier usage for user specific declaration)
+- add extern "C" at co_canopen.h for usage with C++
+- add line parameter to all timer indication calls (coTimerAdd() for mult-line changed!!!)
+- add OD index defines, usable with co_canopen.h
+
+---------------------------------------------------------------------------
+V2.3.2
+---------------------------------------------------------------------------
+driver:
+- add driver for V850e2
+
+---------------------------------------------------------------------------
+V2.3.1
+---------------------------------------------------------------------------
+colib:
+- network routing: correct abort data for network requests
+- extend gateway functionality for PDO forwarding
+- correct object access to 0x1f80/0x1f81
+- adapt p419 for multiline
+- adapt SRD for multiline
+- adapt p401 for multiline
+- add SDO Split indication functionality for Server SDO Read/Write
+- add example for using own dynamic objects at application
+- add function coSleepWakeUp() to wake up network
+- remove unused limit entries at object dictionary, if limit is not used
+
+energyBus:
+- add SDO Read Indication
+
+driver:
+-remove tranmsit flag at cob-structure
+- add driver for Renesas RX62N
+
+---------------------------------------------------------------------------
+V2.3.0
+---------------------------------------------------------------------------
+colib:
+- add bootup initialisation to standard intialisation calls
+- add CO_ to LSS_STATE_WAITING and LSS_STATE_CONFIGURATION states
+- add master guarding functionality
+- allow emergency calls with NULL pointer assignment for user data
+- check for reserved cob-ids for emcy consumer cobs
+- impovement for bootup manager handling
+
+profile:
+- config manager: reset busy flag at end of transfer
+
+
+driver:
+can4linux:
+- add function codrvGetCanFd() for easier select calls
+- add timer signaling by thread
+
+---------------------------------------------------------------------------
+V2.2.1
+---------------------------------------------------------------------------
+colib:
+add U64 support for dynamic objects
+
+driver:
+xmc4xxx driver transmission of multiple objects corrected
+
+---------------------------------------------------------------------------
+V2.2.0
+---------------------------------------------------------------------------
+colib:
+new dynamic object creating and handling
+flying master handling reworked
+gateway networking for SDO, EMCY reworked
+correct initialisation for services if not all lines are used with multiline
+
+driver:
+xmc4xxx driver updated for XMC-Lib (DAVE 4.0)
+MPC5604P driver added (Code Warrior)
+
+---------------------------------------------------------------------------
+V2.1.2
+---------------------------------------------------------------------------
+colib:
+save HB value to correct subindex at specific line for Multiline
+allow user limit check for HB producer and PDO EventTimer/Inhibit Time
+add inquire services for LSS
+check at mt reset for valid node id again
+multiline example for STM32F107 and Crossworks added
+CooCox and Keil example for NUC140 added
+
+profile:
+454 remove automatic add for sleep mode
+correct HB consumer check for new devices
+ 
+driver:
+NUC140 driver package (internal Bosch C_CAN)
+FM3 driver package updated (internal Bosch C_CAN)
+STM32 multiline - Fullcan mode adapted (bxCan)
+Multiline driver or STM32F107 added
+
+-----------------------------------------------------------------------------
+V2.1.1
+---------------------------------------------------------------------------
+Example for Bootloader STM32F072 added
+
+-----------------------------------------------------------------------------
+V2.1.0
+---------------------------------------------------------------------------
+colib:
+generate single line from multi line version
+reject invalid node id at reset communication
+
+profile 447:
+correct number of max used nodes
+add sleep/objection cob-ids
+
+energybus:
+add load para function parameter to initialisation function
+correct define for battery detach state
+rename internal pointer to ebData to pEbData
+
+driver:
+socketcan: correct receive of extended data frames
+can4linux: adpat to actual can4linux with CAN-FD
+
+-----------------------------------------------------------------------------
+V2.0.3
+---------------------------------------------------------------------------
+colib:
+add static indication functions
+LSS correction if tranmsit buffer is full
+expand counting for heartbeat consumer to U16 range
+correct error history for multi line
+correct number of last correct received block for SDO Server 
+add function to get available messages coQueueReceiveMessageAvailable()
+add CO_ERRCTRL_STATE_BOOTUP_FAILURE to indicate errors sending bootup
+add CO_COB defines at co_cob.h
+
+drv:
+add multiline version for socketcan
+
+-----------------------------------------------------------------------------
+V2.0.2
+---------------------------------------------------------------------------
+colib:
+correct line parameter for static indications
+
+-----------------------------------------------------------------------------
+V2.0.1
+---------------------------------------------------------------------------
+colib:
+add line parameter to emcy indication functions
+add get/putObject for U24..U48 functions for multiline
+correct intialization for sdo client multiline
+
+-----------------------------------------------------------------------------
+V2.0.0
+---------------------------------------------------------------------------
+driver:
+XMC4000 Multiline added
+
+-----------------------------------------------------------------------------
+V1.10.2
+-----------------------------------------------------------------------------
+stack:
+call indication for busy SDOs at reset communication
+add configuration manager handling
+
+driver:
+add driver for mb9f506n
+
+-----------------------------------------------------------------------------
+V1.10.1
+-----------------------------------------------------------------------------
+driver:
+TMS320F2812 driver transmit problem resolved
+NXP LPC17xx driver use of Acceptance filter added
+
+-----------------------------------------------------------------------------
+V1.10.0
+-----------------------------------------------------------------------------
+stack:
+static indication added for all services
+LSS slave: new indication value for new node id received
+
+profile:
+CiA 447 profil added
+
+examples:
+example application for LPC1754 Bootloader added
+
+-----------------------------------------------------------------------------
+V1.9.3
+-----------------------------------------------------------------------------
+stack:
+ensure correct index/subindex for sdo client indications (for more than 1 indication)
+add possibility to decide master or slave mode at runtime
+add new initialisation function coCanOpenStackInitPara() with para (actual only used for master and slave applications)
+
+driver:
+NXP LPC17xx driver package added (BasicCAN)
+
+-----------------------------------------------------------------------------
+V1.9.2
+-----------------------------------------------------------------------------
+stack:
+add function coOdVisStringSet() to change visible strings at OD
+correct state for SDO client request, if transmitmit buffer is full
+call sdo queue again if transmit buffer was full
+
+eb_framework:
+call sdo queue again if transmit buffer was full
+add detection of recoming nodes with valid heartbeat entry
+
+-----------------------------------------------------------------------------
+V1.9.1
+-----------------------------------------------------------------------------
+eb-framework:
+correct state change detection with PDOs
+change data transfer to actual standard, single object transfer completed
+
+eb-examples:
+charger example for TI LM4F232 updated
+
+drivers:
+ST STM32 - hardware initialization in different cpu_* files, depend of 
+derivate and compiler, now.
+
+-----------------------------------------------------------------------------
+V1.9.0
+-----------------------------------------------------------------------------
+stack:
+allow no sending of PDOs at enter OPERATIONAL by setting define CO_PDO_NO_TRANSMIT_OPERATIONAL
+add putObj functions for extended datatypes (U24..U64)
+correct default values for extended datatypes (U24..U64)
+
+eb-framework:
+rework EBC and charger functionality
+rework and simplify charger example for charging battery autark or with EBC
+rework and simplify EBC example
+rename EBC_DEVICE_LIST_T to EBC_DEVICE_T
+rename EBC_NODE_LIST_T to EBC_NODE_T
+
+examples:
+Freescale K60 - guarding example added
+Freescale K60 - slave1 example updated
+
+drivers:
+Freescale Kinetis - Receive Filter added, released
+
+-----------------------------------------------------------------------------
+V1.8.2
+-----------------------------------------------------------------------------
+stack:
+Profil support for 443 released
+SDO server domain indication added
+gateway functionality added
+deliver pending node id for CO_LSS_SERVICE_STORE indication
+
+driver:
+Atmel AT90CAN128 driver added
+RTX64 with janz tec hardware added
+Freescale Kinetis driver added
+
+-----------------------------------------------------------------------------
+V1.8.1
+-----------------------------------------------------------------------------
+stack:
+LSS standard scan added, example for master enlarged
+SRD profil added
+Profil support for 418/419 released
+
+
+-----------------------------------------------------------------------------
+V1.8.0
+-----------------------------------------------------------------------------
+stack:
+add support for U24, U40, U48 and U64
+add inhibit for NMT commands (object 0x102a)
+
+energybus:
+correct calculation of subindex mapping for receive PDOs (EBC)
+
+driver:
+support full-can mode for XMC4xxx
+
+-----------------------------------------------------------------------------
+V1.7.1
+-----------------------------------------------------------------------------
+stack:
+don't save emcy with errorcode 0000 at 0x1003
+avoid compiler warnings at emcy.c
+
+-----------------------------------------------------------------------------
+V1.7.0
+-----------------------------------------------------------------------------
+stack:
+correct number of mapped bytes for dummy mapping
+add sleep request mode
+check for correct index/subindex answer for sdo client requests
+don't allow resticted cob-ids for server-sdos
+add limit check for standard datatypes
+correct handling at resetComm for dynamic PDO mappings
+
+energyBus framework:
+correct usage of vdn - use devIdx, devNr, gin instead
+adapt defines for state transitions to actual standard
+correct node-id for fixed devices
+rework charge handling
+add function for setup receive PDO MSNs
+allow change of LSS timeout
+correct security initialisation
+add eb_debug.c/h for debug strings
+add automatical enter of sleep mode is LSS doesn't get node id
+support of additional objects for EBC (0x6080/0x6093/1f80)
+use internal VDN as PDO-number and change only COB-ID of the PDO if GIN was changed
+add ebSleepAwake() to replace coSleepAwake()
+add new indication function for EBC security events
+
+-----------------------------------------------------------------------------
+V1.6.0
+-----------------------------------------------------------------------------
+stack:
+change PDO mapping data into separate structs and functions for transmit and receive for correct const handling
+change OD handling functions for correct handling of const data
+use correct datatypes for const OD entries for better MISRA compatibility
+set actual datasize for sdo client read before user indication is called
+don't allow transtype 253/252 if CO_RTR_NOT_SUPPORTED is set
+check for correct cob-id with if CO_RTR_NOT_SUPPORTED is set
+reject enabling of SYNC producer if object 1006 doesn't exist
+add mapping attributes for read/write separatly
+correct call of coLssIdentifyNonConfiguredSlaves() with interval = 0
+
+energyBus framework:
+rename global EBC variables to ebc....
+number of known hosts can be set by the user
+ensure that heartbeat monitoring for slave are only valid for EBC and charger
+add functionality for datatransfer over EBC
+
+
+-----------------------------------------------------------------------------
+V1.5.0
+-----------------------------------------------------------------------------
+stack:
+all timer variables use now 32bit - max. time up to 2^32 µsec possible
+call initial LED state after indication was called
+if RTR is not supported, define CO_RTR_NOT_SUPPORTED can be used to reject COB-IDs without RTR Bit
+exchange INLINE by CO_INLINE
+wrap SDO Block sources by extra define
+ignore extended ids for bootup messages
+set PDO inhibit time only for transmission type 254/255
+object indications can now setup an extra indication for each object
+
+-----------------------------------------------------------------------------
+V1.4.1
+-----------------------------------------------------------------------------
+stack:
+avoid compiler errors for only static mapping
+rename define for CO_COB_RTR to CO_COB_RTR_BIT at pdo.c
+rename DOMAIN to CO_DOMAIN_PTR
+add check for restricted cobids
+lss allow global change to configuration
+don't delete RTR Bit for PDO COBs
+
+driver:
+	STM32 - remote frame support support completed
+	STM32 - acceptance filter supports 11bit data and remote frames
+	STM32 - extended frame support (but without acceptance filter)
+
+energyBus:
+add new events for charging procedure: stop and new battery command
+start node if device is compatible and network is already working
+
+-----------------------------------------------------------------------------
+V1.4.0
+-----------------------------------------------------------------------------
+stack:
+add sdo queue functions
+set/reset error led for heartbeat failure
+allow writing again the same cob-id for object 0x1014
+correct value check for big endian and DSP
+check mapping entries immediately at value writing
+add PDO RTR support
+
+profiles:
+	p401 - delta interrupt supported
+		 - additional functions to set the output to default or error state 
+
+driver:
+	STM32 - bxcan driver supports CAN2 now.
+	linux - check status messages only for non-CAN messages
+
+-----------------------------------------------------------------------------
+V1.3.2
+-----------------------------------------------------------------------------
+add sdo block transfer
+change parameter 5 of CO_EVENT_SDO_SERVER_CHECK_WRITE_T to const
+ignore message count for RTR guarding messages
+correct copy of error history 
+
+-----------------------------------------------------------------------------
+V1.3.1
+-----------------------------------------------------------------------------
+add CiA 401 modul and example
+don't call receive buffer event at getRecBuffer() - its interrupt content
+
+-----------------------------------------------------------------------------
+V1.3.0
+-----------------------------------------------------------------------------
+icoTransmitMessage() overwrite some messages (e.g. TPDO) and change there state from To Transmit to Waiting without a running inhibit timer 
+-> This will stop all transmissions!
+=> solved.
+
+sleep mode for 454 added
+stop heartbeat monitoring timer alltimes if value was changed
+complete queue handling and state monitoring reworked
+inhibit emergency corrected
+
+-----------------------------------------------------------------------------
+V1.2.0
+-----------------------------------------------------------------------------
+add REAL32 support
+set generic error bit if emergency error code is != 0x00xx
+add LSS switch mode selective
+allow access to error register if EMCY is not defined
+Adapt to CANopenDeviceDesigner V1.1
+
+-----------------------------------------------------------------------------
+V1.1.0
+-----------------------------------------------------------------------------
+add LSS fastScan support
+correct access for DSP support
+add new internal event handler
+allow disable/enable LSS master services
+prepared for CAN FD support
+correct buffer handling for waiting messages with inhibit time
+correct usage of return value from check user write indication
+call check user write indication also for segmented transfers 
+
+driver:
+	MB9BF506n - new driver for Fujitsu FM3 family (IAR)
+
+-----------------------------------------------------------------------------
+V1.0.2
+-----------------------------------------------------------------------------
+Indication for bootups from unknown hosts corrected
+
+-----------------------------------------------------------------------------
+V1.0.1
+-----------------------------------------------------------------------------
+Documentation changed
+
+-----------------------------------------------------------------------------
+V1.0	CDD V1.0.3
+-----------------------------------------------------------------------------
+User interface to coCanOpenStackInit() changed
+Functionnames to driver interface changed
+store/restore added
+dynamic object dictionary added
+
+driver:
+	STM32 - filter functionality added (Keil)
+	LM4F232 - filter functionality added (Code Composer Studio)
+
+-----------------------------------------------------------------------------
+V0.9.4	CDD V0.9.19
+-----------------------------------------------------------------------------
+add emergency consumer handling
+add time services
+add default error behavior with object 0x1029
+transmit Emergency for heartbeat/guarding failure
+add PDO dummy mapping
+add PDO receive event timer
+ignore PDOs with length to short
+
+-----------------------------------------------------------------------------
+V0.9.3
+-----------------------------------------------------------------------------
+add slave guarding
+add default handling for communication errors
+add SYNC COB-ID limit check
+
+-----------------------------------------------------------------------------
+V0.9.2
+-----------------------------------------------------------------------------
+add dynamic PDO mapping
+
+-----------------------------------------------------------------------------
+V0.9.1
+-----------------------------------------------------------------------------
+General:
+	add support for DSP's
+	add compiler switches to avoid compiler errors for unsused functionality
+NMT:
+	reset all objects from communication part at resetAppl
+SYNC:
+	correct reset variables at startup
+Emergency:
+	add emergency error code as parameter to indication function
+ObjectDict:
+	correct parameter for coOdDomainAddrSet() call
+	call reset object dictionary for application variables at init
+LED:
+	use correct datatype for BOOL variables
+
+-----------------------------------------------------------------------------
+V0.9		03.07.12
+-----------------------------------------------------------------------------
+first version

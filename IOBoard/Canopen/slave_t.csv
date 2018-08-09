@@ -1,0 +1,123 @@
+Index,Sub,EDSname,Datatype,Access,Value,varname,LowLimit,UpLimit,hasDefault,hasLimit,refuseRead,refuseWrite,defaultInEDS,ImplementationType,Size,ObjectCode,mapable
+0x1000,0x00,Device Type,UNSIGNED32,ro,983441,devType,0,4294967295,yes,no,no,no,0,Variable,0,,mapping
+0x1001,0x00,Error Register,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1005,0x00,COB ID SYNC,UNSIGNED32,rw,128,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1008,0x00,Manufacturer Device Name,VISIBLE_STRING,const,Generic IO module according CiA 401,deviceName,0,0,yes,no,no,no,1,Variable,32,,mapping
+0x1014,0x00,COB ID EMCY,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1015,0x00,Inhibit Time Emergency,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x00,Consumer heartbeat time Highest sub-index supported,UNSIGNED8,const,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x1016,0x01,Consumer heartbeat time Consumer heartbeat time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1016,0x02,Consumer heartbeat time Consumer heartbeat time,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1017,0x00,Producer Heartbeat Time,UNSIGNED16,rw,1000,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x1018,0x00,Identity Object Number of entries,UNSIGNED8,ro,4,NONE,1,4,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1018,0x01,Identity Object Vendor Id,UNSIGNED32,ro,793,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0,,mapping
+0x1018,0x02,Identity Object Product Code,UNSIGNED32,ro,2069,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0,,mapping
+0x1018,0x03,Identity Object Revision number,UNSIGNED32,ro,65537,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0,,mapping
+0x1018,0x04,Identity Object Serial number,UNSIGNED32,ro,1,serialNumber,0,4294967295,no,no,no,no,0,Variable,0,,mapping
+0x1200,0x00,Server SDO Parameter Number of entries,UNSIGNED8,ro,2,NONE,2,2,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1200,0x01,Server SDO Parameter COB ID Client to Server,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1200,0x02,Server SDO Parameter COB ID Server to Client,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1400,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1400,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rww,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1400,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rww,1,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1600,0x00,RPDO mapping parameter Number of mapped objects,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1600,0x01,RPDO mapping parameter mapped object 1,UNSIGNED32,rw,1644167432,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1600,0x02,RPDO mapping parameter mapped object 2,UNSIGNED32,rw,1644167688,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1800,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,6,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x1800,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rww,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1800,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rww,1,NONE,0,255,no,no,no,no,1,ManagedVariable,0,,mapping
+0x1a00,0x00,TPDO mapping parameter Number of mapped objects,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,RECORD,mapping
+0x1a00,0x01,TPDO mapping parameter mapped object 1,UNSIGNED32,rw,1610613000,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x1a00,0x02,TPDO mapping parameter mapped object 2,UNSIGNED32,rw,1610613256,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0,,mapping
+ 
+0x2000,0x00,DummyDO Highest sub-index supported,UNSIGNED8,ro,4,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2000,0x01,DummyDO simuDO1,UNSIGNED8,rww,0,simuDO1,0,255,yes,no,no,no,1,Variable,0,,mapping
+0x2000,0x02,DummyDO simuDO2,UNSIGNED8,rww,0,simuDO2,0,255,yes,no,no,no,1,Variable,0,,mapping
+0x2000,0x03,DummyDO actStateDO1,UNSIGNED8,rww,0,doState1,0,255,yes,no,no,no,1,Variable,0,,mapping
+0x2000,0x04,DummyDO actStateDO2,UNSIGNED8,rww,0,doState2,0,255,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x00,DummyAO Highest sub-index supported,UNSIGNED8,ro,8,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2001,0x01,DummyAO simuAO1,UNSIGNED16,rww,0,simuAO1,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x02,DummyAO simuAO2,UNSIGNED16,rww,0,simuAO2,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x03,DummyAO readBackAO1,UNSIGNED16,rww,0,readBackAO1,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x04,DummyAO readBackAO2,UNSIGNED16,rww,0,readBackAO2,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x05,DummyAO caliStatus1,UNSIGNED16,rww,0,caliStatus1,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x06,DummyAO caliStatus2,UNSIGNED16,rww,0,caliStatus2,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x07,DummyAO actValueAO1,UNSIGNED16,rww,0,aoValue1,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2001,0x08,DummyAO actValueAO2,UNSIGNED16,rww,0,aoValue2,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2002,0x00,DummyDI Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2002,0x01,DummyDI diStateChn1,UNSIGNED8,ro,0,diState1,0,255,yes,no,no,no,1,Variable,0,,mapping
+0x2002,0x02,DummyDI diStateChn2,UNSIGNED8,ro,0,diState2,0,255,yes,no,no,no,1,Variable,0,,mapping
+0x2003,0x00,Manufacture Highest sub-index supported,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2003,0x01,Manufacture version,UNSIGNED32,const,0,version,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2003,0x02,Manufacture fctTest,UNSIGNED32,rww,0,fctTest,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2003,0x03,Manufacture enableConsumer,UNSIGNED32,rww,0,enableConsumer,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2004,0x00,HeartBeat Highest sub-index supported,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2004,0x01,HeartBeat adrId,UNSIGNED32,rww,0,masterAdr,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2004,0x02,HeartBeat duringTime,UNSIGNED32,rww,0,heartBeatTime,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2005,0x00,errRegister Highest sub-index supported,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2005,0x01,errRegister errCnt_Clr,UNSIGNED32,rww,0,errCnt_Clr,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2005,0x02,errRegister errCnt_Can,UNSIGNED32,rww,0,errCnt_Can,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2005,0x03,errRegister errCnt_Nmt,UNSIGNED32,rww,0,errCnt_Nmt,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2006,0x00,objAccess Highest sub-index supported,UNSIGNED8,ro,5,NONE,0,255,yes,no,no,no,1,ManagedConst,0,RECORD,mapping
+0x2006,0x01,objAccess objID,UNSIGNED16,rww,0,dicObjId,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2006,0x02,objAccess atrID,UNSIGNED16,rww,0,dicAtrId,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2006,0x03,objAccess objType,UNSIGNED16,rww,0,dicObjType,0,65535,yes,no,no,no,1,Variable,0,,mapping
+0x2006,0x04,objAccess objValueU32,UNSIGNED32,rww,0,objValueU32,0,4294967295,yes,no,no,no,1,Variable,0,,mapping
+0x2006,0x05,objAccess objValueR32,REAL32,rww,0,objValueR32,0,0,yes,no,no,no,1,Variable,0,,mapping
+ 
+0x6000,0x00,Read Input 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6000,0x01,Read Input 8 Bit DigInput8,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x6000,0x02,Read Input 8 Bit DigInput8,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0,,mapping
+0x6002,0x00,Polarity Input 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6002,0x01,Polarity Input 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6002,0x02,Polarity Input 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6003,0x00,Filter Constant Input 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6003,0x01,Filter Constant Input 8 Bit FilterConst8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6003,0x02,Filter Constant Input 8 Bit FilterConst8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6005,0x00,Global Interrupt Enable Digital 8 Bit,BOOLEAN,rw,1,NONE,0,1,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6006,0x00,Interrupt Mask Any Change 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6006,0x01,Interrupt Mask Any Change 8 Bit InterruptAnyChange8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6006,0x02,Interrupt Mask Any Change 8 Bit InterruptAnyChange8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6007,0x00,Interrupt Mask Low to High 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6007,0x01,Interrupt Mask Low to High 8 Bit InterruptLowToHigh8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6007,0x02,Interrupt Mask Low to High 8 Bit InterruptLowToHigh8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6008,0x00,Interrupt Mask High to Low 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6008,0x01,Interrupt Mask High to Low 8 Bit InterruptHighToLow8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6008,0x02,Interrupt Mask High to Low 8 Bit InterruptHighToLow8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6200,0x00,Write Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6200,0x01,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6200,0x02,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6202,0x00,Polarity Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6202,0x01,Polarity Output 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6202,0x02,Polarity Output 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6206,0x00,Error Mode Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6206,0x01,Error Mode Output 8 Bit ErrorMode8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6206,0x02,Error Mode Output 8 Bit ErrorMode8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6207,0x00,Error Value Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6207,0x01,Error Value Output 8 Bit ErrorValue8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6207,0x02,Error Value Output 8 Bit ErrorValue8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6208,0x00,Filter Mask Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6208,0x01,Filter Mask Output 8 Bit FilterMask8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6208,0x02,Filter Mask Output 8 Bit FilterMask8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6411,0x00,Write Analogue Output 16 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6411,0x01,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6411,0x02,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6421,0x00,Interrupt Trigger Selection Number of Elements,UNSIGNED8,ro,6,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6421,0x01,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6421,0x02,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6421,0x03,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6421,0x04,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6421,0x05,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6421,0x06,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6443,0x00,Analogue Output Error Mode Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6443,0x01,Analogue Output Error Mode ErrorMode,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6443,0x02,Analogue Output Error Mode ErrorMode,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6444,0x00,Analogue Output Error Value Integer Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6444,0x01,Analogue Output Error Value Integer ErrorValueInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6444,0x02,Analogue Output Error Value Integer ErrorValueInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6446,0x00,Analogue Output Offset Integer Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6446,0x01,Analogue Output Offset Integer OffsetInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6446,0x02,Analogue Output Offset Integer OffsetInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6447,0x00,Analogue Output Scaling Integer Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0,ARRAY,mapping
+0x6447,0x01,Analogue Output Scaling Integer ScalingInt,INTEGER32,rw,1,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0,,mapping
+0x6447,0x02,Analogue Output Scaling Integer ScalingInt,INTEGER32,rw,1,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0,,mapping

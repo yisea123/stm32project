@@ -1,0 +1,19 @@
+<featureinfo>
+  <protocol>CANopen</protocol>
+  <edition>basic</edition>
+  <!-- versions without patchlevels! -->
+  <version>2.6</version>
+  <required_tool_version>2.6</required_tool_version>
+  <features>
+    <sdo_server>1</sdo_server>
+    <pdo_producer>6</pdo_producer>
+    <pdo_consumer additional_values="tbd">6</pdo_consumer>
+    <pdo_mapping>static</pdo_mapping>
+    <sync_consumer>1</sync_consumer>
+    <emcy_producer>1</emcy_producer>
+    <heartbeat_producer>1</heartbeat_producer>
+    <nmt_slave>1</nmt_slave>
+    <led>1</led>
+    <lss_slave>1</lss_slave>
+  </features>
+</featureinfo>

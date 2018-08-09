@@ -1,0 +1,755 @@
+CANopen Object Dictionary Documenation for slave_t
+
+
+Index:       0x1000 - Device Type
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This objects contains the CANopen device type of the device.
+  Sub:          0x0 - Device Type
+  DataType:     UNSIGNED32
+  DefaultValue: 0xf0191
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1001 - Error Register
+DataType:    UNSIGNED8
+ObjectCode:  Variable
+Description: This object contains a register of 8 error information bits.
+  Sub:          0x0 - Error Register
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   4
+
+Index:       0x1005 - COB ID SYNC
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This object shall indicate the configured COB-ID of the synchronization object (SYNC). Further, it defines whether the CANopen device generates the SYNC.
+  Sub:          0x0 - COB ID SYNC
+  DataType:     UNSIGNED32
+  DefaultValue: 0x00000080
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1008 - Manufacturer Device Name
+DataType:    VISIBLE_STRING
+ObjectCode:  Variable
+  Sub:          0x0 - Manufacturer Device Name
+  DataType:     VISIBLE_STRING
+  DefaultValue: Generic IO module according CiA 401
+  AccessType:   const
+  PDOMapping:   0
+
+Index:       0x1014 - COB ID EMCY
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This object shall indicate the configured COB-ID for the EMCY write service.
+
+  Sub:          0x0 - COB ID EMCY
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x80
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1015 - Inhibit Time Emergency
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+Description: This object shall indicate the configured inhibit time for the EMCY message. The value shall be given in multiples of 100 ¦Ìs. The value 0 shall disable the inhibit time.
+
+  Sub:          0x0 - Inhibit Time Emergency
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1016 - Consumer heartbeat time
+DataType:    UNSIGNED32
+ObjectCode:  Array
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x1 - Consumer heartbeat time
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Consumer heartbeat time
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1017 - Producer Heartbeat Time
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+Description: The producer heartbeat time shall indicate the configured cycle time of the heartbeat produced by the device.
+
+The value shall be given in multiples of 1 ms. The value 0 shall disable the producer heartbeat.
+
+  Sub:          0x0 - Producer Heartbeat Time
+  DataType:     UNSIGNED16
+  DefaultValue: 1000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1018 - Identity Object
+DataType:    UNSIGNED8
+ObjectCode:  Record
+Description: This objects contains the identity information of the device.
+
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 4
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Vendor Id
+  DataType:     UNSIGNED32
+  DefaultValue: 0x319
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Product Code
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0815
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Revision number
+  DataType:     UNSIGNED32
+  DefaultValue: 0x00010001
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Serial number
+  DataType:     UNSIGNED32
+  DefaultValue: 1
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1200 - Server SDO Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB ID Client to Server
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x600
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - COB ID Server to Client
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x580
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1400 - Receive PDO Communication Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+Description: This object contains the communication parameters for the PDO the CANopen device is able to receive.
+
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB ID
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x200
+  AccessType:   rww
+  PDOMapping:   0
+  Sub:          0x2 - Transmission Type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rww
+  PDOMapping:   0
+
+Index:       0x1600 - RPDO mapping parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - Number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - mapped object 1
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000108
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - mapped object 2
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000208
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1800 - Transmit PDO Communication Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+Description: This object contains the communication parameters for the PDO the CANopen device is able to transmit.
+
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB ID
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x180
+  AccessType:   rww
+  PDOMapping:   0
+  Sub:          0x2 - Transmission Type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rww
+  PDOMapping:   0
+  Description: Sub-index 0x03 contains the inhibit time. The time is the minimum interval for PDO
+transmission if the transmission type is set to FEh and FF h . The value is defined as multiple of 100 ¦Ìs. The value of 0 shall disable the inhibit time. The value shall not be changed while the PDO exists (bit 31 of sub-index 01h is set to 0 b ).
+
+
+Index:       0x1a00 - TPDO mapping parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - Number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - mapped object 1
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000108
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - mapped object 2
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000208
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x2000 - DummyDO
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 4
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - simuDO1
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - simuDO2
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x3 - actStateDO1
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x4 - actStateDO2
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x2001 - DummyAO
+DataType:    UNSIGNED16
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - simuAO1
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - simuAO2
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x3 - readBackAO1
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x4 - readBackAO2
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x5 - caliStatus1
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x6 - caliStatus2
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x7 - actValueAO1
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x8 - actValueAO2
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x2002 - DummyDI
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - diStateChn1
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   1
+  Sub:          0x2 - diStateChn2
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   1
+
+Index:       0x2003 - Manufacture
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - version
+  DataType:     UNSIGNED32
+  AccessType:   const
+  PDOMapping:   1
+  Sub:          0x2 - fctTest
+  DataType:     UNSIGNED32
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x3 - enableConsumer
+  DataType:     UNSIGNED32
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x2004 - HeartBeat
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - adrId
+  DataType:     UNSIGNED32
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - duringTime
+  DataType:     UNSIGNED32
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x2005 - errRegister
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - errCnt_Clr
+  DataType:     UNSIGNED32
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - errCnt_Can
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x3 - errCnt_Nmt
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x2006 - objAccess
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 5
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - objID
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - atrID
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x3 - objType
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x4 - objValueU32
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x5 - objValueR32
+  DataType:     REAL32
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x6000 - Read Input 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - DigInput8
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   1
+  Sub:          0x2 - DigInput8
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   1
+
+Index:       0x6002 - Polarity Input 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Polarity8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - Polarity8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6003 - Filter Constant Input 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - FilterConst8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - FilterConst8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6005 - Global Interrupt Enable Digital 8 Bit
+DataType:    BOOLEAN
+ObjectCode:  Variable
+  Sub:          0x0 - Global Interrupt Enable Digital 8 Bit
+  DataType:     BOOLEAN
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x6006 - Interrupt Mask Any Change 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - InterruptAnyChange8
+  DataType:     UNSIGNED8
+  DefaultValue: 255
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - InterruptAnyChange8
+  DataType:     UNSIGNED8
+  DefaultValue: 255
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6007 - Interrupt Mask Low to High 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - InterruptLowToHigh8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - InterruptLowToHigh8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x6008 - Interrupt Mask High to Low 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - InterruptHighToLow8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - InterruptHighToLow8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x6200 - Write Output 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - DigOutput8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - DigOutput8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x6202 - Polarity Output 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Polarity8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - Polarity8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6206 - Error Mode Output 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - ErrorMode8
+  DataType:     UNSIGNED8
+  DefaultValue: 255
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - ErrorMode8
+  DataType:     UNSIGNED8
+  DefaultValue: 255
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6207 - Error Value Output 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - ErrorValue8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - ErrorValue8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6208 - Filter Mask Output 8 Bit
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - FilterMask8
+  DataType:     UNSIGNED8
+  DefaultValue: 255
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - FilterMask8
+  DataType:     UNSIGNED8
+  DefaultValue: 255
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6411 - Write Analogue Output 16 Bit
+DataType:    INTEGER16
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - AnalogueOutput16
+  DataType:     INTEGER16
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+  Sub:          0x2 - AnalogueOutput16
+  DataType:     INTEGER16
+  DefaultValue: 0
+  AccessType:   rww
+  PDOMapping:   1
+
+Index:       0x6421 - Interrupt Trigger Selection
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 6
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - InterruptTriggerSelection
+  DataType:     UNSIGNED8
+  DefaultValue: 7
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - InterruptTriggerSelection
+  DataType:     UNSIGNED8
+  DefaultValue: 7
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - InterruptTriggerSelection
+  DataType:     UNSIGNED8
+  DefaultValue: 7
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - InterruptTriggerSelection
+  DataType:     UNSIGNED8
+  DefaultValue: 7
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - InterruptTriggerSelection
+  DataType:     UNSIGNED8
+  DefaultValue: 7
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - InterruptTriggerSelection
+  DataType:     UNSIGNED8
+  DefaultValue: 7
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x6443 - Analogue Output Error Mode
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - ErrorMode
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - ErrorMode
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6444 - Analogue Output Error Value Integer
+DataType:    INTEGER32
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - ErrorValueInt
+  DataType:     INTEGER32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - ErrorValueInt
+  DataType:     INTEGER32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6446 - Analogue Output Offset Integer
+DataType:    INTEGER32
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - OffsetInt
+  DataType:     INTEGER32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - OffsetInt
+  DataType:     INTEGER32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x6447 - Analogue Output Scaling Integer
+DataType:    INTEGER32
+ObjectCode:  Array
+  Sub:          0x0 - Number of Elements
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - ScalingInt
+  DataType:     INTEGER32
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   1
+  Sub:          0x2 - ScalingInt
+  DataType:     INTEGER32
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   1

@@ -1,0 +1,80 @@
+# Makefile
+
+#CFLAGS = -g -c -Wall -DCO_PROFILE_401
+CFLAGS = -g -c -Wall -Wmissing-prototypes
+CC = gcc
+
+OBJ_DIR = obj
+TARGET_NAME = 401
+
+CO_INC_DIRS = ../../colib/inc ../../colib/src ../../colib/profile .
+#C4L_INC_DIRS = /usr/src/can4linux
+
+
+CO_OBJECTS = \
+	main.o	\
+	gen_objdict.o	\
+	co_odaccess.o	\
+	co_commtask.o	\
+	co_sdoserv.o	\
+	co_pdo.o	\
+	co_nmt.o	\
+	co_errctrl.o	\
+	co_queue.o	\
+	co_event.o	\
+	co_cobhandler.o	\
+	co_store.o	\
+	co_timer.o	\
+	co_emcy.o	\
+	co_sync.o	\
+	co_led.o	\
+	co_stackinit.o	\
+	cpu_linux.o	\
+	\
+	co_p401.o	\
+	usr_401.o	\
+	codrv_socketcan.o	\
+
+
+#	codrv_c4l.o	\
+
+VPATH += ../../colib/src
+VPATH += ../../colib/profile
+VPATH += ../../codrv/can4linux
+VPATH += ../../codrv/socketcan
+
+
+# add -I option
+#INC_DIRS = $(addprefix -I,$(CO_INC_DIRS) $(C4L_INC_DIRS))
+INC_DIRS = $(addprefix -I,$(CO_INC_DIRS))
+
+# add path obj/
+CO_OBJS         = $(addprefix $(OBJ_DIR)/,$(CO_OBJECTS))
+DEPS := $(CO_OBJS:.o=.d)
+
+
+#---------------------------------------------------------------------------
+.PHONY:$(TARGET_NAME)
+$(TARGET_NAME): $(CO_OBJS)
+	@echo " [LD] $(TARGET_NAME)"
+	@$(CC) $(LDFLAGS) -o $(TARGET_NAME) $(CO_OBJS) -lrt
+
+# ------------------------------------------------------------
+# objects
+#
+#@echo " [CC] $<"
+.SUFFIXES: o
+$(OBJ_DIR)/%.o : %.c Makefile
+	$(CC) $(CFLAGS) $(INC_DIRS) -MMD -o$@ -c $<
+
+
+all: $(TARGET_NAME)
+
+-include $(DEPS)
+
+clean:
+	rm -f $(OBJ_DIR)/* $(TARGET_NAME)
+
+.PHONY: doc
+doc:
+	doxygen Doxyfile

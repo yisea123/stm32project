@@ -1,0 +1,28 @@
+//  Gnu C/C++ (version 2.95.3 or later), -si4 -sp4, 
+//  Standard lint options
+
+au-misra3.lnt
+co-gcc.lnt
+
+options.lnt  -si4 -sp4
+-i"library/FreeRTOS/ARM_CM4F"
+-i"library/FreeRTOS/include"
+-i"library/rtos"
+-i"bsp/Inc"
+-i"device"
+-i"system/include"
+-i"system/include/cmsis"
+-i"system/include/stm32f4-hal"
+-i"app/subsystem"
+-i"app/t_unit"
+-i"app/datalog"
+-i"app/inc"
+-i"app/localBus"
+-i"app/shell/ntshell_v030/lib/util"
+-i"app/shell/ntshell_v030/lib/core"
+-i"app/shell"
+-i"Canopen/app_can"
+-i"Canopen/master"
+-i"Canopen/stack"
+-i"Canopen/device"
+

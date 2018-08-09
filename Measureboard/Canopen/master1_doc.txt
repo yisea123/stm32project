@@ -1,0 +1,4055 @@
+CANopen Object Dictionary Documenation for master1
+
+
+Index:       0x1000 - Device Type
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This objects contains the CANopen device type of the device.
+  Sub:          0x0 - Device Type
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1001 - Error Register
+DataType:    UNSIGNED8
+ObjectCode:  Variable
+Description: This object contains a register of 8 error information bits.
+  Sub:          0x0 - Error Register
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   4
+
+Index:       0x1005 - COB ID SYNC
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This object shall indicate the configured COB-ID of the synchronization object (SYNC). Further, it defines whether the CANopen device generates the SYNC.
+  Sub:          0x0 - COB ID SYNC
+  DataType:     UNSIGNED32
+  DefaultValue: 0x40000080
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1006 - Communication Cycle Period
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This object shall provide the communication cycle period. This period defines the SYNC interval.
+
+The value shall be given in multiple of ¦Ìs. If the value is set to 0x00000000  the transmission of SYNC messages shall be disabled. By changing the value from 0x00000000 and the synchronous counter overflow value is greater than 0 the first SYNC message shall start with the counter value reset to 1.
+
+The transmission of SYNC messages shall start within one communication cycle period as given by the value after it is set to the new value.
+
+  Sub:          0x0 - Communication Cycle Period
+  DataType:     UNSIGNED32
+  DefaultValue: 100000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1007 - Synchronous Window Length
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This object shall indicate the configured the length of the time window for synchronous PDOs. 
+
+If the synchronous window length expires all synchronous TPDOs may be discarded and an EMCY message may be transmitted; all synchronous RPDOs may be discarded until the next SYNC message is received. Synchronous RPDO processing is resumed with the next SYNC message.
+
+  Sub:          0x0 - Synchronous Window Length
+  DataType:     UNSIGNED32
+  DefaultValue: 50000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1008 - Manufacturer device name
+DataType:    VISIBLE_STRING
+ObjectCode:  Variable
+  Sub:          0x0 - Manufacturer device name
+  DataType:     VISIBLE_STRING
+  DefaultValue: Rainbow
+  AccessType:   const
+  PDOMapping:   0
+
+Index:       0x1009 - Manufacturer hardware version
+DataType:    VISIBLE_STRING
+ObjectCode:  Variable
+  Sub:          0x0 - Manufacturer hardware version
+  DataType:     VISIBLE_STRING
+  DefaultValue: 1.0.0
+  AccessType:   const
+  PDOMapping:   0
+
+Index:       0x100a - Manufacturer software version
+DataType:    VISIBLE_STRING
+ObjectCode:  Variable
+  Sub:          0x0 - Manufacturer software version
+  DataType:     VISIBLE_STRING
+  DefaultValue: 0.2.0
+  AccessType:   const
+  PDOMapping:   0
+
+Index:       0x100c - Guard Time
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+Description: The object at index 0x100c  shall indicate the configured guard time
+The value shall be given in multiple of ms. The value of 0x0000 shall disable the life guarding.
+
+  Sub:          0x0 - Guard Time
+  DataType:     UNSIGNED16
+  DefaultValue: 1000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x100d - Life Time Factor
+DataType:    UNSIGNED8
+ObjectCode:  Variable
+Description: The life time factor multiplied with the guard time gives the life time for the life guarding protocol. The value of 0x00 shall disable the life guarding.
+
+  Sub:          0x0 - Life Time Factor
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1010 - Store parameters
+DataType:    UNSIGNED32
+ObjectCode:  Array
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 127
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x1 - Save all parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Save communication parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - Save application parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x9 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x10 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x11 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x12 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x13 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x14 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x15 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x16 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x17 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x18 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x19 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x20 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x21 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x22 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x23 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x24 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x25 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x26 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x27 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x28 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x29 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x30 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x31 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x32 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x33 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x34 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x35 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x36 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x37 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x38 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x39 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x40 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x41 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x42 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x43 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x44 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x45 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x46 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x47 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x48 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x49 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x50 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x51 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x52 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x53 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x54 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x55 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x56 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x57 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x58 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x59 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x60 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x61 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x62 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x63 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x64 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x65 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x66 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x67 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x68 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x69 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x70 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x71 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x72 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x73 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x74 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x75 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x76 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x77 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x78 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x79 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x80 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x81 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x82 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x83 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x84 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x85 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x86 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x87 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x88 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x89 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x90 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x91 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x92 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x93 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x94 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x95 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x96 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x97 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x98 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x99 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x100 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x101 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x102 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x103 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x104 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x105 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x106 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x107 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x108 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x109 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x110 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x111 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x112 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x113 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x114 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x115 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x116 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x117 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x118 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x119 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x120 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x121 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x122 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x123 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x124 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x125 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x126 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x127 - Save manufacturer defined parameters
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1012 - COB ID Time Stamp
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+  Sub:          0x0 - COB ID Time Stamp
+  DataType:     UNSIGNED32
+  DefaultValue: 0x40000100
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1016 - Consumer Heartbeat Time
+DataType:    UNSIGNED32
+ObjectCode:  Array
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Consumer Heartbeat Time
+  DataType:     UNSIGNED32
+  DefaultValue: 0x2003e8
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Consumer Heartbeat Time
+  DataType:     UNSIGNED32
+  DefaultValue: 0x2103e8
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1017 - Producer Heartbeat Time
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+Description: The producer heartbeat time shall indicate the configured cycle time of the heartbeat produced by the device.
+
+The value shall be given in multiples of 1 ms. The value 0 shall disable the producer heartbeat.
+
+  Sub:          0x0 - Producer Heartbeat Time
+  DataType:     UNSIGNED16
+  DefaultValue: 1000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1018 - Identity Object
+DataType:    UNSIGNED8
+ObjectCode:  Record
+Description: This objects contains the identity information of the device.
+
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 4
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Vendor Id
+  DataType:     UNSIGNED32
+  DefaultValue: 0x319
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Product Code
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0815
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Revision number
+  DataType:     UNSIGNED32
+  DefaultValue: 0x00010001
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Serial number
+  DataType:     UNSIGNED32
+  DefaultValue: 1
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1028 - Emergency Consumer
+DataType:    UNSIGNED32
+ObjectCode:  Array
+  Sub:          0x0 - Nr of EMCY Consumer
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - EMCYConsumer 1
+  DataType:     UNSIGNED32
+  DefaultValue: 0xa0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - EMCYConsumer 2
+  DataType:     UNSIGNED32
+  DefaultValue: 0xa1
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1029 - Error behaviour
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Nr of Error Classes
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Communication Error
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Specific Error Class 
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x102a - NMT inhibit time
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+  Sub:          0x0 - NMT inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 1000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1200 - SDO server parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID client to server
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x600
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x2 - COB-ID server to client
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x580
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Node-ID of the SDO client
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1280 - SDO client parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 0x03
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID client -> server
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - COB-ID server -> client
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - Node-ID of the SDO server
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1400 - RPDO 1 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x200
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1401 - RPDO 2 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x300
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1402 - RPDO 3 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x400
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1403 - RPDO 4 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x500
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1404 - RPDO 5 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1405 - RPDO 6 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1406 - RPDO 7 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1407 - RPDO 8 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1408 - RPDO 9 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1409 - RPDO 10 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x140a - RPDO 11 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x140b - RPDO 12 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x140c - RPDO 13 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x140d - RPDO 14 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x140e - RPDO 15 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x140f - RPDO 16 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1410 - RPDO 17 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1411 - RPDO 18 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1412 - RPDO 19 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1413 - RPDO 20 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0xfe
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1600 - RPDO 1 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000108
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000208
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000308
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000408
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000508
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000608
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000708
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x62000808
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1601 - RPDO 2 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 4
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x64110110
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x64110210
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x64110310
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x64110410
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1602 - RPDO 3 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1603 - RPDO 4 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1604 - RPDO 5 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1605 - RPDO 6 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1606 - RPDO 7 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1607 - RPDO 8 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1608 - RPDO 9 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1609 - RPDO 10 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x160a - RPDO 11 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x160b - RPDO 12 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x160c - RPDO 13 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x160d - RPDO 14 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x160e - RPDO 15 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x160f - RPDO 16 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1610 - RPDO 17 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1611 - RPDO 18 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1612 - RPDO 19 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1613 - RPDO 20 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1800 - TPDO 1 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x180
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1801 - TPDO 2 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of parameter
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID TPDO2
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x280
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inihibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1802 - TPDO 3 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x380
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1803 - TPDO 4 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x480
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1804 - TPDO 5 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x182
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1805 - TPDO 6 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x183
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1806 - TPDO 7 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1807 - TPDO 8 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1808 - TPDO 9 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1809 - TPDO 10  Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x180a - TPDO 11  Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x180b - TPDO 12  Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x180c - TPDO 13  Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x180d - TPDO 14  Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x180e - TPDO 15  Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x180f - TPDO 16 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1810 - TPDO 17 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1811 - TPDO 18 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1812 - TPDO 19 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1813 - TPDO 20 Communication Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of supported entries
+  DataType:     UNSIGNED8
+  DefaultValue: 3
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB-ID used by PDO
+  DataType:     UNSIGNED32
+  DefaultValue: 0x184
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - transmission type
+  DataType:     UNSIGNED8
+  DefaultValue: 0x185
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - inhibit time
+  DataType:     UNSIGNED16
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a00 - TPDO 1 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000108
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000208
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000308
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000408
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000508
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000608
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000708
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x60000808
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a01 - TPDO 2 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of elements
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x64010110
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x64010210
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a02 - TPDO 3 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a03 - TPDO 4 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a04 - TPDO 5 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a05 - TPDO 6 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a06 - TPDO 7 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a07 - TPDO 8 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a08 - TPDO 9 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a09 - TPDO 10 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a0a - TPDO 11 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a0b - TPDO 12 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a0c - TPDO 13 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a0d - TPDO 14 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a0e - TPDO 15 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a0f - TPDO 16 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a10 - TPDO 17 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a11 - TPDO 18 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a12 - TPDO 19 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a13 - TPDO 20 Mapping Parameter
+DataType:    UNKNOWN
+ObjectCode:  Record
+  Sub:          0x0 - number of mapped objects
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - 1. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - 2. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - 3. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - 4. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - 5. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x6 - 6. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x7 - 7. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x8 - 8. mapped object
+  DataType:     UNSIGNED32
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x2000 - DI board
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Board 1
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Board 2
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Board 3
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Board 4
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x5 - Board 5
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x6 - Board 6
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x7 - Board 7
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x8 - Board 8
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x2001 - DO board
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Board 1
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Board 2
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Board 3
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Board 4
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x5 - Board 5
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x6 - Board 6
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x7 - Board 7
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x8 - Board 8
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x2002 - AI board
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Board 1
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Board 2
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Board 3
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Board 4
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x5 - Board 5
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x6 - Board 6
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x7 - Board 7
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x8 - Board 8
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x2003 - AO board
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Highest sub-index supported
+  DataType:     UNSIGNED8
+  DefaultValue: 8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Board 1
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Board 2
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Board 3
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Board 4
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x5 - Board 5
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x6 - Board 6
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x7 - Board 7
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x8 - Board 8
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x6000 - digital 8 bit input blocks
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - number of input blocks
+  DataType:     UNSIGNED8
+  DefaultValue: 16
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Input 1
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x2 - Input 2
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x3 - Input 3
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x4 - Input 4
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x5 - Input 5
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x6 - Input 6
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x7 - Input 7
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x8 - Input 8
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x9 - Input 9
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x10 - Input 10
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x11 - Input 11
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x12 - Input 12
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x13 - Input 13
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x14 - Input 14
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x15 - Input 15
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x16 - Input 16
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   4
+
+Index:       0x6200 - digital 8 bit output blocks
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - number of outputs blocks
+  DataType:     UNSIGNED8
+  DefaultValue: 16
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Output block 1
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x2 - Output block 2
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x3 - Output block 3
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x4 - Output block 4
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x5 - Output block 5
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x6 - Output block 6
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x7 - Output block 7
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x8 - Output block 8
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x9 - Output block 9
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x10 - Output block 10
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x11 - Output block 11
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x12 - Output block 12
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x13 - Output block 13
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x14 - Output block 14
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x15 - Output block 15
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x16 - Output block 16
+  DataType:     UNSIGNED8
+  AccessType:   rww
+  PDOMapping:   3
+
+Index:       0x6401 - analogue 2 byte inputs
+DataType:    UNSIGNED16
+ObjectCode:  Array
+  Sub:          0x0 - number of 2 byte analogue inputs
+  DataType:     UNSIGNED8
+  DefaultValue: 16
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - analogue 2 byte input channel 1
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x2 - analogue 2 byte input channel 2
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x3 - analogue 2 byte input channel 3
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x4 - analogue 2 byte input channel 4
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x5 - analogue 2 byte input channel 5
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x6 - analogue 2 byte input channel 6
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x7 - analogue 2 byte input channel 7
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x8 - analogue 2 byte input channel 8
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x9 - analogue 2 byte input channel 9
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x10 - analogue 2 byte input channel 10
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x11 - analogue 2 byte input channel 11
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x12 - analogue 2 byte input channel 12
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x13 - analogue 2 byte input channel 13
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x14 - analogue 2 byte input channel 14
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x15 - analogue 2 byte input channel 15
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x16 - analogue 2 byte input channel 16
+  DataType:     UNSIGNED16
+  AccessType:   ro
+  PDOMapping:   4
+
+Index:       0x6411 - analogue 2 byte outputs
+DataType:    UNSIGNED16
+ObjectCode:  Array
+  Sub:          0x0 - number of 2 byte analogue outputs
+  DataType:     UNSIGNED8
+  DefaultValue: 16
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - analogue 2 byte output channel 1
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x2 - analogue 2 byte output channel 2
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x3 - analogue 2 byte output channel 3
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x4 - analogue 2 byte output channel 4
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x5 - analogue 2 byte output channel 5
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x6 - analogue 2 byte output channel 6
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x7 - analogue 2 byte output channel 7
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x8 - analogue 2 byte output channel 8
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x9 - analogue 2 byte output channel 9
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x10 - analogue 2 byte output channel 10
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x11 - analogue 2 byte output channel 11
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x12 - analogue 2 byte output channel 12
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x13 - analogue 2 byte output channel 13
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x14 - analogue 2 byte output channel 14
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x15 - analogue 2 byte output channel 15
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3
+  Sub:          0x16 - analogue 2 byte output channel 16
+  DataType:     UNSIGNED16
+  AccessType:   rww
+  PDOMapping:   3

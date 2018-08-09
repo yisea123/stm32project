@@ -1,0 +1,304 @@
+CANopen Object Dictionary Documenation for slave1
+
+
+Index:       0x1000 - Device Type
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+  Sub:          0x0 - Device Type
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1001 - Error Register
+DataType:    UNSIGNED8
+ObjectCode:  Variable
+  Sub:          0x0 - Error Register
+  DataType:     UNSIGNED8
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1003 - Predefined Error Field
+DataType:    UNSIGNED32
+ObjectCode:  Array
+  Sub:          0x0 - Number of Errors
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - Standard Error Field
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1008 - Manufacturer device name
+DataType:    VISIBLE_STRING
+ObjectCode:  Variable
+  Sub:          0x0 - Manufacturer device name
+  DataType:     VISIBLE_STRING
+  DefaultValue: CANopen Example slave1
+  AccessType:   const
+  PDOMapping:   0
+
+Index:       0x1012 - COB ID Time Stamp
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+Description: This object shall indicate the configured COB-ID of the Time-Stamp Object (TIME). Further, it defines whether the CANopen device consumes the TIME or whether the CANopen device generates the TIME. 
+  Sub:          0x0 - COB ID Time Stamp
+  DataType:     UNSIGNED32
+  DefaultValue: 0x40000100
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1014 - COB ID EMCY
+DataType:    UNSIGNED32
+ObjectCode:  Variable
+  Sub:          0x0 - COB ID EMCY
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x80
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1015 - Inhibit Time Emergency
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+  Sub:          0x0 - Inhibit Time Emergency
+  DataType:     UNSIGNED16
+  DefaultValue: 0x0
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1016 - Consumer Heartbeat Time
+DataType:    UNSIGNED32
+ObjectCode:  Array
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Consumer Heartbeat Time
+  DataType:     UNSIGNED32
+  DefaultValue: 0x10800
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1017 - Producer Heartbeat Time
+DataType:    UNSIGNED16
+ObjectCode:  Variable
+  Sub:          0x0 - Producer Heartbeat Time
+  DataType:     UNSIGNED16
+  DefaultValue: 1400
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1018 - Identity Object
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 4
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Vendor Id
+  DataType:     UNSIGNED32
+  DefaultValue: 0x319
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - Product Code
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x3 - Revision number
+  DataType:     UNSIGNED32
+  DefaultValue: 0
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x4 - Serial number
+  DataType:     UNSIGNED32
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1029 - Error behaviour
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Nr of Error Classes
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Communication Error
+  DataType:     UNSIGNED8
+  DefaultValue: 0
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Specific Error Class 
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1200 - Server SDO Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB ID Client to Server
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x600
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x2 - COB ID Server to Client
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x580
+  AccessType:   ro
+  PDOMapping:   0
+
+Index:       0x1400 - Receive PDO Communication Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 5
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB ID
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x200
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Transmission Type
+  DataType:     UNSIGNED8
+  DefaultValue: 254
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - Inhibit Time
+  DataType:     UNSIGNED16
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - Compatibility Entry
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - Event Timer
+  DataType:     UNSIGNED16
+  DefaultValue: 3000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1600 - Receive PDO Mapping Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x1 - PDO Mapping Entry
+  DataType:     UNSIGNED32
+  DefaultValue: 0x30000210
+  AccessType:   const
+  PDOMapping:   0
+  Sub:          0x2 - PDO Mapping Entry
+  DataType:     UNSIGNED32
+  DefaultValue: 0x20010020
+  AccessType:   const
+  PDOMapping:   0
+
+Index:       0x1800 - Transmit PDO Communication Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 5
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - COB ID
+  DataType:     UNSIGNED32
+  DefaultValue: $NODEID+0x180
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - Transmission Type
+  DataType:     UNSIGNED8
+  DefaultValue: 254
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x3 - Inhibit Time
+  DataType:     UNSIGNED16
+  DefaultValue: 0x0000
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x4 - Compatibility Entry
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x5 - Event Timer
+  DataType:     UNSIGNED16
+  DefaultValue: 1000
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1a00 - Transmit PDO Mapping Parameter
+DataType:    UNSIGNED8
+ObjectCode:  Record
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x1 - PDO Mapping Entry
+  DataType:     UNSIGNED32
+  DefaultValue: 0x20010020
+  AccessType:   rw
+  PDOMapping:   0
+  Sub:          0x2 - PDO Mapping Entry
+  DataType:     UNSIGNED32
+  DefaultValue: 0x30000110
+  AccessType:   rw
+  PDOMapping:   0
+
+Index:       0x1f51 - Program Control (for boot loader)
+DataType:    UNSIGNED8
+ObjectCode:  Array
+  Sub:          0x0 - Number of entries
+  DataType:     UNSIGNED8
+  DefaultValue: 1
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Program Control
+  DataType:     UNSIGNED8
+  AccessType:   rw
+  PDOMapping:   0
+  Description: This object is only used with the application has been flashed by a bootloader.
+It provides functions to return to the bootloader mode.
+
+Index:       0x2001 - Manufacturer Object
+DataType:    INTEGER32
+ObjectCode:  Variable
+  Sub:          0x0 - Manufacturer Object
+  DataType:     INTEGER32
+  DefaultValue: 4
+  AccessType:   rw
+  PDOMapping:   1
+
+Index:       0x3000 - Managed Array
+DataType:    INTEGER16
+ObjectCode:  Array
+  Sub:          0x0 - NUmber of Entries
+  DataType:     UNSIGNED8
+  DefaultValue: 2
+  AccessType:   ro
+  PDOMapping:   0
+  Sub:          0x1 - Sub 1
+  DataType:     INTEGER16
+  AccessType:   ro
+  PDOMapping:   4
+  Sub:          0x2 - sub 2
+  DataType:     INTEGER16
+  DefaultValue: 2
+  AccessType:   rw
+  PDOMapping:   1

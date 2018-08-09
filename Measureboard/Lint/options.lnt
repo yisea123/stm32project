@@ -1,0 +1,25 @@
+// Please note -- this is a representative set of error suppression
+//                options.  Please adjust to suit your own policies
+//                See  manual (chapter LIVING WITH LINT)
+//                for further details.
+
+-dDEBUG
+-dUSE_FULL_ASSERT
+-dTRACE
+-dSTM32F429xx
+-dUSE_HAL_DRIVER
+-dHSE_VALUE=12000000
+-dOS_USE_TRACE_SEMIHOSTING_DEBUG
+-dTEST_PRE_ALPHA
+
+-d_Noreturn 
+
+-w2
+
+-e46	// Bit fields in structure can be char.
+-e793	// Many large programs exceed the ANSI limit of 511 external identifiers.
+-e923	// Cast from Type to Type  -- A cast is being made either from a pointer to a non-pointer or from a non-pointer to a pointer.
+-e19
+-e641
+-e534   //Ignoring return value of function
+-e830   //not sure

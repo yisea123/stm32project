@@ -1,0 +1,9 @@
+.\objects\co_cobhandler.o: ..\..\colib\src\co_cobhandler.c
+.\objects\co_cobhandler.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\co_cobhandler.o: .\gen_define.h
+.\objects\co_cobhandler.o: ..\..\colib\inc\co_datatype.h
+.\objects\co_cobhandler.o: ..\..\colib\inc\co_timer.h
+.\objects\co_cobhandler.o: ..\..\colib\inc\co_drv.h
+.\objects\co_cobhandler.o: ..\..\colib\src\ico_cobhandler.h
+.\objects\co_cobhandler.o: ..\..\colib\inc\co_cob.h
+.\objects\co_cobhandler.o: ..\..\colib\src\ico_queue.h

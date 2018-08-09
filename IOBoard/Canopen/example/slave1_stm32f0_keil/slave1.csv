@@ -1,0 +1,44 @@
+Index,Subindex,Objectname,Datatype,Access,Defaultvalue,Variable,LowLimit,HighLimit,hasDefault,hasLimit,refuseRead,refuseWrite,defaultInEDS,ImplementationType,Size
+0x1000,0x00,Device Type,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0
+0x1001,0x00,Error Register,UNSIGNED8,ro,0,NONE,0,255,no,no,no,no,0,ManagedVariable,0
+0x1003,0x00,Predefined Error Field Number of Errors,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1003,0x01,Predefined Error Field Standard Error Field,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,0,ManagedVariable,0
+0x1014,0x00,COB ID EMCY,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1015,0x00,Inhibit Time Emergency,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1016,0x00,Consumer Heartbeat Time Number of entries,UNSIGNED8,ro,1,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x1016,0x01,Consumer Heartbeat Time Consumer Heartbeat Time,UNSIGNED32,rw,67584,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1017,0x00,Producer Heartbeat Time,UNSIGNED16,rw,1000,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1018,0x00,Identity Object Number of entries,UNSIGNED8,ro,4,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x1018,0x01,Identity Object Vendor Id,UNSIGNED32,ro,0,NONE,0,4294967295,no,no,no,no,0,ManagedConst,0
+0x1018,0x02,Identity Object Product Code,UNSIGNED32,ro,0,NONE,0,4294967295,no,no,no,no,0,ManagedConst,0
+0x1018,0x03,Identity Object Revision number,UNSIGNED32,ro,0,NONE,0,4294967295,no,no,no,no,0,ManagedConst,0
+0x1018,0x04,Identity Object Serial number,UNSIGNED32,ro,0,NONE,0,4294967295,no,no,no,no,0,ManagedVariable,0
+0x1029,0x00,Error behaviour Nr of Error Classes,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x1029,0x01,Error behaviour Communication Error,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1029,0x02,Error behaviour Specific Error Class ,UNSIGNED8,rw,0,NONE,0,255,no,no,no,no,1,ManagedVariable,0
+0x1200,0x00,Server SDO Parameter Number of entries,UNSIGNED8,ro,2,NONE,2,2,yes,no,no,no,1,ManagedConst,0
+0x1200,0x01,Server SDO Parameter COB ID Client to Server,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1200,0x02,Server SDO Parameter COB ID Server to Client,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1400,0x00,Receive PDO Communication Parameter Number of entries,UNSIGNED8,ro,5,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1400,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,385,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1400,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,254,NONE,0,255,no,no,no,no,1,ManagedVariable,0
+0x1400,0x03,Receive PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1400,0x04,Receive PDO Communication Parameter Compatibility Entry,UNSIGNED8,rw,0,NONE,0,255,no,no,no,no,1,ManagedVariable,0
+0x1400,0x05,Receive PDO Communication Parameter Event Timer,UNSIGNED16,rw,3000,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1600,0x00,Receive PDO Mapping Parameter Number of entries,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x1600,0x01,Receive PDO Mapping Parameter PDO Mapping Entry,UNSIGNED32,ro,805306896,NONE,0,0,yes,no,no,no,1,ManagedConst,0
+0x1600,0x02,Receive PDO Mapping Parameter PDO Mapping Entry,UNSIGNED32,ro,536936480,NONE,0,805306912,yes,no,no,no,1,ManagedConst,0
+0x1800,0x00,Transmit PDO Communication Parameter Number of entries,UNSIGNED8,ro,5,NONE,2,6,yes,no,no,no,1,ManagedConst,0
+0x1800,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,385,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1800,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,254,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1800,0x03,Transmit PDO Communication Parameter Inhibit Time,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1800,0x04,Transmit PDO Communication Parameter Compatibility Entry,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0
+0x1800,0x05,Transmit PDO Communication Parameter Event Timer,UNSIGNED16,rw,1000,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x00,Transmit PDO Mapping Parameter Number of entries,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x01,Transmit PDO Mapping Parameter PDO Mapping Entry,UNSIGNED32,rw,536936480,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x02,Transmit PDO Mapping Parameter PDO Mapping Entry,UNSIGNED32,rw,805306640,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+ 
+0x2001,0x00,Manufacturer Object,INTEGER32,rw,4,NONE,0,0,no,no,no,no,0,ManagedVariable,0
+0x3000,0x00,Managed Array NUmber of Entries,UNSIGNED8,ro,2,NONE,0,0,yes,no,no,no,1,ManagedConst,0
+0x3000,0x01,Managed Array Sub 1,INTEGER16,ro,0,NONE,0,0,no,no,no,no,0,ManagedVariable,0
+0x3000,0x02,Managed Array sub 2,INTEGER16,rw,2,NONE,0,0,no,no,no,no,0,ManagedVariable,0
