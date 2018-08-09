@@ -463,6 +463,7 @@ static void ValueScreen(void)
 		uint16_t valueInt = 0;
 
 		parameter_Get(PARA_IDX_weldCurrent, WHOLE_OBJECT, &data_value1);
+		data_value1 = data_value1/10;
 		WriteTFT_U16(U16_CURRENT_VALUE, data_value1);
 		parameter_Get(PARA_IDX_weldWorkPoint, WHOLE_OBJECT, &data_value2);
 		WriteTFT_U16(U16_VOLTAGE_VALUE, data_value2);
