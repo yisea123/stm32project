@@ -1,0 +1,159 @@
+Index,Subindex,Objectname,Datatype,Access,Defaultvalue,Variable,LowLimit,HighLimit,hasDefault,hasLimit,refuseRead,refuseWrite,defaultInEDS,ImplementationType,Size
+0x1000,0x00,Device Type,UNSIGNED32,ro,983441,NONE,0,4294967295,yes,no,no,no,0,ManagedConst,0
+0x1001,0x00,Error Register,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0
+0x1005,0x00,COB ID SYNC,UNSIGNED32,rw,128,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1008,0x00,Manufacturer Device Name,VISIBLE_STRING,const,Generic IO module according CiA 401,NONE,0,0,yes,no,no,no,1,ManagedConst,35
+0x1014,0x00,COB ID EMCY,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1015,0x00,Inhibit Time Emergency,UNSIGNED16,rw,0,NONE,0,65535,yes,no,no,no,1,ManagedVariable,0
+0x1017,0x00,Producer Heartbeat Time,UNSIGNED16,rw,1000,NONE,0,65535,yes,no,no,no,0,ManagedVariable,0
+0x1018,0x00,Identity Object Number of entries,UNSIGNED8,ro,4,NONE,1,4,yes,no,no,no,1,ManagedConst,0
+0x1018,0x01,Identity Object Vendor Id,UNSIGNED32,ro,793,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0
+0x1018,0x02,Identity Object Product Code,UNSIGNED32,ro,2069,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0
+0x1018,0x03,Identity Object Revision number,UNSIGNED32,ro,65537,NONE,0,4294967295,yes,no,no,no,1,ManagedConst,0
+0x1018,0x04,Identity Object Serial number,UNSIGNED32,ro,1,NONE,0,4294967295,no,no,no,no,0,ManagedConst,0
+0x1200,0x00,Server SDO Parameter Number of entries,UNSIGNED8,ro,2,NONE,2,2,yes,no,no,no,1,ManagedConst,0
+0x1200,0x01,Server SDO Parameter COB ID Client to Server,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1200,0x02,Server SDO Parameter COB ID Server to Client,UNSIGNED32,ro,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1400,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1400,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1400,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1401,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1401,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1401,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1402,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1402,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1402,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1403,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1403,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1403,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1404,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1404,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1404,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1405,0x00,Receive PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,5,yes,no,no,no,1,ManagedConst,0
+0x1405,0x01,Receive PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1405,0x02,Receive PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1600,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1600,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644167432,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1600,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644167688,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1601,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1601,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1601,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1601,0x03,Receive PDO Mapping Parameter Mapping Entry 3,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1601,0x04,Receive PDO Mapping Parameter Mapping Entry 4,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1602,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,2,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1602,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1678835984,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1602,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1678836240,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1603,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,3,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1603,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1678836496,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1603,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1678836752,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1603,0x03,Receive PDO Mapping Parameter Mapping Entry 3,UNSIGNED32,rw,1678837008,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1604,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1604,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1604,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1604,0x03,Receive PDO Mapping Parameter Mapping Entry 3,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1604,0x04,Receive PDO Mapping Parameter Mapping Entry 4,UNSIGNED32,rw,0,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1605,0x00,Receive PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,3,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1605,0x01,Receive PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1644167944,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1605,0x02,Receive PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1644168200,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1605,0x03,Receive PDO Mapping Parameter Mapping Entry 3,UNSIGNED32,rw,1644168456,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1800,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,6,yes,no,no,no,1,ManagedConst,0
+0x1800,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1800,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,no,no,no,no,1,ManagedVariable,0
+0x1803,0x00,Transmit PDO Communication Parameter Highest sub-index supported,UNSIGNED8,ro,2,NONE,2,6,yes,no,no,no,1,ManagedConst,0
+0x1803,0x01,Transmit PDO Communication Parameter COB ID,UNSIGNED32,rw,0,NONE,1,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x1803,0x02,Transmit PDO Communication Parameter Transmission Type,UNSIGNED8,rw,255,NONE,0,255,no,no,no,no,1,ManagedVariable,0
+0x1a00,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,5,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1610613000,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1610613256,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x03,Transmit PDO Mapping Parameter Mapping Entry 3,UNSIGNED32,rw,1677787408,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x04,Transmit PDO Mapping Parameter Mapping Entry 4,UNSIGNED32,rw,1677787664,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a00,0x05,Transmit PDO Mapping Parameter Mapping Entry 5,UNSIGNED32,rw,1677787920,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a03,0x00,Transmit PDO Mapping Parameter Highest sub-index supported,UNSIGNED8,rw,4,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x1a03,0x01,Transmit PDO Mapping Parameter Mapping Entry 1,UNSIGNED32,rw,1677787408,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a03,0x02,Transmit PDO Mapping Parameter Mapping Entry 2,UNSIGNED32,rw,1677787664,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a03,0x03,Transmit PDO Mapping Parameter Mapping Entry 3,UNSIGNED32,rw,1677787920,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+0x1a03,0x04,Transmit PDO Mapping Parameter Mapping Entry 4,UNSIGNED32,rw,1677788176,NONE,0,0,yes,no,no,no,1,ManagedVariable,0
+ 
+ 
+0x6000,0x00,Read Input 8 Bit Number of Elements,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6000,0x01,Read Input 8 Bit DigInput8,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0
+0x6000,0x02,Read Input 8 Bit DigInput8,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0
+0x6000,0x03,Read Input 8 Bit DigInput8,UNSIGNED8,ro,0,NONE,0,255,yes,no,no,no,0,ManagedVariable,0
+0x6002,0x00,Polarity Input 8 Bit Number of Elements,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6002,0x01,Polarity Input 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6002,0x02,Polarity Input 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6002,0x03,Polarity Input 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6003,0x00,Filter Constant Input 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6003,0x01,Filter Constant Input 8 Bit FilterConst8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6003,0x02,Filter Constant Input 8 Bit FilterConst8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6005,0x00,Global Interrupt Enable Digital 8Bit,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6006,0x00,Interrupt Mask Any Change 8 Bit Number of Elements,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6006,0x01,Interrupt Mask Any Change 8 Bit InterruptAnyChange8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6006,0x02,Interrupt Mask Any Change 8 Bit InterruptAnyChange8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6006,0x03,Interrupt Mask Any Change 8 Bit InterruptAnyChange8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6007,0x00,Interrupt Mask Low to High 8 Bit Number of Elements,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6007,0x01,Interrupt Mask Low to High 8 Bit InterruptLowToHigh8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6007,0x02,Interrupt Mask Low to High 8 Bit InterruptLowToHigh8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6007,0x03,Interrupt Mask Low to High 8 Bit InterruptLowToHigh8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6008,0x00,Interrupt Mask High to Low 8 Bit Number of Elements,UNSIGNED8,ro,3,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6008,0x01,Interrupt Mask High to Low 8 Bit InterruptHighToLow8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6008,0x02,Interrupt Mask High to Low 8 Bit InterruptHighToLow8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6008,0x03,Interrupt Mask High to Low 8 Bit InterruptHighToLow8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6200,0x00,Write Output 8 Bit Number of Elements,UNSIGNED8,ro,6,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6200,0x01,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6200,0x02,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6200,0x03,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6200,0x04,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6200,0x05,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6200,0x06,Write Output 8 Bit DigOutput8,UNSIGNED8,rww,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6202,0x00,Polarity Output 8 Bit Number of Elements,UNSIGNED8,ro,1,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6202,0x01,Polarity Output 8 Bit Polarity8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6206,0x00,Error Mode Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6206,0x01,Error Mode Output 8 Bit ErrorMode8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6206,0x02,Error Mode Output 8 Bit ErrorMode8,UNSIGNED8,rw,255,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6207,0x00,Error Value Output 8 Bit Number of Elements,UNSIGNED8,ro,2,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6207,0x01,Error Value Output 8 Bit ErrorValue8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6207,0x02,Error Value Output 8 Bit ErrorValue8,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6401,0x00,Read Analogue Input 16 Bit Number of Elements,UNSIGNED8,ro,6,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6401,0x01,Read Analogue Input 16 Bit AnalogInput16 - 1,INTEGER16,ro,0,NONE,-32768,32767,yes,no,no,no,0,ManagedVariable,0
+0x6401,0x02,Read Analogue Input 16 Bit AnalogInput16 - 2,INTEGER16,ro,0,NONE,-32768,32767,yes,no,no,no,0,ManagedVariable,0
+0x6401,0x03,Read Analogue Input 16 Bit AnalogueInput16,INTEGER16,ro,0,NONE,-32768,32767,yes,no,no,no,0,ManagedVariable,0
+0x6401,0x04,Read Analogue Input 16 Bit AnalogueInput16,INTEGER16,ro,0,NONE,-32768,32767,yes,no,no,no,0,ManagedVariable,0
+0x6401,0x05,Read Analogue Input 16 Bit AnalogueInput16,INTEGER16,ro,0,NONE,-32768,32767,yes,no,no,no,0,ManagedVariable,0
+0x6401,0x06,Read Analogue Input 16 Bit AnalogueInput16,INTEGER16,ro,0,NONE,-32768,32767,yes,no,no,no,0,ManagedVariable,0
+0x6411,0x00,Write Analogue Output 16 Bit Number of Elements,UNSIGNED8,ro,8,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6411,0x01,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x02,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x03,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x04,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x05,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x06,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x07,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6411,0x08,Write Analogue Output 16 Bit AnalogueOutput16,INTEGER16,rww,0,NONE,-32768,32767,yes,no,no,no,1,ManagedVariable,0
+0x6421,0x00,Interrupt Trigger Selection Number of Elements,UNSIGNED8,ro,6,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6421,0x01,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0
+0x6421,0x02,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0
+0x6421,0x03,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0
+0x6421,0x04,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0
+0x6421,0x05,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0
+0x6421,0x06,Interrupt Trigger Selection InterruptTriggerSelection,UNSIGNED8,rw,7,NONE,0,31,yes,no,no,no,1,ManagedVariable,0
+0x6423,0x00,Analog Input global interrupt enable,UNSIGNED8,rw,0,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6424,0x00,Analogue Input Interrupt Upper Limit Integer Number of Elements,UNSIGNED8,ro,4,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6424,0x01,Analogue Input Interrupt Upper Limit Integer InterruptUpperLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6424,0x02,Analogue Input Interrupt Upper Limit Integer InterruptUpperLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6424,0x03,Analogue Input Interrupt Upper Limit Integer InterruptUpperLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6424,0x04,Analogue Input Interrupt Upper Limit Integer InterruptUpperLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6425,0x00,Analogue Input Interrupt Lower Limit Integer Number of Elements,UNSIGNED8,ro,4,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6425,0x01,Analogue Input Interrupt Lower Limit Integer InterruptLowerLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6425,0x02,Analogue Input Interrupt Lower Limit Integer InterruptLowerLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6425,0x03,Analogue Input Interrupt Lower Limit Integer InterruptLowerLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6425,0x04,Analogue Input Interrupt Lower Limit Integer InterruptLowerLimInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0
+0x6426,0x00,Analogue Input Interrupt Delta Unsigned Number of Elements,UNSIGNED8,ro,4,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6426,0x01,Analogue Input Interrupt Delta Unsigned InterruptDeltaUInt,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x6426,0x02,Analogue Input Interrupt Delta Unsigned InterruptDeltaUInt,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x6426,0x03,Analogue Input Interrupt Delta Unsigned InterruptDeltaUInt,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x6426,0x04,Analogue Input Interrupt Delta Unsigned InterruptDeltaUInt,UNSIGNED32,rw,0,NONE,0,4294967295,yes,no,no,no,1,ManagedVariable,0
+0x6443,0x00,Analogue Output Error Mode Number of Elements,UNSIGNED8,ro,1,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6443,0x01,Analogue Output Error Mode ErrorMode,UNSIGNED8,rw,1,NONE,0,255,yes,no,no,no,1,ManagedVariable,0
+0x6444,0x00,Analogue Output Error Value Integer Number of Elements,UNSIGNED8,ro,1,NONE,0,255,yes,no,no,no,1,ManagedConst,0
+0x6444,0x01,Analogue Output Error Value Integer ErrorValueInt,INTEGER32,rw,0,NONE,-2147483648,2147483647,yes,no,no,no,1,ManagedVariable,0

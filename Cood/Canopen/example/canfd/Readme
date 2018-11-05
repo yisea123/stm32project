@@ -1,0 +1,70 @@
+Installing and activationg CAN FD hardware
+
+
+SocketCAN 
+=================
+
+Installing can-utils
+(autogen needs autoreconf - 
+	sudo apt-get install  autoconf
+	sudo apt-get install  libtool
+)
+
+
+git clone https://git.gitorious.org/linux-can/can-utils.git
+cd can-utils
+./autogen.sh
+./configure
+make
+make install (with root privileges)
+
+
+Loading and configuring the driver
+
+sudo modprobe vcan
+sudo ip link add type vcan
+ip -details link show vcan0
+ip link set vcan0 type can help
+
+# mtu 72 sets the CAN FD mode
+sudo ifconfig vcan0 mtu 72
+sudo ip link set dev vcan0 mtu 72
+sudo ip link set up can0
+# ip link set canX type can bitrate 125000
+
+
+
+
+
+can4linux
+=================
+
+With can4linux the virtual network can be used as well. It is implemented in the generic driver
+
+in can4linux do
+make TARGET=GENERIC
+sudo make load
+(or 
+sudo /sbin/insmod can4linux.ko)
+
+
+Using the example
+=================
+in two different terminals
+$ ./canfd_x86_64-suse-linux_can4linux 127
+$ ./canfd_x86_64-suse-linux_can4linux 1
+
+in case of can4linux, watch using 
+$ receive -H
+
+All three are using /dev/can0
+
+
+Or for SocketCAN
+
+$ ./canfd_x86_64-suse-linux_socketcan 127
+$ ./canfd_x86_64-suse-linux_socketcan 1
+
+$ candump vcan0
+
+vcan0 is used as virtual can

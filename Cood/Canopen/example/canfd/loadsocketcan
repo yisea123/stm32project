@@ -1,0 +1,10 @@
+#
+echo "Loading and activating socketCAN vcan0"
+
+sudo modprobe vcan
+sudo ip link add type vcan
+ip -details link show vcan0
+sudo ip link set dev vcan0 mtu 72
+sudo ip link set up vcan0
+ip -details link show vcan0
+

@@ -1,0 +1,44 @@
+--------------------------------------------------------------------
+Directory Inhalt:
+--------------------------------------------------------------------
+CHANGELOG					Aktuelle Versionshinweise
+codrv						CANopen Treiber
+colib						CANopen Lib und EnergyBus Framework
+example						CANopen Beispiele
+example_eb					EnergyBus Beispiele
+ref_man						Referenz Manual
+user_man					User Manual
+co_featureinfo_basic.xml	Versionsinfo für CANopenDeviceDesigner
+eb_featureinfo_master.xml	Versionsinfo für EnergyBusWizard
+
+
+--------------------------------------------------------------------
+Hinweise für CANopen
+--------------------------------------------------------------------
+Lauffähige Beispiele befinden sich im Verzeichnis example.
+Alle Files im
+- Beispielverzeichnis
+- canopen/src
+- drivers/xxx
+übersetzen.
+Als Includepath sind anzugeben:
+- Beispielverzeichnis
+- canopen/inc
+- drivers/xxx
+
+--------------------------------------------------------------------
+Hinweise für EnergyBus Framework
+--------------------------------------------------------------------
+Lauffähige Beispiele befinden sich im Verzeichnis example_eb.
+Alle Files im
+- Beispielverzeichnis
+- canopen/src
+- drivers/xxx
+- canopen/energybus
+übersetzen.
+Als Includepath sind anzugeben:
+- Beispielverzeichnis
+- canopen/inc
+- canopen/energybus
+- drivers/xxx
+

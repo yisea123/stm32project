@@ -1,0 +1,31 @@
+rem set TOOLS_PATH=C:\svn_server\01001\software\tools\generate_firmware\trunk
+
+set TOOLS_PATH= C:\svn_server\01001\software\tools\generate_firmware\trunk
+set PROJECT_PATH=C:\svn_server\01004\software\trunk\example\gateway_stm32f446_openstm32
+
+set GENERATOR=%TOOLS_PATH%\generate_firmware.exe
+set OBJCOPY=%TOOLS_PATH%\mingw\objcopy
+set OBJDUMP=%TOOLS_PATH%\mingw\objdump
+set TARGET=%PROJECT_PATH%\Boot
+set APPL=gateway_stm32f446
+set COMMANDBLOCK=0x200
+
+rem check path
+%GENERATOR% -?
+
+%OBJDUMP% -h %TARGET%\%APPL%.elf
+
+rem generate binary
+REM %OBJCOPY% -I ihex -O binary --gap-fill=0xFF %TARGET%\%APPL%.hex %TARGET%\%APPL%.bin
+%OBJCOPY% -I elf32-little -O binary --gap-fill=0xFF %TARGET%\%APPL%.elf %TARGET%\%APPL%.bin
+
+rem check for double files and new created one
+dir %TARGET%\*.hex %TARGET%\*.bin %TARGET%\*.elf 
+
+@echo ""
+@echo ""
+
+REM %GENERATOR% -c 0x200 -i %TARGET%\%APPL%.bin -o %TARGET%\%APPL%.crc
+%GENERATOR% -c %COMMANDBLOCK% -i %TARGET%\%APPL%.bin -o %TARGET%\%APPL%.crc
+PAUSE
+

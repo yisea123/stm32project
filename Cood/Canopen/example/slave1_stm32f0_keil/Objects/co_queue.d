@@ -1,0 +1,11 @@
+.\objects\co_queue.o: ..\..\colib\src\co_queue.c
+.\objects\co_queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\co_queue.o: .\gen_define.h
+.\objects\co_queue.o: ..\..\colib\inc\co_datatype.h
+.\objects\co_queue.o: ..\..\colib\inc\co_timer.h
+.\objects\co_queue.o: ..\..\colib\inc\co_drv.h
+.\objects\co_queue.o: ..\..\colib\inc\co_commtask.h
+.\objects\co_queue.o: ..\..\colib\src\ico_indication.h
+.\objects\co_queue.o: ..\..\colib\src\ico_cobhandler.h
+.\objects\co_queue.o: ..\..\colib\inc\co_cob.h
+.\objects\co_queue.o: ..\..\colib\src\ico_queue.h

@@ -1,0 +1,57 @@
+slave1		NMT Slave, HB Producer/Consumer, EMCY Producer, LED, 1 RPDO, 1 TPDO
+slave2		NMT Slave, HB Producer, SDO domain transfer, 1 RPDO, 1 TPDO,
+			Time Consumer 
+slave3		NMT Slave, HB Producer, SDO Block transfer, 1 RPDO, 1 TPDO,
+slave_401	NMT Slave with DS401 extension
+
+master1		NMT Master, HB Consumer, EMCY Consumer, TIME Producer, SYNC Producer
+master2		NMT Master, SDO client
+master3		NMT Master, SDO client mit Blocktransfer
+
+lss_master	LSS Master, setup node id to slaves
+lss_slave	LSS slave
+dynod		setup dynamic object dictionary
+guarding	usage of slave node guarding
+canfd		usage of CAN-FD
+store		slave, provides store/restore
+
+slave_401	slave with CiA 401 extension
+slave_402	slave with CiA 402 extension
+
+
+Hardware depend:
+================
+
+slave1                Linux, can4linux
+slave1_fm3	          Fujitsu MB9BF506 (Cortex-M3, C_CAN), IAR
+slave1_generic        Linux, generic driver package
+slave1_stm32	      ST STM32F103, (Cortex-M3, bxCan), Keil (renamed!)
+slave1_stm32_keil	  ST STM32F103, (Cortex-M3, bxCan), Keil 
+slave1_stm32_atollic  ST STM32F105, (Cortex-M3, second bxCan), Atollic
+slave1_stm32_coocox	  ST STM32F407, (Cortex-M4, bxCan), Coocox
+gateway_stm32f407_openstm32
+                      STM32F4 Discovery Board, USB FS, openSTM32
+gateway_stm32f446_openstm32
+                      STM32F446 Evalboard, USB HS, openSTM32
+slave1_at90can128	  Atmel AT90CAN128 Atmel Studio
+slave1_lpc1754_crossworks	NXP LPC1754, (Cortex-M3, NXP Can), Crossworks
+slave1_xmc4200_dave	  Infineon XMC4200 on the 4200 Hexagon Board - using DAVE3
+ml_master-slave_xmc4500_dave - Multi Line Master/Slave example for Infineon XMC4500 hexagon - using DAVE3
+slave1_xmc4200		  Infineon XMC4200 on the 4200 Hexagon Board - using DAVE4
+ml_master-slave_xmc4500 - Multi Line Master/Slave example for Infineon XMC4500 hexagon - using DAVE4
+
+
+RTOS examples:
+==============
+slave1_stm32f1_RTX_keil  STM32F103, Keil uVision 5, RTX
+
+Bootloader Application Examples:
+================================
+(use for download for Bootloader Devices)
+boot_stm32f4_coocox   ST STM32F407, (Cortex-M4, bxCan), Coocox
+boot_stm32f1_atollic  ST STM32F105, (Cortex-M3, bxCan), Atollic
+boot_stm32f1_keil     ST STM32F103, (Cortex-M3, bxCan), Keil
+boot_lpc1754_crossworks  NXP LPC1754, (Cortex-M3, NXP Can), Crossworks
+boot_k10_kds    Freescale K10 (Cortex-M4, Flexcan), Kinetis Design Studio
+
+
