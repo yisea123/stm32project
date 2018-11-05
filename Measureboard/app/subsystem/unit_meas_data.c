@@ -38,6 +38,7 @@ MeasDataSt 			measResultRealTime;
 CaliDataSt	 		caliResultRealTime;
 MeasDataRaw	 		measRawDataResult;
 float 				absMeasConcentration[3];
+float 				_absMeasFinal[3];
 
 extern float 			absChnValue[MEA_DATA_MAX];
 extern __IO uint16_t 	valveIO_Status;
@@ -134,6 +135,7 @@ static const T_DATA_OBJ _ObjList[] =
 	CONSTRUCT_ARRAY_SIMPLE_U16(&updateRequest[0],sizeof(updateRequest)/sizeof(uint16_t),RAM),
 //20
 	CONSTRUCT_ARRAY_SIMPLE_U16(&hadc1080_Val[0],sizeof(hadc1080_Val)/sizeof(uint16_t),READONLY_RAM),
+	CONSTRUCT_ARRAY_SIMPLE_FLOAT(&_absMeasFinal[0],sizeof(_absMeasFinal)/sizeof(float), READONLY_RAM),
 
 
 

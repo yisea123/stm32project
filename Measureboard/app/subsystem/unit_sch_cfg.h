@@ -50,6 +50,7 @@ enum
 {
 	NOT_CHECK_LONG_SHORT,
 	CHECK_LONG_SHORT,
+	TEMP_CALC_CONCENTRATION,
 };
 
 enum
@@ -290,6 +291,7 @@ extern FlushMode		flushMode;
 extern Measure_Sch		measSch;
 extern Measure_Sch 		_measSch;
 extern Calibration_Sch	calibSch;
+extern Calibration_Sch		_calibSch;
 extern Clean_Sch		cleanSch;
 extern SchInfo			schInfo;
 extern uint32_t 		actionRuningDetail;
@@ -322,7 +324,7 @@ uint16_t CheckCalibrationFactor(float val1, float* range1, float val2,float* ran
 uint16_t CalcOffset(float* absVal0, uint16_t cliRange);
 uint16_t UpdateSlopeOffset(float* absVal0, float* absVal1, uint32_t caliTime, uint16_t cliRange);
 void UpdateSchFlushCfg(void);
-void UpdateCalibResult(void);
+void UpdateCalibResult(uint16_t type);
 uint16_t GetCaliFlag(uint16_t taskid, uint16_t rangeIdx);
 
 
@@ -332,6 +334,7 @@ uint16_t Get_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 uint16_t Put_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
 					void * ptrValue);
 uint16_t Copy2UITrigger(void);
+uint16_t ClrCalibration_EPA(uint32_t rangeIdx_);
 void UpdateTriggerStatus(void);
 void UpdateToCurrentSch(uint16_t type);
 uint16_t AutoRangeChangetoIdx(uint16_t newRangeIdx, uint16_t flag, uint32_t lineNum);
@@ -342,6 +345,7 @@ uint32_t TrigNewTrigger(SCH_STATE* ptrState, uint32_t* ptrSelection);
 
 #define ChkRangeValid(x)	CheckRangeValid(x,__LINE__)
 #define SCH_Put(objId,attributeIndex,ptrValue)		Put_SchCfg(&schCfg,objId,attributeIndex,ptrValue)
+#define SCH_Get(objId,attributeIndex,ptrValue)		Get_SchCfg(&schCfg,objId,attributeIndex,ptrValue)
 
 enum
 {

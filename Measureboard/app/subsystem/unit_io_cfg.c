@@ -1042,7 +1042,8 @@ void UpdateDIValue(void)
 		if(schMode != Sch_Mode)
 		{
 			schRequest = 1;
-			Sch_Mode = 	schMode;
+			uint16_t mode = schMode;
+			SCH_Put(OBJ_SCH_MODE, WHOLE_OBJECT,(void*)&mode);
 		}
 	}
 
@@ -1121,10 +1122,21 @@ static uint16_t GetAO_Value(uint16_t idx, uint8_t chn)
 			}
 			if(idx_Loc <= 1)
 			{
-				_aoValue = (uint16_t)(1000*(measureValue - IO_AOSrcChn1_Low[idx])/ \
+				float val = (1000.0f*(measureValue - IO_AOSrcChn1_Low[idx])/ \
 						(IO_AOSrcChn1_High[idx] - IO_AOSrcChn1_Low[idx])*\
-						(AO_Range[idx_Loc][1] - AO_Range[idx_Loc][0]) + 1000*AO_Range[idx_Loc][0]) ;
-				if(_aoValue >20000)		_aoValue = 20000;
+						(AO_Range[idx_Loc][1] - AO_Range[idx_Loc][0]) + 1000.0f*AO_Range[idx_Loc][0]) ;
+
+				if(val > 20000)
+					_aoValue = 20000;
+				else if(val < 0)
+					_aoValue = 0;
+				else
+					_aoValue = (uint16_t)val;
+			//	TraceUser("AO chn 1 output: %d - %.4f\n",_aoValue, val);
+			}
+			else
+			{
+			//	TraceUser("AO chn 1 output Error: %d \n",_aoValue);
 			}
 		}
 	}
@@ -1186,12 +1198,24 @@ static uint16_t GetAO_Value(uint16_t idx, uint8_t chn)
 				}
 				break;
 			}
+
 			if(idx_Loc <= 1)
 			{
-				_aoValue = (uint16_t)(1000*(measureValue - IO_AOSrcChn2_Low[idx])/ \
+				float val = (1000.0f*(measureValue - IO_AOSrcChn2_Low[idx])/ \
 						(IO_AOSrcChn2_High[idx] - IO_AOSrcChn2_Low[idx])* \
-						(AO_Range[idx_Loc][1] - AO_Range[idx_Loc][0]) + 1000*AO_Range[idx_Loc][0]) ;
-				if(_aoValue >20000)		_aoValue = 20000;
+						(AO_Range[idx_Loc][1] - AO_Range[idx_Loc][0]) + 1000.0f*AO_Range[idx_Loc][0]) ;
+
+				if(val > 20000)
+					_aoValue = 20000;
+				else if(val < 0)
+					_aoValue = 0;
+				else
+					_aoValue = (uint16_t)val;
+			//	TraceUser("AO chn 2 output: %d - %.4f\n",_aoValue, val);
+			}
+			else
+			{
+			//	TraceUser("AO chn 2 output Error: %d \n",_aoValue);
 			}
 		}
 	}

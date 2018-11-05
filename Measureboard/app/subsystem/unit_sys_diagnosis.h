@@ -112,6 +112,7 @@ enum
 	DIA_MASK = 0x02,
 	DIA_STOPACTION = 0x01,
 	DIA_NONE = 0x0,
+	DIA_DISABLE = 0x0,
 }DiaMsk;
 
 //Mask	Relay_Event	AO_Exception	AutoClear	Stop action	Type
@@ -154,7 +155,7 @@ extern const float 	fluidVolume_Set_Default[VOL_MAX_ID];
 extern float		fluidVolume_Set[VOL_MAX_ID];
 extern uint8_t		_diagnosisLoc[DIAG_MAX_ID];
 extern uint8_t		diagnosisOutput[DIAG_MAX_ID];
-
+void Dia_UpdateRTCAlarm(void);
 uint16_t Initialize_Diagnosis(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Put_Diagnosis(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
 					void * ptrValue);

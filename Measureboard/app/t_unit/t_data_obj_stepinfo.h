@@ -14,8 +14,9 @@
  {
  	uint32_t 	step;
  	uint32_t 	startTime; //T32
- 	uint32_t 	duringTime;
- 	uint32_t 	remainTime;
+ 	int32_t 	duringTime;
+ 	int32_t 	remainTime;
+ 	uint32_t	startTick;
  }FlowStepRun;
 #pragma pack(pop)
 
@@ -31,7 +32,7 @@ extern const T_DATA_CLASS cgClassInitializer_STEPINFO;
  \param  y storageQualifier
 */
 //--------------------------------------------------------------------------------------------------
-#define CONSTRUCT_STRUCT_STEPINFO(w,y) {#w, (void *)(w),4,sizeof(FlowStepRun),y,STRUCT, NULL, &cgClassInitializer_STEPINFO }
+#define CONSTRUCT_STRUCT_STEPINFO(w,y) {#w, (void *)(w),5,sizeof(FlowStepRun),y,STRUCT, NULL, &cgClassInitializer_STEPINFO }
 
 
 

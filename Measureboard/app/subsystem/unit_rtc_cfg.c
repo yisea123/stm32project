@@ -320,7 +320,11 @@ uint32_t CalcDays(const uint32_t year0, const uint8_t mon0, const uint8_t day)
 {
 	int32_t mon = (int)mon0;
 	uint32_t year = year0;
-	assert(year >= 2000);
+	if(year < 2000)
+	{
+		year = 2000;
+		mon = 1;
+	}
 	uint32_t dateTime = 0;
     /* 1..12 -> 11,12,1..10 */
     if (0 >= (int) (mon -= 2))

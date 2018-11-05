@@ -56,6 +56,7 @@ extern MeasDataRaw	 	measRawDataResult;
 extern int16_t 			temperatureDisplay[6];
 extern __IO uint16_t 	measDataSaturation;
 extern float 			absMeasConcentration[3];
+extern float 			_absMeasFinal[3];
 #define LONG_SATURATION 		0x0F
 #define SHORT_SATURATION 		0xF0
 #define NONE_SATURATION			0x00

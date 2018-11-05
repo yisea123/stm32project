@@ -209,6 +209,8 @@ static const T_DATA_OBJ _ObjList[] =
 	//20
 	CONSTRUCT_SIMPLE_U32(&usedSWVersion, READONLY_NOV),
 	CONSTRUCT_ARRAY_SIMPLE_CHAR(_sysInfo.DeviceType, sizeof(_sysInfo.DeviceType), ROM),
+	CONSTRUCT_ARRAY_SIMPLE_U8(deviceName, sizeof(deviceName), NON_VOLATILE),
+	CONSTRUCT_ARRAY_SIMPLE_U8(SerialNumber,sizeof(SerialNumber), NON_VOLATILE),
 
 };
 

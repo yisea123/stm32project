@@ -1,7 +1,7 @@
 /*
  * tsk_flow_all.c
  *
- *  Created on: 2016锟斤拷12锟斤拷1锟斤拷
+ *  Created on: 2016閿熸枻鎷�12閿熸枻鎷�1閿熸枻鎷�
  *      Author: pli
  */
 
@@ -97,7 +97,8 @@ void StartFlowTask(void const * argument)
 	(void)argument; // pc lint
 	/* USER CODE BEGIN StartFlowTask */
 	uint32_t tickOut = osWaitForever;
-	uint16_t signal;
+	uint16_t flowStep;
+	uint32_t duringTime;
 	osEvent event;
 	FLOW_STATE tskState = FLOW_IDLE;
 	TSK_MSG localMsg;
@@ -187,31 +188,30 @@ void StartFlowTask(void const * argument)
 						//idle
 						break;
 					case FLOW_INIT:
-						signal = (uint16_t)(localMsg.val.value);
-						flowStepRun[1].step = signal;
-						flowStepRun[1].duringTime = (uint32_t)(CalcDuringTimeMsStep_WithDelay((uint16_t)flowStepRun[1].step) + 500)/1000;
-						flowStepRun[1].startTime = GetCurrentST();
-						if(IN_RANGE(signal,A_0, A_MAX))
+						flowStep = (uint16_t)(localMsg.val.value);
+						duringTime = (uint32_t)(CalcDuringTimeMsStep_WithDelay((uint16_t)flowStep) + 500)/1000;
+						SetFlowStep(FLOW_STEP_MAIN, flowStep, duringTime);
+						if(IN_RANGE(flowStep,A_0, A_MAX))
 						{
 
 							//main step
-							gFlowProcess.mainProcess = (uint16_t)signal;
+							gFlowProcess.mainProcess = (uint16_t)flowStep;
 							gFlowProcess.subStepIdx = 0;
-							TraceMsg(taskID,"main Process %d  [ %s ]is called During time: %d S\n", gFlowProcess.mainProcess, GetStepName(gFlowProcess.mainProcess), flowStepRun[1].duringTime);
+							TraceMsg(taskID,"main Process %d  [ %s ]is called During time: %d S\n", gFlowProcess.mainProcess, GetStepName(gFlowProcess.mainProcess), duringTime);
 							tskState = FLOW_SUBSTEP;
 						}
-						else if(IN_RANGE(signal,SUB_STEP, SUB_STEP_MAX) )
+						else if(IN_RANGE(flowStep,SUB_STEP, SUB_STEP_MAX) )
 						{
 							gFlowProcess.mainProcess = 0;
 							gFlowProcess.subStepIdx = 0;
-							gFlowProcess.subStep = signal;
+							gFlowProcess.subStep = flowStep;
 							tskState = FLOW_SUBSTEP;
 						}
-						else if(IN_RANGE(signal,SPECIAL_IDX_0, SPECIAL_IDX_MAX) )
+						else if(IN_RANGE(flowStep,SPECIAL_IDX_0, SPECIAL_IDX_MAX) )
 						{
 							gFlowProcess.mainProcess = 0;
 							gFlowProcess.subStepIdx = 0;
-							gFlowProcess.subStep = signal;
+							gFlowProcess.subStep = flowStep;
 							tskState = FLOW_SUBSTEP;
 						}
 						else
@@ -242,9 +242,8 @@ void StartFlowTask(void const * argument)
 						MsgPush ( FLOW_TSK_ID, (uint32_t)&localMsg, 0);
 						break;
 					case FLOW_FINISH:
-						flowStepRun[1].step = 0;
-						flowStepRun[1].duringTime = 0;
-						flowStepRun[1].remainTime = 0;
+						duringTime = 0;
+						SetFlowStep(FLOW_STEP_MAIN, 0, duringTime);
 						tskState = FLOW_IDLE;
 						TraceMsg(taskID,"flow finish %d ! \n",gFlowProcess.mainProcess);
 						if(localMsg.callBack)

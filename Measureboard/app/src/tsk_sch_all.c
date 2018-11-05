@@ -90,15 +90,18 @@ uint32_t GetSeconds_TimeCfg(TimeCfg* ptrStartTime)
 	return (days*86400 + secondStart);
 }
 
-void UpdateLedErrorDiag(uint16_t val)
+void UpdateLedDiag(uint16_t ledLow, uint16_t val)
 {
 
 	if((schRangeSelection & 0x0F) >= 2)
 	{
-#define LED_LONG_ERROR_MSK 0x33
+#define LED_LONG_ERROR_MSK 0xCC
+#define LED_LONG_LOW_MSK 0x0C
 		val = (val & LED_LONG_ERROR_MSK);
+		ledLow = (ledLow & LED_LONG_LOW_MSK);
 	}
-	Dia_UpdateDiagnosis(LED_ERROR,val);
+	Dia_UpdateDiagnosis(LED_ERROR, val);
+	Dia_UpdateDiagnosis(LED_OUTPUT_LOW, ledLow);
 }
 
 static uint16_t SchTskCheck(uint32_t* ptrIdleTime, uint16_t mode, TimeCfg* ptrStartTime, uint32_t eachTime, uint32_t lastExecTime)
@@ -406,6 +409,8 @@ void StartSchTask(void const * argument)
 {
 	(void) argument; // pc lint
 	uint32_t tickOut = osWaitForever;
+	uint32_t duringTime;
+	uint32_t flowStep;
 	osEvent event;
 	tickOut = UI_START_TIME;//1 MINUTES
 	TSK_MSG locMsg;
@@ -480,7 +485,7 @@ void StartSchTask(void const * argument)
 						{
 							triggerFlowStep = ADVANCED_VERSION_STOPACTION;
 						}
-						flowStepRun[0].step = MAINACT_INITIALIZATION;
+						flowStep = MAINACT_INITIALIZATION;
 						tskState = SCH_FLOW_1;
 						locMsg.tskState = TSK_SUBSTEP;
 						MsgPush(SCH_ID, (uint32_t) &locMsg, 0);
@@ -521,6 +526,9 @@ void StartSchTask(void const * argument)
 						tskState = SCH_CALIBRATION_DELAY;
 						tickOut = GetCaliDuringTime_Ms(schRangeSelection&MSK_RANGE_SEL , &caliNum);
 						//todo
+						//remove EPA calibration triggerred action;
+						if(loadEPACfg != 0)
+							ClrCalibration_EPA(schRangeSelection);
 
 						TraceMsg(taskID,"schedule task - SCH_CALIBRATION T%d\n",tickOut);
 					}
@@ -532,9 +540,8 @@ void StartSchTask(void const * argument)
 						SendTskMsg(SCH_CLEAN_ID, TSK_INIT, schRangeSelection, SchTskFinish);
 						tskState = SCH_CLEANING_DELAY;
 						tickOut = GetCleanDuringTime_Ms(schRangeSelection);
-						flowStepRun[0].step = MAINACT_CLEAN;
-						flowStepRun[0].startTime = GetCurrentST();
-						flowStepRun[0].duringTime = (tickOut+500)/1000;
+						duringTime = (tickOut+500)/1000;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_CLEAN, duringTime);
 						TraceMsg(taskID,"schedule task - SCH_CLEANING T%d\n",tickOut);
 						break;
 
@@ -546,12 +553,12 @@ void StartSchTask(void const * argument)
 						SendTskMsg(FLOW_TSK_ID, TSK_INIT, drainSchSteps[schRangeSelection], SchTskFinish);
 						tickOut = CalcDuringTimeMsStep_WithDelay(drainSchSteps[schRangeSelection]);
 						tskState = SCH_DRAIN_DELAY;
-						flowStepRun[0].step = MAINACT_DRAIN;
-						flowStepRun[0].startTime = stTime;
+						duringTime = (tickOut+500)/1000;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_DRAIN, duringTime);
 						actionExecuteTime_ST[ Trigger_Drain] = stTime;
 						actionRuningDetail = schRangeSelection;
 						mainActionDetail = (uint16_t)((schRangeSelection<<8) | 0xFF);
-						flowStepRun[0].duringTime = (tickOut+500)/1000;
+
 						memset((void*)&evData[0], 0, sizeof(evData));
 						evData[0] = (uint8_t)schRangeSelection;
 						evData[1] = (uint8_t)drainSchSteps[schRangeSelection];
@@ -571,9 +578,8 @@ void StartSchTask(void const * argument)
 						actionRuningDetail = schRangeSelection;
 						mainActionDetail = (uint16_t)((schRangeSelection<<8) | 0xFF);
 						tickOut = CalcDuringTimeMsStep_WithDelay(flushSchSteps[schRangeSelection]);
-						flowStepRun[0].step = MAINACT_FLUSH ;
-						flowStepRun[0].duringTime = (tickOut+500)/1000;
-						flowStepRun[0].startTime = stTime;
+						duringTime = (tickOut+500)/1000;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_FLUSH, duringTime);
 						actionExecuteTime_ST[ Trigger_Flush] = stTime;
 						memset((void*)&evData[0], 0, sizeof(evData));
 						evData[0] = (uint8_t)schRangeSelection;
@@ -594,9 +600,9 @@ void StartSchTask(void const * argument)
 						SendTskMsg(FLOW_TSK_ID, TSK_INIT, primeSchSteps[schRangeSelection], SchTskFinish);
 						tskState = SCH_FLUSH_DELAY;
 						tickOut = CalcDuringTimeMsStep_WithDelay(primeSchSteps[schRangeSelection]);
-						flowStepRun[0].step = MAINACT_PRIME;
-						flowStepRun[0].duringTime = (tickOut+500)/1000;
-						flowStepRun[0].startTime = stTime;
+
+						duringTime = (tickOut+500)/1000;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_PRIME, duringTime);
 						actionExecuteTime_ST[ Trigger_Prime] = stTime;
 
 						memset((void*)&evData[0], 0, sizeof(evData));
@@ -617,8 +623,9 @@ void StartSchTask(void const * argument)
 						tickOut = CalcDuringTimeMsStep_WithDelay(triggerFlowStep);
 						actionRuningDetail = triggerFlowStep;
 						mainActionDetail = triggerFlowStep;
-						flowStepRun[0].duringTime = (tickOut+500)/1000;
-						flowStepRun[0].startTime = stTime;
+						duringTime = (tickOut+500)/1000;
+						SetFlowStep(FLOW_STEP_ACT, flowStep, duringTime);
+
 						actionExecuteTime_ST[ Trigger_FlowSteps] = stTime;
 						memset((void*)&evData[0], 0, sizeof(evData));
 						evData[0] = (uint8_t)triggerFlowStep;
@@ -639,13 +646,15 @@ void StartSchTask(void const * argument)
 							tickOut = CalcDuringTimeMsStep_WithDelay(triggerFlowStep);
 							actionRuningDetail = triggerFlowStep;
 							mainActionDetail = triggerFlowStep;
-							flowStepRun[0].step = MAINACT_SUBSTEP;
-							flowStepRun[0].duringTime = (tickOut+500)/1000;
-							flowStepRun[0].startTime = stTime;
+							duringTime = (tickOut+500)/1000;
+							SetFlowStep(FLOW_STEP_ACT, MAINACT_SUBSTEP, duringTime);
 							actionExecuteTime_ST[ Trigger_FlowSteps] = stTime;
-							memset((void*)&evData[0], 0, sizeof(evData));
-							evData[0] = (uint8_t)triggerFlowStep;
-							NewEventLog(EV_FLOWSTEP, evData);
+							if(triggerFlowStep != 0)
+							{
+								memset((void*)&evData[0], 0, sizeof(evData));
+								evData[0] = (uint8_t)triggerFlowStep;
+								NewEventLog(EV_FLOWSTEP, evData);
+							}
 
 							triggerFlowStep = 0;
 
@@ -673,15 +682,32 @@ void StartSchTask(void const * argument)
 						tskState = SCH_FINISH;
 						if(calibSch.calibrationPostAction)
 						{
-							tskState = SCH_FLUSH;
-							schRangeSelection &= MSK_RANGE_SEL;
-							TraceMsg(taskID,"schedule task - post flush for calibration\n");
+							if(caliPostMeas)
+							{
+								schRangeSelection &= MSK_RANGE_SEL;
+								schRangeSelection |= MSK_POST_STD1;
+								tskState = SCH_MEASURE;
+								TraceMsg(taskID,"schedule task - post measure for calibration\n");
+							}
+							else
+							{
+								tskState = SCH_FLUSH;
+								schRangeSelection &= MSK_RANGE_SEL;
+								TraceMsg(taskID,"schedule task - post flush for calibration\n");
+							}
 						}
 						locMsg.tskState = TSK_SUBSTEP;
 						MsgPush(SCH_ID, (uint32_t) &locMsg, 0);
 						break;
 					case SCH_MEASURE_DELAY:
 						tskState = SCH_FINISH;
+						if(measPostEnable)
+						{
+							TraceMsg(taskID,"schedule task - post flow for measure\n");
+							tskState = SCH_FLOW;
+							schRangeSelection &= MSK_RANGE_SEL;
+							triggerFlowStep = measPostStep[schRangeSelection];
+						}
 
 						locMsg.tskState = TSK_SUBSTEP;
 						MsgPush(SCH_ID, (uint32_t) &locMsg, 0);
@@ -707,9 +733,8 @@ void StartSchTask(void const * argument)
 						break;
 					case SCH_FINISH:
 						mainActionDetail = 0x0;
-						flowStepRun[0].step = MAINACT_NONE;
-						flowStepRun[0].duringTime = 0;
-						flowStepRun[0].remainTime = 0;
+						duringTime = 0;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_NONE, duringTime);
 						TraceMsg(taskID,"schedule task -schedule is finished!\n");
 						tskState = SCH_IDLE;
 						locMsg.tskState = TSK_SUBSTEP;
@@ -788,7 +813,7 @@ void StartSchTask(void const * argument)
 				if(startAction != 0)
 				{
 					triggerFlowStep = startAction;
-					flowStepRun[0].step = MAINACT_INITIALIZATION;
+					flowStep = MAINACT_INITIALIZATION;
 					tskState = SCH_FLOW_1;
 					startAction = 0;
 					locMsg.tskState = TSK_SUBSTEP;
@@ -828,7 +853,7 @@ void StartSchTask(void const * argument)
 				if(startAction != 0)
 				{
 					triggerFlowStep = startAction;
-					flowStepRun[0].step = MAINACT_INITIALIZATION;
+					flowStep = MAINACT_INITIALIZATION;
 					tskState = SCH_FLOW_1;
 					startAction = 0;
 					locMsg.tskState = TSK_SUBSTEP;

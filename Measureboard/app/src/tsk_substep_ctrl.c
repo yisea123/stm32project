@@ -90,6 +90,7 @@ void StartSubStepTask(void const * argument)
 {
 	(void)argument; // pc lint
 	uint32_t tickOut = osWaitForever;
+	uint32_t duringTime;
 	osEvent event;
 	SUBSTEP_STATE tskState = SUBSTEP_IDLE;
 
@@ -197,9 +198,8 @@ void StartSubStepTask(void const * argument)
 					//send msg to be running;
 				}
 				measResultPrint &= MEASURE_DATA_INVALID_MSK;
-				flowStepRun[2].step = subStepId;
-				flowStepRun[2].duringTime = (CalcDuringTimeMsStep_WithDelay((uint16_t)subStepId)+500)/1000;
-				flowStepRun[2].startTime = GetCurrentST();
+				duringTime = (uint32_t)(CalcDuringTimeMsStep_WithDelay((uint16_t)subStepId)+500)/1000;
+				SetFlowStep(FLOW_STEP_SUB, subStepId, duringTime);
 			}
 			else if(mainTskState == TSK_SUBSTEP)
 			{
@@ -210,7 +210,7 @@ void StartSubStepTask(void const * argument)
 					break;
 				case SUBSTEP_INIT:
 
-					TraceMsg(taskID,"%03d ** %s ** is called, During Time: %d s\n", subStepId, GetStepName((uint16_t)subStepId), flowStepRun[2].duringTime);
+					TraceMsg(taskID,"%03d ** %s ** is called, During Time: %d s\n", subStepId, GetStepName((uint16_t)subStepId), duringTime);
 
 
 					if(IN_RANGE(subStepId,STEP_0, STEP_MAX))
@@ -263,6 +263,15 @@ void StartSubStepTask(void const * argument)
 							SendTskMsg(FLOW_MOTOR_CTL_ID,TSK_RESETIO, 0, NULL);
 							tskState = SUBSTEP_ACT;
 							break;
+
+						case RECALC_GAIN:
+						{
+							uint8_t val = 1;
+							MEASCFG_PUT(OBJ_IDX_CALC_GAIN, 0, &val);
+							tskState = SUBSTEP_ACT;
+						}
+							break;
+
 						case VALVE_STOP:
 							SendTskMsg(FLOW_VALVE_CTL_ID,TSK_FORCE_BREAK, 0, NULL);
 							tskState = SUBSTEP_ACT;
@@ -308,6 +317,9 @@ void StartSubStepTask(void const * argument)
 							break;
 						case BLANK_CALC_END:
 							blankMeasure = BLANK_END;
+							tskState = SUBSTEP_ACT;
+							break;
+						default:
 							tskState = SUBSTEP_ACT;
 							break;
 						}
@@ -396,9 +408,8 @@ void StartSubStepTask(void const * argument)
 					break;
 				case SUBSTEP_FINISH:
 					measResultPrint &= MEASURE_DATA_INVALID_MSK;
-					flowStepRun[2].step = 0;
-					flowStepRun[2].duringTime = 0;
-					flowStepRun[2].remainTime = 0;
+					duringTime = 0;
+					SetFlowStep(FLOW_STEP_SUB, 0, 0);
 					subStepId = 0;
 					tskState = SUBSTEP_IDLE;
 					if(localMsg.callBack)

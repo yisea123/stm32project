@@ -111,7 +111,7 @@ uint16_t	ValveMask = 0;
 
 uint16_t	pollFunctionEnabled	= 0;
 
-FlowStepRun flowStepRun[3];
+FlowStepRun flowStepRun[FLOW_STEP_MAX];
 uint16_t mainActionDetail = 0;
 uint8_t	actionStepName[16];
 uint8_t	mainStepName[16];
@@ -645,6 +645,35 @@ const T_UNIT flowAct =
 	GetObjectName_T_UNIT
 };
 
+void SetFlowStep(uint16_t id, uint16_t step, uint32_t _duringTime)
+{
+	assert(id < FLOW_STEP_MAX);
+	flowStepRun[id].step = step ;
+	flowStepRun[id].duringTime = (int32_t)_duringTime;
+	flowStepRun[id].startTime = GetCurrentST();
+	flowStepRun[id].startTick = HAL_GetTick();
+}
+
+int32_t GetFlowStepRemainTime(uint16_t id)
+{
+	uint32_t tick = HAL_GetTick();
+	int32_t remain = 0;
+	assert(id < FLOW_STEP_MAX);
+
+	if( tick >= flowStepRun[id].startTick)
+	{
+		remain = (int32_t)(tick - flowStepRun[id].startTick)/1000;
+	}
+	else
+	{
+		remain = (int32_t)(0xFFFFFFFF - flowStepRun[id].startTick + tick)/1000;
+	}
+	remain = flowStepRun[id].duringTime - remain;
+	if(remain < 0)
+		remain = 0;
+
+	return remain;
+}
 
 uint16_t Initialize_FlowAct(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 {
@@ -1048,20 +1077,9 @@ uint16_t Get_FlowAct(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 
 	if(objectIndex == OBJ_GET_FLOW2_STATUS || objectIndex == OBJ_GET_FLOW1_STATUS || objectIndex == OBJ_GET_FLOW3_STATUS)
 	{
-		uint32_t tickSecond = GetCurrentSeconds();
-		for(int idx = 0;idx<3;idx++)
+		for(uint16_t idx = 0;idx<FLOW_STEP_MAX;idx++)
 		{
-			if(flowStepRun[idx].duringTime)
-			{
-				if(tickSecond - GetSecondsFromST(flowStepRun[idx].startTime) >= (flowStepRun[idx].duringTime + 1))
-				{
-					flowStepRun[idx].remainTime = 0;
-				}
-				else
-				{
-					flowStepRun[idx].remainTime = (flowStepRun[idx].duringTime - tickSecond + GetSecondsFromST(flowStepRun[idx].startTime));
-				}
-			}
+			flowStepRun[idx].remainTime = GetFlowStepRemainTime(idx);
 		}
 	}
 	else if(OBJ_MAINSTEP_NAME == objectIndex)

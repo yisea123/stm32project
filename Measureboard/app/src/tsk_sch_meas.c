@@ -44,7 +44,7 @@ static MeasDataRaw  measDataRaw[MAX_AVG_TIMES];
 static __IO uint16_t _longShortSwitch = MEAS_SHORT_CALC;
 uint32_t measDuringTime = 7*60;//7 minutes
 
-
+static float measVal_Final[2];
 static const char* taskStateDsp[] =
 {
 	TO_STR(SCH_MEAS_IDLE),
@@ -329,11 +329,11 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 		if(used_longShortSwitch == MEAS_LONG_CALC)
 		{
 			val = absMeasConcentration[0];
-			if(type == 1)
+			if(type == CHECK_LONG_SHORT)
 			{
 				if(val >= longShortSwitchLimit[rangeIdx][0])
 				{
-					TraceMsg(TSK_ID_SCH_MEAS, "change to use short calculation: %.3f > %.3f\n", val, longShortSwitchLimit[rangeIdx][0]);
+					TraceMsg(TSK_ID_SCH_MEAS, "change to use short calculation: %.3f > %.3f -> %.3f\n", val, longShortSwitchLimit[rangeIdx][0], absMeasConcentration[1]);
 					val = absMeasConcentration[1];
 					_longShortSwitch = MEAS_SHORT_CALC;
 				}
@@ -342,11 +342,11 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 		else
 		{
 			val = absMeasConcentration[1];
-			if(type == 1)
+			if(type == CHECK_LONG_SHORT)
 			{
 				if(val <= longShortSwitchLimit[rangeIdx][1])
 				{
-					TraceMsg(TSK_ID_SCH_MEAS, "change to use long calculation: %.3f < %.3f\n", val, longShortSwitchLimit[rangeIdx][1]);
+					TraceMsg(TSK_ID_SCH_MEAS, "change to use long calculation: %.3f < %.3f ->%.3f\n", val, longShortSwitchLimit[rangeIdx][1], absMeasConcentration[0]);
 					val = absMeasConcentration[0];
 					_longShortSwitch = MEAS_LONG_CALC;
 				}
@@ -361,6 +361,16 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 	}
 	absMeasConcentration[2] = val;
 
+	if(type != TEMP_CALC_CONCENTRATION)
+	{
+		TraceMsg(TSK_ID_SCH_MEAS, "Raw Meas: %.3f, [ %.3f ,%.3f , %.3f ]\n", val, absMeasConcentration[0], absMeasConcentration[1], absMeasConcentration[2]);
+		if(type == CHECK_LONG_SHORT)
+		{
+			memcpy((void*)&_absMeasFinal[0], (void*)&absMeasConcentration[0], sizeof(absMeasConcentration));
+			TraceMsg(TSK_ID_SCH_MEAS, "Final Meas for Adaption: %.3f, [ %.3f ,%.3f , %.3f ]\n", val, _absMeasFinal[0], _absMeasFinal[1], _absMeasFinal[2]);
+		}
+	}
+
 	return val;
 }
 
@@ -368,10 +378,14 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 static float CalcConcentrationWithAdaption(MeasDataRaw* measResult, uint16_t rangeIdx, uint16_t type)
 {
 	float val = CalcConcentration(measResult, rangeIdx, type);
-	val = (val * calibSch.adaptionFactor[rangeIdx]) + calibSch.adaptionOffset[rangeIdx];
-	//(val + calibSch.adaptionOffset[rangeIdx]) * calibSch.adaptionFactor[rangeIdx];
 
-	return val;
+	float val1 = (val * calibSch.adaptionFactor[rangeIdx]) + calibSch.adaptionOffset[rangeIdx];
+	//(val + calibSch.adaptionOffset[rangeIdx]) * calibSch.adaptionFactor[rangeIdx];
+	measVal_Final[0] = (_absMeasFinal[0] * calibSch.adaptionFactor[rangeIdx]) + calibSch.adaptionOffset[rangeIdx];
+	measVal_Final[1] = (_absMeasFinal[1] * calibSch.adaptionFactor[rangeIdx]) + calibSch.adaptionOffset[rangeIdx];
+	TraceUser("CalcConcentrationWithAdaption: %.06f,\t %.06f,\t %.06f,\t %.06f,\t %.06f,\t %.06f,\t, Flag: 0x%x\n",\
+			val, val1,_absMeasFinal[0],_absMeasFinal[1],measVal_Final[0], measVal_Final[1], measDataFlag);
+	return val1;
 }
 
 //calc the final measure result;
@@ -495,13 +509,27 @@ void Fake_TrigMeasStorage(void)
 		Trigger_Save2FF(NULL);
 	}
 }
+static uint16_t firstMeasure = 0;
+static uint32_t measureType = 0;
+static uint16_t validMeasureData = 0;
+static uint32_t changedRange = 0;
+static uint16_t sampleFlow = OK;
+static const uint8_t taskID = TSK_ID_SCH_MEAS;
+static uint32_t measureStartTime = 0;
 
 static void IssueToUI(uint32_t stTime)
 {
 	static uint32_t oldTime = 0;
 	//todo
 	if (stTime != oldTime)
-		UpdateResult2UI_Pre(UPDATE_MEASURE_SCH_ID);
+	{
+		if((measResultRealTime.measFlag & FLAG_POST_STD1) == FLAG_POST_STD1)
+		{
+			TraceMsg(taskID, "Post std1 verification: %.4f flag: %x not updated to UI and modbus\n",measResultRealTime.measValue, measResultRealTime.measFlag);
+		}
+		else
+			UpdateResult2UI_Pre(UPDATE_MEASURE_SCH_ID);
+	}
 	oldTime = stTime;
 }
 
@@ -515,11 +543,13 @@ uint32_t GetMeasDuringTime_Ms(uint32_t rangeIdx)
 
 
 	uint16_t measureSchSteps = measSchSteps[idx];
-	if(measureType == MSK_MEAS_OFFLINE)
+/*	if(measureType == MSK_MEAS_OFFLINE)
 	{
 		measureSchSteps = measOffLineSteps[idx];
 	}
-	else if(measureType == MSK_MEAS_ONLINE)
+	else
+	*/
+	if(measureType == MSK_MEAS_ONLINE)
 	{
 		measureSchSteps = measOnLineSteps[idx];
 	}
@@ -527,7 +557,7 @@ uint32_t GetMeasDuringTime_Ms(uint32_t rangeIdx)
 	{
 		measureSchSteps = measStandard0Steps[idx];
 	}
-	else if(measureType == MSK_MEAS_STD1)
+	else if( (measureType == MSK_MEAS_STD1) || (measureType == MSK_POST_STD1) )
 	{
 		measureSchSteps = measStandard1Steps[idx];
 	}
@@ -545,13 +575,77 @@ uint32_t GetMeasDuringTime_Ms(uint32_t rangeIdx)
 }
 
 
-static uint16_t firstMeasure = 0;
-static uint32_t measureType = 0;
-static uint16_t validMeasureData = 0;
-static uint32_t changedRange = 0;
-static uint16_t sampleFlow = OK;
-static const uint8_t taskID = TSK_ID_SCH_MEAS;
-static uint32_t measureStartTime = 0;
+
+
+
+static uint16_t HandlePostVerify(uint16_t schMeasSel, float measValue, float* final)
+{
+	static uint16_t times = 0;
+	uint16_t ret = OK;
+	schMeasSel = ( schMeasSel & MSK_RANGE_SEL);
+	float deviation = std1VeriDeviation * calibSch.caliConcentration[schMeasSel];
+	float currDeviation = calibSch.caliConcentration[schMeasSel] - measValue;
+	float currDeviation_S = calibSch.caliConcentration[schMeasSel] - final[0];
+	float currDeviation_L = calibSch.caliConcentration[schMeasSel] - final[1];
+//	float absVal = abs(calibSch.caliConcentration[schMeasSel] - measValue);
+	if(currDeviation < 0)
+		currDeviation = -1.0f * currDeviation;
+	if(currDeviation_S < 0)
+		currDeviation_S = -1.0f * currDeviation_S;
+	if(currDeviation_L < 0)
+		currDeviation_L = -1.0f * currDeviation_L;
+
+	if( deviation <= currDeviation )
+	{
+		ret = FATAL_ERROR;
+	}
+	else if(schMeasSel <= MEAS_RANGE_HIGH)
+	{
+		if( (deviation <= currDeviation_S) || (deviation <= currDeviation_L ))
+		{
+			ret = FATAL_ERROR;
+		}
+	}
+	TraceMsg(taskID, "Post std1 verification: %.4f,%.4f,%.4f,calc: %.4f, %.4f; C:%.4f,D:%.4f range index: %d, ret: %d\n",measValue, final[0], final[1],currDeviation,0,
+			calibSch.caliConcentration[schMeasSel],
+			deviation, schMeasSel, ret);
+
+	times++;
+	if(ret != OK)
+	{
+		//retore the calibration result;
+		UpdateCalibResult(RECOVER_FROM_TMP);
+		if(times >= caliTimesMax)
+		{
+			ret = OK;
+			TraceMsg(taskID, "restore the calibration result: %d, times: %d, and force not to calibration again\n",ret, times);
+			times = 0;
+		}
+		else
+		{
+			TraceMsg(taskID, "restore the calibration result: %d, times: %d\n",ret, times);
+		}
+	}
+	else
+	{
+		TraceMsg(taskID, "Check OK, not to restore: %d, times: %d\n",ret, times);
+		times = 0;
+	}
+	if(std1VeriEnable && (ret != OK))
+	{
+		TrigAction locTrigger;
+		uint16_t schRequest = 1;
+		locTrigger.byte.triggerType = IO_ACTION;
+		locTrigger.byte.action = Trigger_Calibration;
+		locTrigger.byte.value0 = 0xFF;
+		SCH_Put(OBJ_SYSTEM_PUSH_NEW,WHOLE_OBJECT,(void*)&locTrigger);
+		SCH_Put(OBJ_SYSTEM_STARTTRIG,WHOLE_OBJECT,(void*)&schRequest);
+
+		TraceMsg(taskID, "another calibration is triggered: %x\n",locTrigger.u32Val);
+	}
+	return ret;
+}
+
 
 
 static SCH_MEAS_STATE Handle_MeasurementDelay(uint32_t schMeasSel)
@@ -702,7 +796,9 @@ void StartSchMeasTask(void const * argument)
 {
 	(void)argument; // pc lint
 	uint32_t tickOut = osWaitForever;
+	uint32_t duringTime;
 	osEvent event;
+	uint16_t flowStep;
 
 	TSK_MSG locMsg;
 
@@ -755,7 +851,6 @@ void StartSchMeasTask(void const * argument)
 						}
 					}
 				}
-
 					break;
 				case SCH_MEAS_PRETREATMENT_DELAY:
 					SendTskMsg(SCH_IO_ID, TSK_INIT, RO_PRETREATMENT_CLR, NULL);
@@ -794,12 +889,16 @@ void StartSchMeasTask(void const * argument)
 				switch(tskState)
 				{
 					case SCH_MEAS_PRETREATMENT:
-						flowStepRun[0].step = MAINACT_PRE_TREATMENT;
-						flowStepRun[0].startTime = GetCurrentST();
-						flowStepRun[0].duringTime = measSch.preTreatDelay;
+						duringTime = measSch.preTreatDelay;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_PRE_TREATMENT, duringTime);
+
 						TraceMsg(taskID,"sch_meas task execute: SCH_MEAS_PRETREATMENT\n");
 						RTC_Get(IDX_RTC_ST,0,(void*)&measureStartTime);
-						SendTskMsg(SCH_IO_ID, TSK_INIT, RO_PRETREATMENT_SET, NULL);
+						if(measSch.preTreatDelay)
+						{
+							SendTskMsg(SCH_IO_ID, TSK_INIT, RO_PRETREATMENT_SET, NULL);
+						}
+
 						if(measSch.sampleFlowDetectTime > measSch.preTreatDelay)
 						{
 							//output IO value
@@ -822,38 +921,41 @@ void StartSchMeasTask(void const * argument)
 						tskState = SCH_MEAS_MEASURE_DELAY;
 						SendTskMsg(FLOW_TSK_ID, TSK_INIT, measureSchSteps, MeasureFinished);
 						tickOut = CalcDuringTimeMsStep_WithDelay(measureSchSteps);
+						/*
 						if(measureType == MSK_MEAS_OFFLINE)
 						{
 							actionExecuteTime_ST[Trigger_Offline] = stTime;
-							flowStepRun[0].step = MAINACT_OFFLINE;
+							flowStep = MAINACT_OFFLINE;
 						}
-						else if(measureType == MSK_MEAS_ONLINE)
+						else
+							*/
+						if(measureType == MSK_MEAS_ONLINE)
 						{
 							actionExecuteTime_ST[Trigger_Online] = stTime;
-							flowStepRun[0].step = MAINACT_ONLINE;
+							flowStep = MAINACT_ONLINE;
 						}
 						else if(measureType == MSK_MEAS_STD0)
 						{
 							actionExecuteTime_ST[Standard0_Verification] = stTime;
-							flowStepRun[0].step = MAINACT_STD0_V;
+							flowStep = MAINACT_STD0_V;
 						}
-						else if(measureType == MSK_MEAS_STD1)
+						else if( (measureType == MSK_MEAS_STD1) || (measureType == MSK_POST_STD1) )
 						{
 							actionExecuteTime_ST[Standard1_Verification] = stTime;
-							flowStepRun[0].step = MAINACT_STD1_V;
+							flowStep = MAINACT_STD1_V;
 						}
 						else if(MSK_MEAS_TRIG == measureType)
 						{
 							actionExecuteTime_ST[ Trigger_Measure] = stTime;
-							flowStepRun[0].step = MAINACT_MEAS;
+							flowStep = MAINACT_MEAS;
 						}
 						else
 						{
 							actionExecuteTime_ST[ Sch_Measure] = stTime;
-							flowStepRun[0].step = MAINACT_MEAS;
+							flowStep = MAINACT_MEAS;
 						}
-						flowStepRun[0].startTime = GetCurrentST();
-						flowStepRun[0].duringTime = (tickOut + 500)/1000;
+						duringTime = (uint32_t)(tickOut + 500)/1000;
+						SetFlowStep(FLOW_STEP_ACT, flowStep, duringTime);
 					}
 						break;
 					case SCH_MEAS_MEASURE_DELAY:
@@ -868,6 +970,11 @@ void StartSchMeasTask(void const * argument)
 						TraceMsg(taskID,"sch_meas task execute: SCH_MEAS_FINISH\n");
 						tskState = SCH_MEAS_IDLE;
 						measResult = OK;
+						if( (std1VeriEnable != 0) && (measureType == MSK_POST_STD1))
+						{
+							HandlePostVerify((uint16_t)schMeasSel, measResultRealTime.measValue, measVal_Final);
+						}
+
 						//if the measure idx is changed, the following case is not accessed!
 						if(sampleFlow != OK)
 						{
@@ -1020,7 +1127,7 @@ void StartSchMeasTask(void const * argument)
 							//scheduled by schedule task;
 							measureTimes = 0;
 							tskState = SCH_MEAS_PRETREATMENT;
-							assert(measSch.sampleFlowDetectTime <= measSch.preTreatDelay);
+							//assert(measSch.sampleFlowDetectTime <= measSch.preTreatDelay);
 							//the put value has no meanings.
 
 						}
@@ -1041,10 +1148,10 @@ void StartSchMeasTask(void const * argument)
 						measureTimes = 0;
 						tskState = SCH_MEAS_MEASURE;
 						//standard 0 and standard 1 and online and offline
-						if(measureType == MSK_MEAS_OFFLINE)
+						if(measureType == MSK_MEAS_ONLINE)
 						{
 							schInfo.lastTrigOffline = stTime;
-							measDataFlag = (uint16_t)(FLAG_MEA_OFFLINE | schMeasSel);
+							measDataFlag = (uint16_t)(FLAG_MEA_ONLINE | schMeasSel);
 							measureSchSteps = measOffLineSteps[schMeasSel];
 						}
 						else if(measureType == MSK_MEAS_STD0)
@@ -1057,6 +1164,12 @@ void StartSchMeasTask(void const * argument)
 						{
 							schInfo.lastTrigStd1 = stTime;
 							measDataFlag = (uint16_t)(FLAG_MEA_STD1 | schMeasSel);
+							measureSchSteps = measStandard1Steps[schMeasSel];
+						}
+						else if(measureType == MSK_POST_STD1)
+						{
+							schInfo.lastTrigStd1 = stTime;
+							measDataFlag = (uint16_t)(FLAG_POST_STD1 | schMeasSel);
 							measureSchSteps = measStandard1Steps[schMeasSel];
 						}
 						else

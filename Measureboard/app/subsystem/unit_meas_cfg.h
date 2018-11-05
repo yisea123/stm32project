@@ -127,6 +127,8 @@ uint16_t UpdateAbsInfo(const float* absFloat);
 uint16_t UpdateGain(const int32_t* rawAdMeas, const int32_t* rawAdRef);
 void InitGainReCalc(void);
 
+
+#define MEASCFG_PUT(x,y,z)		Put_MeasCfg(&measCfg, x,y,z)
 #ifdef __cplusplus
  }
 #endif

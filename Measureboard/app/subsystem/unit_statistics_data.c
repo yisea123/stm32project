@@ -551,10 +551,18 @@ void Sta_UpdateVolumeUsage(const StepConfig* steps)
 			if( (pumpValve[i].pumpId == IDX_PUMP1) && (steps->pump1.pps != 0) && (steps->pump1.steps != 0))
 			{
 				_usedVolume = (float)steps->pump1.steps * usedVolumePPS[i];
-	//todo:
 				if(steps->pump1.mode == MTP)
 					_usedVolume /= 2.0f;
-
+				else if(steps->pump1.mode == FTP4)
+					_usedVolume /= 4.0f;
+				else if(steps->pump1.mode == FTP8)
+					_usedVolume /= 8.0f;
+				else if(steps->pump1.mode == FTP16)
+					_usedVolume /= 16.0f;
+				else if(steps->pump1.mode == FTP32)
+					_usedVolume /= 32.0f;
+				else
+				{}
 			}
 			else if( (pumpValve[i].pumpId == IDX_PUMP2) && (steps->pump2.pps != 0) && (steps->pump2.steps != 0))
 			{
@@ -562,6 +570,16 @@ void Sta_UpdateVolumeUsage(const StepConfig* steps)
 				//todo:
 				if(steps->pump2.mode == MTP)
 					_usedVolume /= 2.0f;
+				else if(steps->pump2.mode == FTP4)
+					_usedVolume /= 4.0f;
+				else if(steps->pump2.mode == FTP8)
+					_usedVolume /= 8.0f;
+				else if(steps->pump2.mode == FTP16)
+					_usedVolume /= 16.0f;
+				else if(steps->pump2.mode == FTP32)
+					_usedVolume /= 32.0f;
+				else
+				{}
 			}
 			else
 			{

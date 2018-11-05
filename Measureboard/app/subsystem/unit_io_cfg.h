@@ -298,4 +298,8 @@ void UpdateAOSrc(float val, uint16_t rangeIdx, uint16_t status, uint16_t src);
 void UpdateAOValue(void);
 void UpdateDOValue(uint8_t* doValue);
 void UpdateDIValue(void);
+
+
+#define IO_Put(objId,attributeIndex,ptrValue)		Put_IOCfg(&IOCfg, objId, attributeIndex, ptrValue)
+#define IO_Get(objId,attributeIndex,ptrValue)		Get_IOCfg(&IOCfg, objId, attributeIndex, ptrValue)
 #endif /* SUBSYSTEM_UNIT_IO_CFG_H_ */

@@ -209,9 +209,9 @@ void SubStep_CalcAndStoreRawMeasAbs(void)
 		{
 			TraceUser("Trig measure result:\n\n");
 		}
-		else if((measDataFlag & FLAG_MEA_OFFLINE) != 0)
+		else if((measDataFlag & FLAG_MEA_ONLINE) != 0)
 		{
-			TraceUser("Offline measure result:\n\n");
+			TraceUser("Online measure result:\n\n");
 		}
 		else if((measDataFlag & FLAG_MEA_STD0) != 0)
 		{
@@ -220,6 +220,10 @@ void SubStep_CalcAndStoreRawMeasAbs(void)
 		else if((measDataFlag & FLAG_MEA_STD1) != 0)
 		{
 			TraceUser("Verify Std1 measure result:\n\n");
+		}
+		else if ( (measDataFlag & FLAG_POST_STD1) != 0)
+		{
+			TraceUser("Post Std1 measure result:\n\n");
 		}
 		else
 		{}
@@ -240,13 +244,13 @@ void SubStep_CalcAndStoreRawMeasAbs(void)
 			float val = CalcConcentration( &measRawDataResult, rangeIdx, NOT_CHECK_LONG_SHORT);
 
 			{
-				TraceUser("Meas Concentration without adaption: use: \t %.06f,\t %.06f,\t %.06f,\t,%s, Flag: 0x%x\n",\
-						val, absMeasConcentration[0],absMeasConcentration[1],PrintTemperature(),measDataFlag);
+				TraceUser("SubStep_CalcAndStoreRawMeasAbs: \t %.06f,\t %.06f,\t %.06f,\t %.06f,\t,%s, Flag: 0x%x\n",\
+						val, absMeasConcentration[0],absMeasConcentration[1],absMeasConcentration[2],PrintTemperature(),measDataFlag);
 			}
 		}
 		else
 		{
-			TraceDBG(TSK_ID_MEASURE,"CalcAndStoreMeasAbs with range range index: %x, %x\n",\
+			TraceDBG(TSK_ID_MEASURE,"CalcAndStoreMeasAbs with range index: %x, %x\n",\
 					caliFlag, rangeIdx);
 		}
 	}
@@ -458,7 +462,7 @@ static float CalcTempConcentration(float* rawAbs1, uint16_t rangeIdx)
 
 	assert(MEAS_RANGE_MAX > rangeIdx);
 
-	val = CalcConcentration(&measResult, rangeIdx, NOT_CHECK_LONG_SHORT);
+	val = CalcConcentration(&measResult, rangeIdx, TEMP_CALC_CONCENTRATION);
 
 	return val;
 }

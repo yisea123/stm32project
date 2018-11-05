@@ -1,7 +1,7 @@
 /*
  * dev_eep.c
  *
- *  Created on: 2016濡ょ姷鍎戦幏锟�7闂佸搫鐗為幏锟�5闂佸搫鍠涢幏锟�
+ *  Created on: 2016婵°倗濮烽崕鎴﹀箯閿燂拷7闂備礁鎼悧鐐哄箯閿燂拷5闂備礁鎼崰娑㈠箯閿燂拷
  *      Author: pli
  */
 
@@ -92,7 +92,7 @@ static void IicStart(void)
 	//sda low
 	SDA_L;
 	I2cDelayus(5);
-	SCL_L;            //濡府鎷�
+	SCL_L;            //婵☆偄搴滈幏锟�
 
 	I2cDelayus(5);      //
 	SDA_H;
@@ -162,7 +162,7 @@ static void IicSendByte(uint8_t temp)
 	{
 		SCL_L;
 		I2cDelayus(5);
-		if (temp & 0x80)           //MSB闂侀潻璐熼崝灞炬櫠閿燂拷
+		if (temp & 0x80)           //MSB闂備線娼荤拹鐔煎礉鐏炵偓娅犻柨鐕傛嫹
 			SDA_H;
 		else
 			SDA_L;
@@ -201,17 +201,17 @@ static uint16_t EEP_WritePage(uint8_t adr, uint8_t* data, uint8_t len)
 {
 	uint8_t adrByte;
 	IicStart();
-	IicSendByte(0xA0);            //闁诲簼绲婚褍顭囬崘顔芥櫖閻忕偠妫勭徊娲⒑椤愶紕顦﹂柛鐔告崌瀹曘劑骞嬮幒鎾承�
+	IicSendByte(0xA0);            //闂佽绨肩徊濠氼敋瑜嶉…鍥礃椤旇姤娅栭柣蹇曞仩濡嫮寰婂ú顏呪拺妞ゆ劧绱曢ˇ锕傛煕閻斿憡宕岀�规洏鍔戦獮瀣箳閹炬壙锟�
 	IicWaiteAck();
 	adrByte = (adr>>8)&0xFF ;
-	IicSendByte(adrByte);      //闁诲孩绋掗〃澶嬩繆椤撱垹鎹堕柡澶嬪缁诧拷 0
+	IicSendByte(adrByte);      //闂佽瀛╃粙鎺椼�冩径瀣╃箚妞ゆ挶鍨归幑鍫曟煛婢跺顕滅紒璇ф嫹 0
 	IicWaiteAck();
 	adrByte = adr&0xFF;
-	IicSendByte(adrByte);      //闁诲孩绋掗〃澶嬩繆椤撱垹鎹堕柡澶嬪缁诧拷 1
+	IicSendByte(adrByte);      //闂佽瀛╃粙鎺椼�冩径瀣╃箚妞ゆ挶鍨归幑鍫曟煛婢跺顕滅紒璇ф嫹 1
 	IicWaiteAck();
 	for (uint8_t i = 0; i < len; i++)
 	{
-		IicSendByte(data[i]);            //闂佸憡鍔栭悷銉╂偩椤掍胶顩查柛鈩兠惁褰掓⒑閽樺澧曟慨妯稿姂瀵即顢涘☉妯兼▎闂佸湱顭堝ú顓㈠箯閿熺姵鍎嶉柛鏇ㄥ墮閻﹀綊鏌涘顓炵仴闁哥喐鎹囧顐︽偋閸繄銈�
+		IicSendByte(data[i]);            //闂備礁鎲￠崝鏍偡閵夆晜鍋╂い鎺嶈兌椤╂煡鏌涢埄鍏狀亪鎯佽ぐ鎺撯拺闁芥ê顦辨晶鏇熸叏濡濮傜�殿喕鍗抽、娑樷槈濡吋鈻庨梻浣告贡椤牆煤椤撱垹绠柨鐔哄У閸庡秹鏌涢弴銊ュ闁伙箑缍婇弻娑橆潩椤撶偟浠撮梺鍝ュ枑閹瑰洤顕ｉ锔藉亱闁割偅绻勯妶锟�
 		IicWaiteAck();
 	}
 	IicStop();
@@ -224,17 +224,17 @@ static uint16_t EEP_ReadPage(uint16_t adr,uint8_t* data, const uint16_t len)
 {
 	uint8_t adrByte;
 	IicStart();
-	IicSendByte(0xA0);        //闁诲簼绲婚褍顭囬崘顔芥櫖閻忕偠妫勭徊娲⒑椤愶紕顦﹂柛鐔告崌瀹曘劑骞嬮幒鎾承戦梺鎸庣☉閻楀棝宕㈠☉姘暫濞达絿顭堥弲鎼佹煙缁嬫寧鍠橀柟鍑ょ節閺佸秹鏁撻敓锟�
+	IicSendByte(0xA0);        //闂佽绨肩徊濠氼敋瑜嶉…鍥礃椤旇姤娅栭柣蹇曞仩濡嫮寰婂ú顏呪拺妞ゆ劧绱曢ˇ锕傛煕閻斿憡宕岀�规洏鍔戦獮瀣箳閹炬壙鎴︽⒑閹稿海鈽夐柣妤�妫濆畷銏犫槈濮橆厼鏆繛杈剧悼椤牓寮查幖浣圭厵缂佸瀵ч崰姗�鏌熼崙銈囩瘈闁轰礁绉归弫鎾绘晸閿燂拷
 	IicWaiteAck();
 	adrByte = (adr>>8)&0xFF;
-	IicSendByte(adrByte);      //闁诲孩绋掗〃澶嬩繆椤撱垹鎹堕柡澶嬪缁诧拷 0
+	IicSendByte(adrByte);      //闂佽瀛╃粙鎺椼�冩径瀣╃箚妞ゆ挶鍨归幑鍫曟煛婢跺顕滅紒璇ф嫹 0
 	IicWaiteAck();
 	adrByte = adr&0xFF;
-	IicSendByte(adrByte);      //闁诲孩绋掗〃澶嬩繆椤撱垹鎹堕柡澶嬪缁诧拷 1
+	IicSendByte(adrByte);      //闂佽瀛╃粙鎺椼�冩径瀣╃箚妞ゆ挶鍨归幑鍫曟煛婢跺顕滅紒璇ф嫹 1
 	IicWaiteAck();
-	IicStart();     //闂佸憡鍔曠粔鐢割敃婵傜鐭楅柟瀛樼箓濮ｅ鎮硅閸㈡煡锝為幇鏉跨骇闁炽儱寮堕锟�
-	IicSendByte(0xA1);  //闁哄鏅滈悷锕傤敃婵傜鍙婃い鏍ㄥ嚬閸ゃ垽鏌涜閹风兘鏌涘鍐劮妞ゆ洑鍗冲畷銊╁箣閹烘挸袘
-	for (uint16_t i = 0; i < len; i++)        //24LC婵炴潙鍚嬬喊宥夋偋閹绢喖绠叉い鏃傚帶閺呯鈹戦崒婊勬珪婵炲牊鍨块獮鎰板炊椤掍礁鐝遍梺鎸庣☉閼活垶鎯冮姀銈嗗剮缂佸娉曠�瑰鏌℃担鍝勵暭鐎规挷绶氬畷锝夊箣閿斿吋瀚瑰ù锝呮啞闊悞DA婵炴垶鎼幏锟�
+	IicStart();     //闂備礁鎲￠崝鏇犵矓閻㈠壊鏁冨┑鍌滎焾閻鏌熺�涙绠撴慨锝咁樀閹顦查柛銏＄叀閿濈偤骞囬弶璺ㄩ獓闂佺偨鍎卞鍫曨敃閿燂拷
+	IicSendByte(0xA1);  //闂佸搫顦弲婊堟偡閿曞偆鏁冨┑鍌滎焾閸欏﹥銇勯弽銊ュ毈闁搞們鍨介弻娑滎檪闁归鍏橀弻娑橆煥閸愵亞鍔銈嗘磻閸楀啿鐣烽妸鈺佺闁圭儤鎸歌
+	for (uint16_t i = 0; i < len; i++)        //24LC濠电偞娼欓崥瀣枈瀹ュ鍋嬮柟缁㈠枛缁犲弶銇勯弮鍌氬付闁哄懐顭堥埞鎴﹀磼濠婂嫭鐝┑鐐茬墛閸ㄥ潡鐛幇鏉跨倞妞ゆ帊绀侀悵閬嶆⒑閹稿海鈽夐柤娲诲灦閹啴濮�閵堝棗鍓紓浣割儓濞夋洜锟界懓顦甸弻鈩冩媴閸濆嫷鏆悗瑙勬尫缁舵艾鐣烽敐澶婄闁挎柨鍚嬬�氱懓霉閿濆懏鍟為棅顒傛倿DA濠电偞鍨堕幖顐﹀箯閿燂拷
 	{
 		IicAck();
 		data[i] = IicReceiveByte();
@@ -682,7 +682,7 @@ uint16_t Save_EEPData(void)
 }
 
 
-uint16_t Trigger_EEPSave(uint8_t* adr, uint16_t len, uint8_t sync)
+uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync, uint32_t _line)
 {
 	if(len != 0)
 	{
@@ -693,7 +693,7 @@ uint16_t Trigger_EEPSave(uint8_t* adr, uint16_t len, uint8_t sync)
 		if(adrSegMax > EEP_SEG_NUM)
 		{
 			Dia_SetDiagnosis(EEPROM_ERROR, 1);
-			TraceDBG(TSK_ID_EEP,"EEP storage Overrun: %d\n",adrSegMax);
+			TraceDBG(TSK_ID_EEP,"EEP storage Overrun: %d, %x, line: %d\n",adrSegMax,adrSegMax, _line);
 		}
 		OS_Use(eepLock);
 		void* dst = (void*)(EEP_RAM_SHADOW + ((uint32_t)adr - EEP_RAM_WORKING));

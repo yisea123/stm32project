@@ -11,8 +11,8 @@
 
 #define FLAG_MEA_AUTORANGE_REQ 		0x0080
 #define FLAG_MEA_MEAS				0x0100
-#define FLAG_MEA_TRIG		   		0x0200
-#define FLAG_MEA_OFFLINE			0x0400
+#define FLAG_MEA_TRIG		   		0x0400
+#define FLAG_MEA_ONLINE				0x0200
 #define FLAG_MEA_STD0				0x0800
 #define FLAG_MEA_STD1				0x1000
 #define FLAG_CALI_STD0				0x2000
@@ -25,6 +25,7 @@
 #define FLAG_LONG_SAT				0x0040
 #define FLAG_BLANK_ENABLE 			0x0020
 #define FLAG_RETRY_MAX    			0x0010
+#define FLAG_POST_STD1    			0x0008
 #define FLAG_MEAS_MSK				(uint16_t)(~(FLAG_CALI_STD0 | FLAG_CALI_STD1))
 #define FLAG_CALI_MSK				(FLAG_CALI_STD0 | FLAG_CALI_STD1)
 

@@ -20,7 +20,7 @@
 #define FLOW_VALVE_QUEUE_SIZE			4
 #define VALVE_ALL						0xFFFF
 
-#define VALVE_MASK_IO					0xFF80
+#define VALVE_MASK_IO					0xFFF0
 #define VALVE_MASK_EX					0x7F
 
 extern uint16_t ValveMask;

@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
+encoding//app/inc/main.h=UTF-8
+encoding//app/src/tsk_flow_all.c=UTF-8
+encoding//app/subsystem/unit_meas_data.h=UTF-8
 encoding//device/dev_eep.c=UTF-8

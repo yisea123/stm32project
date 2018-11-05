@@ -620,6 +620,7 @@ static const uint32_t ADC_limitHigh = 695000 ;
 
 void CheckLedError(void)
 {
+	uint16_t ledLow = 0;
 	uint16_t dia = 0;
 	uint32_t val = 0xFFFFFFFF;
 	if(testADCNum)
@@ -636,8 +637,8 @@ void CheckLedError(void)
 		}
 		if(dia)
 				TraceDBG(TSK_ID_MEASURE,"Led output low: chn info: %x, value: %d\n",dia, val);
+		ledLow = dia;
 
-		Dia_UpdateDiagnosis(LED_OUTPUT_LOW,dia);
 
 
 		dia = 0;
@@ -693,7 +694,7 @@ void CheckLedError(void)
 	if(dia)
 		TraceDBG(TSK_ID_MEASURE,"Led error: chn info: %x, value: %d\n",dia, val);
 
-	UpdateLedErrorDiag(dia);
+	UpdateLedDiag(ledLow, dia);
 }
 
 

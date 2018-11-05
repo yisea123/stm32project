@@ -501,6 +501,7 @@ int main(int argc, char* argv[])
 	uint32_t revData = 0;
  	__enable_irq();
 	SPI_SemInit();
+	CreateAllQid();
 	Init_PrintSem();
  	MX_GPIO_Init();
  	WDI_SET(GPIO_PIN_SET);
@@ -523,7 +524,7 @@ int main(int argc, char* argv[])
 	trace_puts("Hello ARM World!\n");
 //	shell_printf("Hello ARM World!");
 //	xprintf("Hello ARM World!");
-	CreateAllQid();
+
 	// At this stage the system clock should have already been configured
 	// at high speed.
 	trace_printf("System clock: %u Hz\n", SystemCoreClock);
@@ -549,6 +550,7 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
+  	AlignCfgtoHMI();
 	/* Call init function for freertos objects (in freertos.c) */
 	MX_FREERTOS_Init();
 	if(revData != 0)

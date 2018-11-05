@@ -1,9 +1,9 @@
 if "%time:~0,1%"==" " set "time=0%time:~1%"
 set fileDate=%date:~0,4%%date:~5,2%%date:~8,2%%time:~0,2%%time:~3,2%
 echo %fileDate%>E:\rainbow\Measureboard\Debug\version.txt
-echo 0.9.1>>E:\rainbow\Measureboard\Debug\version.txt
-copy /y E:\rainbow\Measureboard\Debug\Measure.bin "Z:\Projects\Rainbow\1_Design\1_SW\measureboard binary code\Measure_beta.bin"
-copy /y E:\rainbow\Measureboard\Debug\Measure.hex "Z:\Projects\Rainbow\1_Design\1_SW\measureboard binary code\Measure_beta.hex"
+echo 0.9.8>>E:\rainbow\Measureboard\Debug\version.txt
+copy /y E:\rainbow\Measureboard\Debug\Measure.bin "Z:\Projects\Rainbow\1_Design\1_SW\measureboard binary code\Measure_epa.bin"
+copy /y E:\rainbow\Measureboard\Debug\Measure.hex "Z:\Projects\Rainbow\1_Design\1_SW\measureboard binary code\Measure_epa.hex"
 copy /y E:\rainbow\Measureboard\Debug\readme.txt "Z:\Projects\Rainbow\1_Design\1_SW\measureboard binary code"
 copy /y E:\rainbow\Measureboard\Debug\version.txt "Z:\Projects\Rainbow\1_Design\1_SW\measureboard binary code"
 copy /y E:\rainbow\Measureboard\Debug\Measure.bin "C:\Program Files\PuTTY"

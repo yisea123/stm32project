@@ -28,7 +28,7 @@
 #include "dev_temp.h"
 #include "unit_meas_data.h"
 #include "unit_sys_diagnosis.h"
-
+#include "unit_cfg_ex.h"
 
 
 
@@ -317,10 +317,10 @@ void StartCalibrationTask(void const * argument)
 					{
 						uint16_t caliNum = 1;
 						uint32_t caliStartTime = GetCurrentST();
-						flowStepRun[0].step = MAINACT_CALIB;
-						flowStepRun[0].startTime = GetCurrentST();
-						flowStepRun[0].duringTime = (GetCaliDuringTime_Ms(schCaliRangeSel, &caliNum)+500)/1000;
-						flowStepRun[0].duringTime /= caliNum;
+						UpdateCalibResult(STORE_TMP_FACTOR);
+						uint32_t duringTime = (GetCaliDuringTime_Ms(schCaliRangeSel, &caliNum)+500)/1000;
+						duringTime /= caliNum;
+						SetFlowStep(FLOW_STEP_ACT, MAINACT_CALIB, duringTime);
 
 						tskState = SCH_CALI_STD0_PRE;
 						caliTimes = 0;
@@ -333,6 +333,7 @@ void StartCalibrationTask(void const * argument)
 						caliResultRealTime.startTimeST = caliStartTime;
 						caliResultRealTime.caliStd0.startTimeST = caliStartTime;
 						caliResultRealTime.caliStd1.startTimeST = caliStartTime;
+
 					}
 						break;
 					case SCH_CALI_STD0_PRE:

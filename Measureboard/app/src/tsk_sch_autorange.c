@@ -53,6 +53,7 @@ void StartAutoRangeTask(void const * argument)
 #define QUEUE_SIZE		4
 	(void)argument; // pc lint
 	uint32_t tickOut = osWaitForever;
+	uint32_t duringTime;
 	uint16_t retryTimes = 0;
 	osEvent event;
 	TSK_MSG locMsg;
@@ -160,7 +161,7 @@ void StartAutoRangeTask(void const * argument)
 								measResultRealTime.measValue = failedMeasureVal;
 								measResultRealTime.measFlag = (measResultRealTime.measFlag | failedMeasureFlag);
 								IssueFinalResult();
-								TraceMsg(TSK_ID_SCH_MEAS, "Failed once, retry: %d \n", retryTimes );
+								TraceMsg(TSK_ID_SCH_MEAS, "Failed final, retry: %d \n", retryTimes );
 								tskState = SCH_AR_FINISH;
 							}
 							else
@@ -229,9 +230,8 @@ void StartAutoRangeTask(void const * argument)
 							TraceMsg(taskID,"schedule task - post cleaning for measure\n");
 							SendTskMsg(SCH_CLEAN_ID, TSK_INIT, schRangeSelection, ARFinished);
 							tickOut = GetCleanDuringTime_Ms(schRangeSelection);
-							flowStepRun[0].step = MAINACT_CLEAN;
-							flowStepRun[0].startTime = GetCurrentST();
-							flowStepRun[0].duringTime = (tickOut+500)/1000;
+							duringTime = (tickOut+500)/1000;
+							SetFlowStep(FLOW_STEP_ACT, MAINACT_CLEAN, duringTime);
 							TraceMsg(taskID,"schedule task - SCH_CLEANING T%d\n",tickOut);
 
 						}

@@ -53,6 +53,7 @@
 #define ATR_MAX_TIMECONFIG		32
 #define MAX_MAIN_SUBSTEPS		32
 #define MAX_MAIN_STEPS			30
+#define MAX_TEST_STEPS			10
 #define MAX_SP_STEPS			20
 
 #define CW_DIR				GPIO_PIN_RESET
@@ -184,7 +185,7 @@ typedef enum{
 	A_CLEAN,
 	A_CLEAN_DI,
 	A_STD_ADD_VERIFICATION,
-	A_MAX = MAX_MAIN_STEPS+A_0,
+	A_MAX = MAX_MAIN_STEPS+A_0 +MAX_TEST_STEPS,
 	OBJ_IDX_MAX,
 	STEP_STOP=1000,
 
@@ -204,11 +205,11 @@ typedef struct
 extern StepConfig allStepsConfig[MAX_SUBSTEP_PUMP];
 extern uint32_t specialConfig[MAX_SP_STEPS];
 extern uint32_t timeConfig[ATR_MAX_TIMECONFIG];
-extern uint8_t stepsConfig[MAX_MAIN_STEPS][MAX_MAIN_SUBSTEPS];
+extern uint8_t* stepsConfig[MAX_MAIN_STEPS+MAX_TEST_STEPS];
 
 extern const T_UNIT flowCfg;
 
-
+uint16_t LoadEPA_FlowCfg(uint16_t);
 uint16_t Initialize_FlowCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint32_t CalcDuringTimeMsStep_WithDelay(uint16_t step);
 

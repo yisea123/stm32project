@@ -520,23 +520,31 @@ uint16_t NewEventLog(uint32_t event, uint8_t* data)
 	if(data)
 		memcpy((void*)&inst->eventData.rev[0], (void*)data, sizeof(inst->eventData.rev));
 	(void)RTC_Get(IDX_RTC_ST,0,(void*)&(inst->eventData.startTimeST));
-
+	if(data)
+		TraceUser("New event is pushed: 0x%x - %x,%x,%x,%x,%x,%x\n", event, data[0],data[1],data[2],data[3],data[4],data[5]);
+	else
+		TraceUser("New event is pushed: 0x%x - null\n", event);
 	Trigger_Save2FF(NULL);
 	//store to the object which access by UI
 	if(	(eventMask & event ) == 0)//EV_CMD_PUT_OBJ	!= event && EV_CMD_PUT_MEM	!= event)
 	{
-		if(((EV_DIA_SET|EV_DIA_CLR)&event) != 0)
+
+		if (((EV_DIA_SET | EV_DIA_CLR) & event) != 0)
 		{
 			EventData* buff = GetAvailableDiagBuff(GET_NEW);
 
-			memcpy((void*)buff, (void*)&inst->eventData, sizeof(EventData));
+			memcpy((void*) buff, (void*) &inst->eventData, sizeof(EventData));
 		}
 		else
 		{
 			EventData* buff = GetAvailableEventBuff(GET_NEW);
-
+			TraceUser("New event is pushed: 0x%x\n", event);
 			memcpy((void*)buff, (void*)&inst->eventData, sizeof(EventData));
 		}
+	}
+	else
+	{
+		TraceMsg(TSK_ID_MCU_STATUS, "New event is not pushed: 0x%x\n", event);
 	}
 	return OK;
 }

@@ -29,10 +29,8 @@ typedef enum
 	SYNC_CYCLE,//sync in a buffer time, defined by eep interfaces
 }EEP_SYNC;
 
-uint16_t Trigger_EEPSave(uint8_t* adr, uint16_t len, uint8_t sync);
-
-
-
+uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync,uint32_t line);
+#define Trigger_EEPSave(x,y,z)		Trigger_EEPSaveInst(x,y,z,__LINE__)
 
 
 #ifdef __cplusplus

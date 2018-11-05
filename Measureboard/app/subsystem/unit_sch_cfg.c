@@ -38,7 +38,7 @@ float				measRangeAlarmLimit[2]					__attribute__ ((section (".configbuf_sch")))
 //0: mode, 1: volume; 2: time
 FlushMode			flushMode   							__attribute__ ((section (".configbuf_sch")));//??????
 Measure_Sch			_measSch								__attribute__ ((section (".configbuf_sch")));//??????
-static  Calibration_Sch		_calibSch						__attribute__ ((section (".configbuf_sch")));
+Calibration_Sch		_calibSch								__attribute__ ((section (".configbuf_sch")));
 static  Clean_Sch			_cleanSch						__attribute__ ((section (".configbuf_sch")));
 SchInfo				schInfo									__attribute__ ((section (".configbuf_sch")));
 uint16_t			cleanSchSteps[MEAS_RANGE_MAX]			__attribute__ ((section (".configbuf_sch")));
@@ -111,7 +111,7 @@ static const FlushMode	flushMode_Default =
 	{DISABLE_MODE, 59400, 59400};
 
 
-static const float	measRangeAlarmLimit_Default[2] = {0.05f, 30.0f};
+static const float	measRangeAlarmLimit_Default[2] = {-100.0f, 1200.0f};
 
 static uint16_t caliPreActStd_Default[MEAS_RANGE_MAX][2] =
 {
@@ -149,14 +149,14 @@ static const SchInfo schInfo_Default = {{0,0,0,0},{0,0,0,0},0,0,0,0,0,0,0,0,0,0,
 static const float longShortSwitchLimit_Default[2][2] = { {5.5,6}, {9,10}};
 static const Measure_Sch measSch_Default =
 {
-	1,						//uint16_t 	sampleFlowDetectTime;
-	1,						//uint16_t  preTreatDelay
+	0,						//uint16_t 	sampleFlowDetectTime;
+	0,						//uint16_t  preTreatDelay
 	0,						//measAvgMode
 	2,						//uint16_t	measAvgTime;
 	DISABLE_MODE,			//uint16_t 	retestCfg;
 	PERIOD_MODE,			//MANUAL_MODE,		//uint16_t	measureMode	;
-	{0.05f,30.0f},			//float		retestThreshHold[2];
-	120,//30, 				//uint16_t 	measInterval
+	{-100.0f,100.0f},		//float		retestThreshHold[2];
+	120,	 				//uint16_t 	measInterval
 	1, 						//uint16_t 	measCaliIndex
 	{2017,7,6,12,0,0},		//TimeCfg	measStartTime;
 	ENABLE_MODE,//sampleFlowDetectEnable
@@ -510,6 +510,8 @@ uint16_t AutoRangeChangetoIdx(uint16_t newRangeIdx, uint16_t flag, uint32_t line
 }
 
 
+
+
 uint16_t CheckRangeValid(const uint32_t rangeIdx_,const uint32_t line)
 {
 	uint16_t ret = OK;
@@ -761,7 +763,7 @@ uint16_t UpdateSlopeOffset(float* absVal0, float* absVal1, uint32_t _caliStartTi
 
 	}
 
-	UpdateCalibResult();
+	UpdateCalibResult(STORE_TO_EEP_IM);
 	//
 	return ret;
 }
@@ -853,6 +855,7 @@ uint16_t Get_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 				}
 				else
 				{
+
 					if(Sch_Mode == MANUAL_MODE)
 					{
 						_deviceStatus = DEV_ST_TRIGGER_ONLY;
@@ -877,16 +880,73 @@ uint16_t Get_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 }
 
 
-void UpdateCalibResult(void)
+void UpdateCalibResult(uint16_t type)
 {
-	memcpy((void*)&_calibSch.calibrationOffset_Long, (void*)&calibSch.calibrationOffset_Long, sizeof(calibSch.calibrationOffset_Long));
-	memcpy((void*)&_calibSch.calibrationOffset_Short, (void*)&calibSch.calibrationOffset_Short, sizeof(calibSch.calibrationOffset_Short));
-	memcpy((void*)&_calibSch.calibrationSlope_Long, (void*)&calibSch.calibrationSlope_Long, sizeof(calibSch.calibrationSlope_Long));
-	memcpy((void*)&_calibSch.calibrationSlope_Short, (void*)&calibSch.calibrationSlope_Short, sizeof(calibSch.calibrationSlope_Short));
-	memcpy((void*)&_calibSch.calibration_ST, (void*)&calibSch.calibration_ST, sizeof(calibSch.calibration_ST));
-	memcpy((void*)&_calibSch.caliStatus, (void*)&calibSch.caliStatus, sizeof(calibSch.caliStatus));
+	static Calibration_Sch caliFactor_Old;
+	if(STORE_TO_EEP_IM == type)
+	{
+		memcpy((void*)&_calibSch.calibrationOffset_Long, (void*)&calibSch.calibrationOffset_Long, sizeof(calibSch.calibrationOffset_Long));
+		memcpy((void*)&_calibSch.calibrationOffset_Short, (void*)&calibSch.calibrationOffset_Short, sizeof(calibSch.calibrationOffset_Short));
+		memcpy((void*)&_calibSch.calibrationSlope_Long, (void*)&calibSch.calibrationSlope_Long, sizeof(calibSch.calibrationSlope_Long));
+		memcpy((void*)&_calibSch.calibrationSlope_Short, (void*)&calibSch.calibrationSlope_Short, sizeof(calibSch.calibrationSlope_Short));
+		memcpy((void*)&_calibSch.calibration_ST, (void*)&calibSch.calibration_ST, sizeof(calibSch.calibration_ST));
+		memcpy((void*)&_calibSch.caliStatus, (void*)&calibSch.caliStatus, sizeof(calibSch.caliStatus));
+		TraceMsg(TSK_ID_SCH_CALI, "store to eep immediately, %d, short: %.4f, %.4f,%.4f,%.4f, \
+				short slope: %.4f,%.4f,%.4f,%.4f,\n",
+				_calibSch.calibration_ST, \
+				_calibSch.calibrationOffset_Short[0],\
+				_calibSch.calibrationOffset_Short[1],\
+				_calibSch.calibrationOffset_Short[2],\
+				_calibSch.calibrationOffset_Short[3],\
+				_calibSch.calibrationSlope_Short[0], \
+				_calibSch.calibrationSlope_Short[1], \
+				_calibSch.calibrationSlope_Short[2], \
+				_calibSch.calibrationSlope_Short[3]);
+	}
+	else if(STORE_TMP_FACTOR == type)
+	{
+		memcpy((void*)&caliFactor_Old.calibrationOffset_Long, (void*)&calibSch.calibrationOffset_Long, sizeof(calibSch.calibrationOffset_Long));
+		memcpy((void*)&caliFactor_Old.calibrationOffset_Short, (void*)&calibSch.calibrationOffset_Short, sizeof(calibSch.calibrationOffset_Short));
+		memcpy((void*)&caliFactor_Old.calibrationSlope_Long, (void*)&calibSch.calibrationSlope_Long, sizeof(calibSch.calibrationSlope_Long));
+		memcpy((void*)&caliFactor_Old.calibrationSlope_Short, (void*)&calibSch.calibrationSlope_Short, sizeof(calibSch.calibrationSlope_Short));
+		memcpy((void*)&caliFactor_Old.calibration_ST, (void*)&calibSch.calibration_ST, sizeof(calibSch.calibration_ST));
+		memcpy((void*)&caliFactor_Old.caliStatus, (void*)&calibSch.caliStatus, sizeof(calibSch.caliStatus));
 
+		TraceMsg(TSK_ID_SCH_CALI, "store temp data, %d, short: %.4f, %.4f,%.4f,%.4f, \
+						short slope: %.4f,%.4f,%.4f,%.4f,\n",
+						caliFactor_Old.calibration_ST, \
+						caliFactor_Old.calibrationOffset_Short[0],\
+						caliFactor_Old.calibrationOffset_Short[1],\
+						caliFactor_Old.calibrationOffset_Short[2],\
+						caliFactor_Old.calibrationOffset_Short[3],\
+						caliFactor_Old.calibrationSlope_Short[0], \
+						caliFactor_Old.calibrationSlope_Short[1], \
+						caliFactor_Old.calibrationSlope_Short[2], \
+						caliFactor_Old.calibrationSlope_Short[3]);
+	}
+	else if(RECOVER_FROM_TMP == type)
+	{
+		memcpy((void*)&_calibSch.calibrationOffset_Long, (void*)&caliFactor_Old.calibrationOffset_Long, sizeof(calibSch.calibrationOffset_Long));
+		memcpy((void*)&_calibSch.calibrationOffset_Short, (void*)&caliFactor_Old.calibrationOffset_Short, sizeof(calibSch.calibrationOffset_Short));
+		memcpy((void*)&_calibSch.calibrationSlope_Long, (void*)&caliFactor_Old.calibrationSlope_Long, sizeof(calibSch.calibrationSlope_Long));
+		memcpy((void*)&_calibSch.calibrationSlope_Short, (void*)&caliFactor_Old.calibrationSlope_Short, sizeof(calibSch.calibrationSlope_Short));
+		memcpy((void*)&_calibSch.calibration_ST, (void*)&caliFactor_Old.calibration_ST, sizeof(calibSch.calibration_ST));
+		memcpy((void*)&_calibSch.caliStatus, (void*)&caliFactor_Old.caliStatus, sizeof(calibSch.caliStatus));
 
+		TraceMsg(TSK_ID_SCH_CALI, "recover from temp immediately, %d, short: %.4f, %.4f,%.4f,%.4f, \
+						short slope: %.4f,%.4f,%.4f,%.4f,\n",
+						_calibSch.calibration_ST, \
+						_calibSch.calibrationOffset_Short[0],\
+						_calibSch.calibrationOffset_Short[1],\
+						_calibSch.calibrationOffset_Short[2],\
+						_calibSch.calibrationOffset_Short[3],\
+						_calibSch.calibrationSlope_Short[0], \
+						_calibSch.calibrationSlope_Short[1], \
+						_calibSch.calibrationSlope_Short[2], \
+						_calibSch.calibrationSlope_Short[3]);
+	}
+	else
+	{}
 	Trigger_EEPSave((uint8_t*)&_calibSch, sizeof(_calibSch),  SYNC_IM );
 }
 void UpdateSchFlushCfg(void)
@@ -955,6 +1015,8 @@ uint16_t Initialize_SchCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 			Trigger_EEPSave((void*)&_measSch, sizeof(_measSch), SYNC_CYCLE);
 			Trigger_EEPSave((void*)&_autoRangeMode, sizeof(_autoRangeMode), SYNC_IM);
 			UpdateToCurrentSch(0xFFFF);
+			memcpy((void*)&calibSch, (void*)&_calibSch, sizeof(calibSch));
+
 		}
 		UpdateSchFlushCfg();
 
@@ -973,6 +1035,26 @@ static void ClearTriggers(void)
 	trigNum[1] = 0;
 }
 
+uint16_t ClrCalibration_EPA(uint32_t rangeIdx_)
+{
+	uint16_t ret = OK;
+	uint32_t rangeIdx = rangeIdx_ & MSK_RANGE_SEL;
+	for(uint16_t i=0;i<MAX_TRIGGER;i++)
+	{
+		if((trigAction[i].byte.triggerType == IO_ACTION) && (Trigger_Calibration == trigAction[i].byte.action))
+		{
+			if(trigAction[i].byte.status == EXECUTE_NOT)
+			{
+				if((trigAction[i].byte.value0 == 0xFF) || (trigAction[i].byte.value0 == rangeIdx) )
+				{
+					TraceMsg(TSK_ID_CAN_IO, "IO trigger calibration (undo) is removed from the list, %d, %x",trigAction[i].u32Val,trigAction[i].u32Val);
+					trigAction[i].byte.status = EXECUTE_END;
+				}
+			}
+		}
+	}
+	return ret;
+}
 
 void UpdateTriggerStatus(void)
 {
@@ -1140,17 +1222,13 @@ uint16_t Put_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 			break;
 		case OBJ_SYSTEM_BREAK:
 		{
-			uint8_t evData[6];
 			if (systemBreakState != 0)
 			{
-				Sch_Mode = MANUAL_MODE;
 				systemStop = SYSTEM_STOP;
 				ClearTriggers();
-				Sch_Mode = MANUAL_MODE;
 				SendTskMsg(SCH_ID, TSK_FORCE_BREAK, SCH_TSK_IDLE, NULL);
-				memset((void*)&evData[0], 0, sizeof(evData));
-				evData[0] = 1;
-				NewEventLog(EV_SCH_STOP, evData);
+				uint16_t mode = MANUAL_MODE;
+				SCH_Put(OBJ_SCH_MODE, WHOLE_OBJECT,(void*)&mode);
 			}
 			else
 			{
@@ -1161,9 +1239,19 @@ uint16_t Put_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 			}
 		}
 			break;
+		case OBJ_SCH_MODE:
+			if (Sch_Mode == PERIOD_MODE)
+			{
+				NewEventLog(EV_SCH_START , NULL);
+			}
+			else
+			{
+				NewEventLog(EV_SCH_STOP, NULL);
+			}
+			break;
 		case OBJ_SYSTEM_STOP:
 		{
-			uint8_t evData[6];
+			uint16_t mode =0;
 			if(systemStop == SYSTEM_NORMAL)
 			{
 				if(systemBreakState != 0)
@@ -1174,21 +1262,20 @@ uint16_t Put_SchCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 				else
 				{
 					//recovery from stop action
-					Sch_Mode = PERIOD_MODE;
+					mode = PERIOD_MODE;
+					SCH_Put(OBJ_SCH_MODE, WHOLE_OBJECT,(void*)&mode);
+					NewEventLog(EV_START_ACT , NULL);
 					WakeUpSchedule();//when sch is changed!
-					memset((void*)&evData[0], 0, sizeof(evData));
-					evData[0] = 2;
-					NewEventLog(EV_SCH_START , evData);
 				}
 			}
 			else
 			{
 				//stop:
-				Sch_Mode = MANUAL_MODE;
-				ClearTriggers();
-				evData[0] = 2;
-				NewEventLog(EV_SCH_STOP, evData);
+				mode = MANUAL_MODE;
+				SCH_Put(OBJ_SCH_MODE, WHOLE_OBJECT,(void*)&mode);
+				ClearTriggers();			
 				SendTskMsg(SCH_ID, TSK_FORCE_STOP, SCH_TSK_IDLE, NULL);
+				NewEventLog(EV_STOP_ACT , NULL);
 			}
 		}
 			break;
@@ -1286,11 +1373,13 @@ static uint16_t GetNewTrigger(TrigAction* ptrTrig,uint16_t idx, SCH_STATE* ptrSt
 		case	Trigger_Prime:
 			*ptrState = SCH_PRIME;
 			break;
+			/*
 		case	Trigger_Offline:
 			*ptrState = SCH_MEASURE;
 			schRangeSelection &= MSK_RANGE_SEL;
 			schRangeSelection |= MSK_MEAS_OFFLINE;
 			break;
+			*/
 		case	Trigger_Online:
 			*ptrState = SCH_MEASURE;
 			schRangeSelection &= MSK_RANGE_SEL;
@@ -1341,9 +1430,12 @@ static uint16_t GetNewTrigger(TrigAction* ptrTrig,uint16_t idx, SCH_STATE* ptrSt
 			//SCH_Put(OBJ_SCH_MODE, 0, (void*)&Sch_Mode);
 			break;
 		case	Trigger_Sch_off:
+		{
 			schRangeSelection = oldschRangeSelection;
-			Sch_Mode = MANUAL_MODE;
+			uint16_t mode = MANUAL_MODE;
+			SCH_Put(OBJ_SCH_MODE, WHOLE_OBJECT,(void*)&mode);
 			actionExecuteTime_ST[Trigger_Sch_off] = GetCurrentST();
+		}
 			//SCH_Put(OBJ_SCH_MODE, 0, (void*)&Sch_Mode);
 			break;
 		}

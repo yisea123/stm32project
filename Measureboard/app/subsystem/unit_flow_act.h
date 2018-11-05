@@ -45,6 +45,14 @@
  }OBJ_IDX_ACT;
 
 
+ enum
+ {
+	 FLOW_STEP_ACT,
+	 FLOW_STEP_MAIN,
+	 FLOW_STEP_SUB,
+	 FLOW_STEP_MAX,
+ };
+
 
  typedef struct
  {
@@ -120,7 +128,7 @@ extern uint8_t	subStepName[16];
 
 extern ValveCtrl valveCtrl;
 extern uint16_t	pollFunctionEnabled;
-extern FlowStepRun flowStepRun[3];
+extern FlowStepRun flowStepRun[FLOW_STEP_MAX];
 
 extern MeasExtend		measExtend[0x08];
 extern MeasExtendAction measExtendAction;
@@ -129,6 +137,9 @@ extern  PollSch     pollSchCfg[POLL_SCH_SIZE];
 extern  uint8_t		pollSchTrig[POLL_SCH_SIZE];
 extern const T_UNIT flowAct;
 extern uint16_t mainActionDetail;
+
+void SetFlowStep(uint16_t id, uint16_t step, uint32_t _duringTime);
+int32_t GetFlowStepRemainTime(uint16_t id);
 
 uint16_t Initialize_FlowAct(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Put_FlowAct(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,

@@ -128,7 +128,8 @@ typedef enum
 
 
 
-#define MSK_MEAS_OFFLINE 	0x10000000
+//#define MSK_MEAS_OFFLINE 	0x10000000
+#define MSK_POST_STD1	 	0x10000000
 #define MSK_MEAS_ONLINE 	0x20000000
 #define MSK_MEAS_STD0  		0x40000000
 #define MSK_MEAS_STD1  		0x80000000
@@ -172,5 +173,5 @@ void CheckMeasRange(uint16_t rangeidx, float measValue);
 uint32_t GetSeconds_TimeCfg(TimeCfg* ptrStartTime);
 void Fake_TrigCaliStorage(void);
 void Fake_TrigMeasStorage(void);
-void UpdateLedErrorDiag(uint16_t val);
+void UpdateLedDiag(uint16_t ledLow, uint16_t val);
 #endif /* INC_TSK_SCH_H_ */
