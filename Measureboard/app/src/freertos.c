@@ -110,8 +110,8 @@ static void StartIdleTask(void const * argument)
 static const TaskConfiguration_t TaskConfiguration[] =
 {
 	{{"sch task",			StartSchTask,			osPriorityNormal, 	0,		512}, 	TSK_ID_SCH, NULL},
-	{{"ad_detector",		StartAdTask,			osPriorityRealtime, 	0,		384}, 	TSK_ID_AD_DETECT, NULL},
-	{{"ad measure", 		StartMeasCalcTask,		osPriorityHigh,			0,		384}, 	TSK_ID_MEASURE, NULL},
+	{{"ad_detector",		StartAdTask,			osPriorityRealtime, 	0,		512}, 	TSK_ID_AD_DETECT, NULL},
+	{{"ad measure", 		StartMeasCalcTask,		osPriorityHigh,			0,		512}, 	TSK_ID_MEASURE, NULL},
 	{{"task Monitor", 		StartMonitorTask,		osPriorityNormal,		0,		256}, 	TSK_ID_MONITOR, NULL},
 	{{"auto range", 		StartAutoRangeTask,		osPriorityNormal,		0,		256}, 	TSK_ID_AUTO_RANGE, NULL},
 
@@ -122,8 +122,8 @@ static const TaskConfiguration_t TaskConfiguration[] =
 	{{"poll sch task",		StartPollSchTask,		osPriorityNormal, 	0,		256}, 	TSK_ID_POLL_SCH_POLL, NULL},
 	{{"flow poll",			StartPollTask,			osPriorityNormal, 	0,		256},	TSK_ID_FLOW_POLL, NULL},
 	{{"sch clean",			StartCleanTask,			osPriorityNormal, 	0,		256}, 	TSK_ID_SCH_CLEAN, NULL},
-	{{"sch calibration",	StartCalibrationTask,	osPriorityNormal, 	0,		384}, 	TSK_ID_SCH_CALI, NULL},
-	{{"sch meas",			StartSchMeasTask,		osPriorityNormal, 	0,		384}, 	TSK_ID_SCH_MEAS, NULL},
+	{{"sch calibration",	StartCalibrationTask,	osPriorityNormal, 	0,		512}, 	TSK_ID_SCH_CALI, NULL},
+	{{"sch meas",			StartSchMeasTask,		osPriorityNormal, 	0,		512}, 	TSK_ID_SCH_MEAS, NULL},
 
 	{{"substep ctrl",	StartSubStepTask,	osPriorityNormal, 	0,		512},			TSK_ID_SUBSTEP_CTRL, NULL},
 	{{"flow ctrl",		StartFlowTask,		osPriorityNormal, 	0,		256},			TSK_ID_FLOW_CTRL, NULL},

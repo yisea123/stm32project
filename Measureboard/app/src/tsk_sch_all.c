@@ -385,7 +385,7 @@ static uint32_t TrigNewSchedule(SCH_STATE* ptrState)
 //todo:
 //FST issues
 //when task is waiting for something timeout(if the task is not responde well), no timeout function is called;
-#define UI_START_TIME  60000
+
 
 static uint16_t IsUIReady(uint32_t tickStart)
 {
@@ -393,7 +393,7 @@ static uint16_t IsUIReady(uint32_t tickStart)
 	if( UI_Start == WAIT_FOR_UI)
 	{
 		uint32_t tickN = HAL_GetTick();
-		if(tickN - tickStart >= UI_START_TIME)
+		if(tickN - tickStart >= (schDelayTime*1000))
 		{
 			UI_Start = UI_TIMEOUT;
 		}
@@ -412,7 +412,7 @@ void StartSchTask(void const * argument)
 	uint32_t duringTime;
 	uint32_t flowStep;
 	osEvent event;
-	tickOut = UI_START_TIME;//1 MINUTES
+	tickOut = schDelayTime*1000;//1 MINUTES
 	TSK_MSG locMsg;
 	locMsg.callBack = NULL;
 	const uint8_t taskID = TSK_ID_SCH;
@@ -436,8 +436,8 @@ void StartSchTask(void const * argument)
 		tickOut = 10*1000;//wait for canopen ready
 		TraceMsg(taskID,"schedule task - Wait canopen ready: T%d\n",tickOut);
 	}
-	if(tickOut < UI_START_TIME)
-		tickOut = UI_START_TIME;
+	if(tickOut < schDelayTime*1000)
+		tickOut = schDelayTime*1000;
 
 	UI_Start = WAIT_FOR_UI;
 	uint32_t tickStart = HAL_GetTick();

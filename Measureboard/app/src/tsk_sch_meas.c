@@ -149,9 +149,9 @@ static uint16_t RetestCheck(const float concentration, uint16_t rangeIdx)
 }
 
 
-static void GetAvgRawAbs(const MeasDataRaw* result , MeasDataRaw* measDst, uint16_t times)
+static void GetAvgRawAbs(MeasDataRaw* result , MeasDataRaw* measDst, uint16_t times, uint16_t rangeIdx)
 {
-
+	static float lastVal_meas = -1000;
 	assert(times>0);
 	assert(times <= MAX_AVG_TIMES);
 	if(measSch.retestCfg && (measSch.measAvgMode == 0))
@@ -190,6 +190,97 @@ static void GetAvgRawAbs(const MeasDataRaw* result , MeasDataRaw* measDst, uint1
 				actTImes ++;
 			}
 		}
+		//special for EPA
+		if(actTImes == 2)
+		{
+			float valFloat2[2];
+			valFloat2[0] = (val[0] - calibSch.calibrationOffset_Short[rangeIdx])* calibSch.calibrationSlope_Short[rangeIdx];
+			valFloat2[1] = (val[1] - calibSch.calibrationOffset_Short[rangeIdx])* calibSch.calibrationSlope_Short[rangeIdx];
+			float max = valFloat2[0];
+			float min = valFloat2[0];
+			uint16_t maxid = 0;
+			uint16_t minId = 0;
+			if(max < valFloat2[1])
+			{
+				max = valFloat2[1];
+				maxid = 1;
+			}
+			else
+			{
+				min = valFloat2[1];
+				minId = 1;
+			}
+			if( max > 1)
+			{
+				float val_diff = max - min;
+
+				if(val_diff > max * 0.15 )
+				{
+					if((((measDataFlag & FLAG_MEA_MEAS) != 0) || ((measDataFlag & FLAG_MEA_TRIG)!=0)) \
+							&& (lastVal_meas > 0))
+					{
+						float val_diff1  = lastVal_meas-valFloat2[0];
+						float val_diff2  = lastVal_meas-valFloat2[1];
+						float useFloat = 0;
+						if(val_diff1 < 0)
+							val_diff1 = -1*val_diff1;
+						if(val_diff2 < 0)
+							val_diff2 = -1*val_diff2;
+
+						if (val_diff1 > val_diff2)
+						{
+							useFloat = valFloat2[1];
+							TraceUser("average calculation error1, %.4f,%.4f; use %.4f, last,%.4f Times:%d, flag: %x\n",\
+									valFloat2[0], valFloat2[1],
+									useFloat, lastVal_meas,actTImes, measDataFlag);
+							result[0].rawAbs[0] = result[1].rawAbs[0] ;
+							result[0].rawAbs[1] = result[1].rawAbs[1] ;
+							result[0].rawAbs[2] = result[1].rawAbs[2] ;
+							result[0].rawAbs[3] = result[1].rawAbs[3] ;
+							max = min = useFloat;
+						}
+						else
+						{
+							useFloat = valFloat2[0];
+							TraceUser("average calculation error2, %.4f,%.4f; use %.4f, last,%.4f Times:%d, flag: %x\n",\
+									valFloat2[0], valFloat2[1],
+									useFloat, lastVal_meas,actTImes, measDataFlag);
+							result[1].rawAbs[0] = result[0].rawAbs[0] ;
+							result[1].rawAbs[1] = result[0].rawAbs[1] ;
+							result[1].rawAbs[2] = result[0].rawAbs[2] ;
+							result[1].rawAbs[3] = result[0].rawAbs[3] ;
+							max = min = useFloat;
+						}
+					}
+					else
+					{
+						TraceUser("average calculation error, not valid flag, %.4f,%.4f; last,%.4f Times:%d, flag: %x\n",\
+																				valFloat2[0], valFloat2[1],
+																				lastVal_meas,actTImes, measDataFlag);
+					}
+				}
+				else
+				{
+					TraceUser("average calculation ok, no big difference %.4f,%.4f; last,%.4f Times:%d, flag: %x\n",\
+														valFloat2[0], valFloat2[1],
+														lastVal_meas,actTImes, measDataFlag);
+				}
+			}
+			else
+			{
+				TraceUser("no EPA for average max > 1: %.4f \n", max);
+			}
+
+			if(((measDataFlag & FLAG_MEA_MEAS) != 0) || ((measDataFlag & FLAG_MEA_TRIG)!=0))
+			{
+				lastVal_meas = max/2.0f + min/2.0f;
+				TraceUser("Epa average: %.4f \n", lastVal_meas);
+			}
+		}
+		else
+		{
+			TraceUser("no special for EPA: %d \n", actTImes);
+		}
 		if(actTImes != times)
 		{
 			TraceDBG(TSK_ID_SCH_MEAS, "Some Invalid measure Result for average is not used! actual: %d < set:%d\n", actTImes, times);
@@ -204,6 +295,7 @@ static void GetAvgRawAbs(const MeasDataRaw* result , MeasDataRaw* measDst, uint1
 
 		if(actTImes < 3)
 		{
+
 			for(uint16_t i=0;i<times;i++)
 			{
 				if(except[i] != i)
@@ -299,15 +391,22 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 	assert(rangeIdx < MEAS_RANGE_MAX);
 
 
-	if(measDataSaturation == NONE_SATURATION)
+	if((measDataSaturation& LONG_SATURATION) != LONG_SATURATION)
 	{
 		absLong = measResult->rawAbs[MEA_STEP_660nm_LONG] - calibSch.caliFactor880 * measResult->rawAbs[MEA_STEP_880nm_LONG];
 	}
+	else
+	{
+		used_longShortSwitch = MEAS_SHORT_CALC;
+		type = NOT_CHECK_LONG_SHORT;
+
+	}
+
 	//if long==55
 	if(measDataSaturation < SHORT_SATURATION)
 	{
 		used_longShortSwitch = MEAS_SHORT_CALC;
-		if(type == 1)
+		if(type == CHECK_LONG_SHORT)
 			_longShortSwitch = MEAS_SHORT_CALC;
 
 		absShort = measResult->rawAbs[MEA_STEP_660nm_SHORT] - calibSch.caliFactor880 * measResult->rawAbs[MEA_STEP_880nm_SHORT];
@@ -331,7 +430,7 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 			val = absMeasConcentration[0];
 			if(type == CHECK_LONG_SHORT)
 			{
-				if(val >= longShortSwitchLimit[rangeIdx][0])
+				if( (val >= longShortSwitchLimit[rangeIdx][0]) && ((measDataSaturation & SHORT_SATURATION) != SHORT_SATURATION))
 				{
 					TraceMsg(TSK_ID_SCH_MEAS, "change to use short calculation: %.3f > %.3f -> %.3f\n", val, longShortSwitchLimit[rangeIdx][0], absMeasConcentration[1]);
 					val = absMeasConcentration[1];
@@ -344,7 +443,7 @@ float CalcConcentration(const MeasDataRaw* measResult, uint16_t rangeIdx, uint16
 			val = absMeasConcentration[1];
 			if(type == CHECK_LONG_SHORT)
 			{
-				if(val <= longShortSwitchLimit[rangeIdx][1])
+				if((val <= longShortSwitchLimit[rangeIdx][1]) && ((measDataSaturation & LONG_SATURATION) != LONG_SATURATION))
 				{
 					TraceMsg(TSK_ID_SCH_MEAS, "change to use long calculation: %.3f < %.3f ->%.3f\n", val, longShortSwitchLimit[rangeIdx][1], absMeasConcentration[0]);
 					val = absMeasConcentration[0];
@@ -391,13 +490,15 @@ static float CalcConcentrationWithAdaption(MeasDataRaw* measResult, uint16_t ran
 //calc the final measure result;
 static float CalcMeasureResult(MeasDataSt* measResult, MeasDataRaw* _measDataRaw, uint16_t _measureTimes, uint16_t rangeIdx)
 {
+	static float avgMeasResult = 0;
+	static uint16_t avgIdx = 0;
 	float val = 0.0f;
 	MeasDataRaw avgResult;
 
 	assert(MEAS_RANGE_MAX > rangeIdx);
 
 
-	GetAvgRawAbs(_measDataRaw, &avgResult, _measureTimes);
+	GetAvgRawAbs(_measDataRaw, &avgResult, _measureTimes, rangeIdx);
 
 
 
@@ -442,6 +543,53 @@ static float CalcMeasureResult(MeasDataSt* measResult, MeasDataRaw* _measDataRaw
 	}
 	measResult->measFlag = (uint16_t)(measResult->measFlag | (avgResult.rawFlag & FLAG_MEAS_MSK));
 	measResult->measRangeIdx = (uint16_t)(rangeIdx | _longShortSwitch<<15);
+
+	if(((measResult->measFlag & FLAG_POST_STD1) != FLAG_POST_STD1) &&  \
+			(((measResult->measFlag & FLAG_MEA_MEAS) != 0) || ((measResult->measFlag & FLAG_MEA_TRIG)!=0)) )
+	{
+		if(val > 1)
+		{
+			float valll = val * 0.20f;
+			float val33 = avgMeasResult * 0.20f;
+			float val22 = val - avgMeasResult;
+			if( val22 < 0)
+			{
+				val22 = -1* val22;
+			}
+			if(( val22 < valll ) && (val33 > val22))
+			{
+				avgIdx = 0;
+				TraceUser("Calc filter value: value change big:%.4f, %d\n",val, avgIdx);
+			}
+			else
+			{
+				TraceUser("Calc filter value: value change small,not use filter:%.4f, %d\n",val, avgIdx);
+			}
+		}
+		else
+		{
+			avgIdx = 0;
+			TraceUser("Calc filter value: value low:%.4f, %d\n",val, avgIdx);
+		}
+
+
+		if(avgIdx > 1)
+		{
+			float val_tt = avgMeasResult* (1-filterKfactor) + val * filterKfactor;
+			TraceUser("Calc filter value: \t %.06f, \t %.06f, final:\t %.06f, flag: %x\n",avgMeasResult, val,val_tt,measResult->measFlag);
+			val = val_tt;
+		}
+		else
+		{
+			TraceUser("Calc filter value: first value: \t %.06f, \t %.06f,%d,flag: %x\n",val, val, avgIdx,measResult->measFlag);
+		}
+		avgMeasResult = val;
+		avgIdx++;
+	}
+	else
+	{
+		TraceUser("Calc filter value: not update anything, \t %.06f, \t %.06f, flag: %x\n",avgMeasResult, val, measResult->measFlag);
+	}
 	return val;
 
 

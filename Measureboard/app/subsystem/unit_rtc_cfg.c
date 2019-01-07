@@ -292,7 +292,7 @@ uint16_t Put_RtcCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInd
 				RTC_TimeStruct.Hours = cfg.hour;
 
 				 //set event
-				NewEventLog(EV_RTC_UPDATE, NULL);
+				NewEventLog(EV_RTC_UPDATE, (void*)ptrValue);
 
 
 				(void)HAL_RTC_SetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);

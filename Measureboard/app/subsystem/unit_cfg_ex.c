@@ -34,9 +34,9 @@
 #include "unit_sch_cfg.h"
 #include "unit_cfg_ex.h"
 
+#define UI_START_TIME  300
 
-
-#define FILE_ID		0x18102408
+#define FILE_ID		0x18111215
 
 static uint16_t _State;     // Subsystem state
 static OS_RSEMA _Semaphore;
@@ -56,6 +56,9 @@ uint16_t  measPostStep[	MEAS_RANGE_MAX]				__attribute__ ((section (".configbuf_
 uint16_t  caliPostMeas 								__attribute__ ((section (".configbuf_EX")));
 uint16_t  loadEPACfg 								__attribute__ ((section (".configbuf_EX")));
 uint16_t	caliTimesMax							__attribute__ ((section (".configbuf_EX")));
+uint16_t	schDelayTime							__attribute__ ((section (".configbuf_EX")));
+float 		filterKfactor							__attribute__ ((section (".configbuf_EX")));
+uint16_t	rev[30]									__attribute__ ((section (".configbuf_EX")));
 static uint32_t fileID2								__attribute__ ((section (".configbuf_EX")));
 
 
@@ -71,6 +74,7 @@ static const float 	measLimitRange_Default[MEAS_RANGE_MAX][2] =
 	{-1000.0f,1000.0f},
 };
 
+static const float filterKfactor_Default = 1.0f;
 static const float  failedMeasureVal_Default = 1555.0f;
 static const uint16_t  retryIimesMax_Default = 3;
 static const uint16_t failedMeasureFlag_Default = FLAG_RETRY_MAX;
@@ -83,6 +87,7 @@ static const uint16_t  caliPostMeas_Default = 0;
 static const uint16_t  measPostStep_Default[MEAS_RANGE_MAX] = {0,0,0,0};
 static const uint16_t  loadEPACfg_Default = 0;
 static const uint16_t  caliTimesMax_Default = 4;
+static const uint16_t  schDelayTime_Default = UI_START_TIME;
 static const  T_DATACLASS _ClassList[]=
 {
 	//lint -e545
@@ -99,6 +104,8 @@ static const  T_DATACLASS _ClassList[]=
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(caliPostMeas, caliPostMeas_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(loadEPACfg, loadEPACfg_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(caliTimesMax, caliTimesMax_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(schDelayTime, schDelayTime_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(filterKfactor, filterKfactor_Default),
 
 	//lint -e545
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileID2,fileID_Default),
@@ -135,6 +142,9 @@ static const T_DATA_OBJ _ObjList[] =
 	NULL_T_DATA_OBJ,
 	CONSTRUCT_SIMPLE_U16(&caliTimesMax,NON_VOLATILE),
 	CONSTRUCT_SIMPLE_T32(&caliTime,READONLY_RAM),
+	CONSTRUCT_SIMPLE_U16(&schDelayTime,NON_VOLATILE),
+	//15
+	CONSTRUCT_SIMPLE_FLOAT(&filterKfactor,NON_VOLATILE),
 
 };
 
@@ -192,6 +202,12 @@ uint16_t Initialize_ExCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 			TraceMsg(TSK_ID_EEP,"%s LoadRomDefaults is called\n",me->t_unit_name);
 
 			result = WARNING;
+
+		}
+		if( (filterKfactor <= 0.005f) || (filterKfactor >= 1.0f) )
+		{
+			filterKfactor = 1.0f;
+			Trigger_EEPSave((void*)&filterKfactor, sizeof(filterKfactor), SYNC_IM);
 		}
 		/*if( (typeOfStartUp & INIT_CALCULATION) != 0)
 		{
@@ -244,9 +260,12 @@ uint16_t Put_ExCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeInde
 			{
 				std1VeriEnable = 0;
 				caliPostMeas = 0;
+				filterKfactor = 1.0f;
 			}
+			Trigger_EEPSave(&filterKfactor, sizeof(filterKfactor), SYNC_CYCLE);
 			Trigger_EEPSave(&std1VeriEnable, sizeof(std1VeriEnable), SYNC_CYCLE);
 			Trigger_EEPSave(&caliPostMeas, sizeof(caliPostMeas), SYNC_IM);
+
 			break;
 		default:
 			break;

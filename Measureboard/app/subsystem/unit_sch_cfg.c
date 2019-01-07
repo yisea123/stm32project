@@ -39,7 +39,7 @@ float				measRangeAlarmLimit[2]					__attribute__ ((section (".configbuf_sch")))
 FlushMode			flushMode   							__attribute__ ((section (".configbuf_sch")));//??????
 Measure_Sch			_measSch								__attribute__ ((section (".configbuf_sch")));//??????
 Calibration_Sch		_calibSch								__attribute__ ((section (".configbuf_sch")));
-static  Clean_Sch			_cleanSch						__attribute__ ((section (".configbuf_sch")));
+static  Clean_Sch	_cleanSch								__attribute__ ((section (".configbuf_sch")));
 SchInfo				schInfo									__attribute__ ((section (".configbuf_sch")));
 uint16_t			cleanSchSteps[MEAS_RANGE_MAX]			__attribute__ ((section (".configbuf_sch")));
 uint16_t			measSchSteps[MEAS_RANGE_MAX]			__attribute__ ((section (".configbuf_sch")));
@@ -159,7 +159,7 @@ static const Measure_Sch measSch_Default =
 	120,	 				//uint16_t 	measInterval
 	1, 						//uint16_t 	measCaliIndex
 	{2017,7,6,12,0,0},		//TimeCfg	measStartTime;
-	ENABLE_MODE,//sampleFlowDetectEnable
+	DISABLE_MODE,			//sampleFlowDetectEnable
 };
 
 
@@ -183,7 +183,7 @@ static const Calibration_Sch calibSch_Default =
 	{0,0,0,0},					//calibrationTime
 	{1.0f,1.0f,1.0f,1.0f},			//float		adaptionFactor[RANGE_IDX_MAX];
 	{0.0f,0.0f,0.0f,0.0f},			//float		adaptionOffset[RANGE_IDX_MAX];
-	{{11.0f,17.0f},{18.0f,27.0f},{49.0f,80.0f},{490.0f,800.0f}},//caliSlopeRange
+	{{10.0f,18.0f},{16.0f,30.0f},{45.0f,80.0f},{450.0f,800.0f}},//caliSlopeRange
 	{{-0.3f,0.3f},{-0.3f,0.3f},{-0.3f,0.3f},{-0.3f,0.3f}},//caliOffsetRange
 	{{-0.3f,0.3f},{-0.3f,0.3f}},				//float		caliOffsetRange_Long[2][2];
 	{{2.00f,4.0f},{4.0f,6.0f}},				//float		caliSlopeRange_Long[2][2];

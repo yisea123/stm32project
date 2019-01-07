@@ -21,6 +21,7 @@ enum
 };
 
 extern const T_UNIT ExCfg;
+extern uint16_t	schDelayTime;
 extern uint16_t	caliTimesMax;
 extern float  failedMeasureVal;
 extern uint16_t  retryIimesMax;
@@ -32,6 +33,8 @@ extern uint16_t  std1VeriEnable;
 extern uint16_t  measPostEnable;
 extern uint16_t  caliPostMeas;
 extern uint16_t  measPostStep[	MEAS_RANGE_MAX];
+extern float 	filterKfactor;
+
 uint16_t Initialize_ExCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Put_ExCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
 					void * ptrValue);
