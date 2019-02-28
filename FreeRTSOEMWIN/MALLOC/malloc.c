@@ -14,9 +14,9 @@
 
 
 //内存池(32字节对齐)
-u8 mem1base[MEM1_MAX_SIZE]	__attribute__ ((section (".mb5rwdata")));													//内部SRAM内存池
+u8 mem1base[MEM1_MAX_SIZE]	__attribute__ ((section (".mb5rwdata")));				//内部SRAM内存池
 u8 mem2base[MEM2_MAX_SIZE]  __attribute__ ((section (".mb5rwdata")));				//外部SDRAM内存池,前面2M给LTDC用了(1280*800*2)
-u8 mem3base[MEM3_MAX_SIZE]  __attribute__ ((section (".mb5rwdata")));;					//内部CCM内存池
+u8 mem3base[MEM3_MAX_SIZE]  __attribute__ ((section (".mb5rwdata")));;				//内部CCM内存池
 //内存管理表
 u32 mem1mapbase[MEM1_ALLOC_TABLE_SIZE] __attribute__ ((section (".mb5rwdata")));													//内部SRAM内存池MAP
 u32 mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__ ((section (".mb5rwdata")));	//外部SRAM内存池MAP

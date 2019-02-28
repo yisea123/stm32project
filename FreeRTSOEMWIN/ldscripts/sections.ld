@@ -437,7 +437,10 @@ SECTIONS
 	    *(.mb5rwdata)	   /* read-write data */
 	    *(.mb5rwdata*)
 	  } >MEMORY_B5
-	  
+	  .memory_b5_1_text (NOLOAD) :
+	  {
+	    *(.mb5ltdc)
+	  } >MEMORY_B5_1
     /*
      * The EXTMEM.
      * The C or assembly source must explicitly place the code or data there

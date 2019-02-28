@@ -17,9 +17,9 @@ DMA2D_HandleTypeDef DMA2D_Handler; 	    //DMA2D句柄
 
 //根据不同的颜色格式,定义帧缓存数组
 #if LCD_PIXFORMAT==LCD_PIXFORMAT_ARGB8888||LCD_PIXFORMAT==LCD_PIXFORMAT_RGB888
-	u32 ltdc_lcd_framebuf[1280][800] __attribute__ ((section (".mb5rwdata")));	//((section (".hbss")));
+	u32 ltdc_lcd_framebuf[1280][800] __attribute__ ((section (".mb5ltdc")));	//((section (".hbss")));
 #else
-	u16 ltdc_lcd_framebuf[1280][800] __attribute__ ((section (".mb5rwdata")));	//((section (".hbss")));
+	u16 ltdc_lcd_framebuf[1280][800] __attribute__ ((section (".mb5ltdc")));	//((section (".hbss")));
 #endif
 
 u32 *ltdc_framebuf[2];					//LTDC LCD帧缓存数组指针,必须指向对应大小的内存区域

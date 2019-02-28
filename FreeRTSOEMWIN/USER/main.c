@@ -15,6 +15,15 @@
 #include "GUI.h"
 #include "WM.h"
 #include "GUIDEMO.h"
+
+
+ HeapRegion_t xHeapRegions[] =
+ {
+	{ ( uint8_t * ) 0x20000000UL,   0x018000 },     // 96KiB from RAM (192KiB)
+ 	{ ( uint8_t * ) 0x10000000UL, 0x10000 }, //<< Defines a block of 64K bytes starting at address of 0x10000000UL --CCR
+  	{ NULL, 0 }                //<< Terminates the array.
+ };
+
 /************************************************
  ALIENTEK 阿波罗STM32F429开发板 FreeRTOS实验21-1
  FreeRTOS+EMWIN移植-HAL库版本
@@ -75,9 +84,9 @@ int main(void)
     SDRAM_Init();                   //SDRAM初始化
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();				        //触摸屏初始化
-    my_mem_init(SRAMIN);		    //初始化内部内存池
-	my_mem_init(SRAMEX);		    //初始化外部内存池
-	my_mem_init(SRAMCCM);		    //初始化CCM内存池
+//    my_mem_init(SRAMIN);		    //初始化内部内存池
+//	my_mem_init(SRAMEX);		    //初始化外部内存池
+//	my_mem_init(SRAMCCM);		    //初始化CCM内存池
 	 
 	//创建开始任务
     xTaskCreate((TaskFunction_t )start_task,            //任务函数
