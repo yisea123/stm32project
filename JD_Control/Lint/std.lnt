@@ -1,0 +1,41 @@
+//  Gnu C/C++ (version 2.95.3 or later), -si4 -sp4, 
+//  Standard lint options
+
+au-misra3.lnt
+co-gcc.lnt
+
+options.lnt  -si4 -sp4
+-i"app/AT"
+-i"app/subsystem"
+-i"app/t_unit"
+-i"app/inc"
+-i"app/shell/ntshell_v030/lib/util"
+-i"app/shell/ntshell_v030/lib/core"
+-i"app/shell"
+-i"bsp/Inc"
+-i"device"
+-i"system/include"
+-i"system/include/cmsis"
+-i"system/include/stm32f4-hal"
+-i"library/uCGUI_LIB"
+-i"library/FreeRTOS/ARM_CM4F"
+-i"library/ucGui/config"
+-i"library/ucGui/inc"
+-i"library/Glcd"
+-i"library/FreeRTOS/include"
+-i"library/RTOS"
+-i"library/STM32_USB_Host_Library/Class/MSC/Inc"
+-i"library/STM32_USB_Host_Library/Core/Inc"
+-i"library/FATFS/SRC"
+-i"library/FATFS/SRC/Drivers"
+-i"library/LwIP/System"
+-i"library/LwIP/Src/Include"
+-i"library/LwIP/System/arch"
+-i"library/LwIP/Src/include/lwip"
+-i"library/LwIP/Src/include/lwip/apps"
+-i"library/LwIP/Src/include/lwip/priv"
+-i"library/LwIP/Src/include/netif"
+-i"library/LwIP/Src/include/netif/ppp"
+-i"library/LwIP/Src/include/netif/ppp/polarssl"
+-i"library/LwIP/Src/include/posix"
+-i"library/LwIP/Src/include/posix/sys"

@@ -84,6 +84,7 @@ int main(void)
     SDRAM_Init();                   //SDRAM初始化
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();				        //触摸屏初始化
+    vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
 //    my_mem_init(SRAMIN);		    //初始化内部内存池
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
