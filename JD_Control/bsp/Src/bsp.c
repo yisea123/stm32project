@@ -43,6 +43,8 @@
 #include "main.h"
 #include "stm32f4xx_it.h"
 #include "shell_io.h"
+#include "dev_ad5689.h"
+#include "dev_ad7190.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -105,21 +107,40 @@ OS_RSEMA OS_CreateSemaphore(void)
 
 void bsp_init(void)
 {
+	uint16_t data = 0x1000;
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
+	MX_USART1_UART_Init();
+	MX_ADC1_Init();
 
-//  MX_FSMC_Init();
+	MX_CAN1_Init();
+	MX_DMA_Init();
+	MX_TIM6_Init();
+	/* USER CODE BEGIN 2 */
+	Init_RTC();
 
-//  MX_SDIO_SD_Init();
-  MX_USART1_UART_Init();
-  MX_ADC1_Init();
+	if (AD7190_Init() == 0)
+	{
+		TraceUser("获取不到 AD7190 !\n");
+		while (1)
+		{
+			HAL_Delay(1000);
+			if (AD7190_Init())
+				break;
+		}
+	}
+	TraceUser("检测到  AD7190 !\n");
+	weight_ad7190_conf();
 
-  MX_CAN1_Init();
-  MX_DMA_Init();
-  MX_TIM6_Init();
-  /* USER CODE BEGIN 2 */
-  Init_RTC();
+	uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
+	TraceUser("zero:%d\n",weight_Zero_Data);
+	TraceUser("硬石DAC（AD5689）模块模拟量电压输出\n");
+
+	AD5689_Init();
+	AD5689_WriteUpdate_DACREG(DAC_A,data);
+	AD5689_WriteUpdate_DACREG(DAC_B,0xFFFF-data);
+	TraceUser("data:%d\n",data);
   /* USER CODE END 2 */
 }
 
@@ -231,7 +252,7 @@ void assert_failed(uint8_t* file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
-    ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    ex: TraceUser("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 //	while(1);
 	TraceDBG(0xFFFF, "Assert Failed: %s, line: %d",file, line);
