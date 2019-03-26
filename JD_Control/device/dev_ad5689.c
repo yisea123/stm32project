@@ -11,7 +11,7 @@
 
 /* 私有类型定义 --------------------------------------------------------------*/
 /* 私有宏定义 ----------------------------------------------------------------*/
-#define SOFT_SPI  1  // 1:使用软件模拟SPI   0：使用硬件SPI外设
+#define SOFT_SPI  0  // 1:使用软件模拟SPI   0：使用硬件SPI外设
 
 /* 私有变量 ------------------------------------------------------------------*/
 SPI_HandleTypeDef hspi_AD5689;
@@ -123,7 +123,7 @@ void AD5689_SetRegisterValue(uint8_t command,DACHANNEL channel,uint16_t data)
   reg |=data;
 
   AD5689_SYNC_LOW();
-  printf(":%08X\n",reg);
+  TraceUser(":%08X\n",reg);
   delay();
 
 	for(i=0;i<24;i++)

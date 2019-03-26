@@ -19,15 +19,7 @@
 
 //extern ARM_DRIVER_USART Driver_USART0;
 //static ARM_DRIVER_USART * USARTdrv;
-#ifdef TEST_L_BUS
-extern UART_HandleTypeDef huart3;
 
-#define shellUart		(&huart3)
-
-#else
-extern UART_HandleTypeDef huart1;
-#define shellUart		(&huart1)
-#endif
 
 
 #define SHELL_MAX_ARGS (1+8) /*arg[0] is the cmd name, arg[1]...arg[N-1] are the actual cmd args*/
@@ -52,7 +44,7 @@ static void InitShell_HW(void)
 //	__USART2_RELEASE_RESET();
 	if(shellUart->Instance)
 		HAL_UART_DeInit(shellUart);
-	MX_USART1_UART_Init();
+	ShellUartInit();
 	HAL_UART_Receive_IT(shellUart, (uint8_t *)revBuff, (uint16_t)MAX_BUFF_SIZE);
 }
 
@@ -201,7 +193,6 @@ static int shellSend(const char* buf, int cnt)
 static const uint8_t dbgStr[] = "\n\n\n\n\n System Failed Dump Msg!\n\n\n\n";
 void SendBugMsg(void)
 {
-	InitShell_HW();
 	if(validPrintMsg == VALID_DBG_MSG)
 	{
 
@@ -297,6 +288,7 @@ void StartShellTXTask(void const * argument)
 	osEvent event;
 	uint16_t whileCount = 0;
 	const uint16_t taskID = TSK_ID_SHELL_TX;
+	InitShell_HW();
 	SendBugMsg();
 	shell_init();
 	while (TASK_LOOP_ST)
@@ -317,7 +309,7 @@ void StartShellTXTask(void const * argument)
 				if(shellUart->gState != HAL_UART_STATE_READY)
 				{
 					InitShell_HW();
-					TraceDBG(TSK_ID_SHELL_TX, "UART 2 force reset\nUART 2 force reset\nUART 2 force reset\nUART 2 force reset\n");
+					TraceDBG(TSK_ID_SHELL_TX, "Shell uart force reset\nShell uart force reset\nShell uart force reset\nShell uart force reset\n");
 
 				}
 			//	else

@@ -77,7 +77,7 @@ trace_write (const char* buf __attribute__((unused)),
 #elif defined(OS_USE_RTT)
   (void)chn;
  // return SEGGER_RTT_Write(chn%SEGGER_RTT_MAX_NUM_UP_BUFFERS, buf, nbyte);
-  return (ssize_t)SEGGER_RTT_Write(0, buf, (unsigned int)nbyte);
+ // return (ssize_t)SEGGER_RTT_Write(0, buf, (unsigned int)nbyte);
 #endif
 
   return -1;

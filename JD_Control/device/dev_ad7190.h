@@ -15,9 +15,9 @@
 /* 宏定义 --------------------------------------------------------------------*/
 #define WEIGHT_SPIx                 SPI2
 #define WEIGHT_SPIx_CLK_ENABLE()    __HAL_RCC_SPI2_CLK_ENABLE()
-#define WEIGHT_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();}
-#define WEIGHT_CS_Pin              GPIO_PIN_10
-#define WEIGHT_CS_GPIO_Port        GPIOC
+#define WEIGHT_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();__HAL_RCC_GPIOH_CLK_ENABLE();}
+#define WEIGHT_CS_Pin              GPIO_PIN_6
+#define WEIGHT_CS_GPIO_Port        GPIOH
 #define WEIGHT_SCK_Pin             GPIO_PIN_13
 #define WEIGHT_SCK_GPIO_Port       GPIOB
 #define WEIGHT_MISO_Pin            GPIO_PIN_14

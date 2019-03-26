@@ -131,6 +131,8 @@ typedef enum
 
 } TaskId_e;
 
+
+
 extern uint8_t		printChnMap[MAX_TASK_ID];
 extern uint8_t		printMsgMap[MAX_TASK_ID];
 extern uint8_t 	dbgMsgMap[MAX_TASK_ID];

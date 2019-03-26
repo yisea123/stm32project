@@ -78,10 +78,12 @@ extern CAN_HandleTypeDef hcan1;
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern DMA_HandleTypeDef hdma_spi2_rx;
 extern DMA_HandleTypeDef hdma_uart5_tx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
 extern DMA_HandleTypeDef hdma_usart2_tx;
 extern DMA_HandleTypeDef hdma_usart3_tx;
 extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart5;
+extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
@@ -99,7 +101,6 @@ void NMI_Handler(void)
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
-  HAL_RCC_NMI_IRQHandler();
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
   /* USER CODE END NonMaskableInt_IRQn 1 */
@@ -241,13 +242,6 @@ void DMA1_Stream4_IRQHandler(void)
 
   /* USER CODE END DMA1_Stream4_IRQn 1 */
 }
-void HW_CanRXMsg(CAN_HandleTypeDef* hcan, uint16_t FIFONumber)
-{
-//	CanRxMsgTypeDef pRxMsg;
-	/* USER CODE END CAN1_RX0_IRQn 0 */
-//	HAL_CAN_GetRxMessage(hcan, FIFONumber, &pRxMsg.head, pRxMsg.Data);
-
-}
 
 /**
   * @brief This function handles DMA1 stream6 global interrupt.
@@ -271,7 +265,7 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 
   /* USER CODE END CAN1_RX0_IRQn 0 */
-  HW_CanRXMsg(&hcan1, 0);
+  HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
 
   /* USER CODE END CAN1_RX0_IRQn 1 */
@@ -285,7 +279,7 @@ void CAN1_RX1_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX1_IRQn 0 */
 
   /* USER CODE END CAN1_RX1_IRQn 0 */
-  HW_CanRXMsg(&hcan1, 1);
+  HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX1_IRQn 1 */
 
   /* USER CODE END CAN1_RX1_IRQn 1 */
@@ -303,6 +297,30 @@ void CAN1_SCE_IRQHandler(void)
   /* USER CODE BEGIN CAN1_SCE_IRQn 1 */
 
   /* USER CODE END CAN1_SCE_IRQn 1 */
+}
+
+/**
+  * @brief This function handles USART1 global interrupt.
+  */
+void USART1_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART1_IRQn 0 */
+
+  /* USER CODE END USART1_IRQn 0 */
+	uint32_t tmp1 = __HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE);
+
+	if(tmp1 != RESET)
+	{
+  		ShellRXHandle();
+  	}
+	else
+	{
+		HAL_UART_IRQHandler(&huart1);
+	}
+  //HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
+
+  /* USER CODE END USART1_IRQn 1 */
 }
 
 /**
@@ -366,19 +384,14 @@ void UART4_IRQHandler(void)
   */
 void UART5_IRQHandler(void)
 {
-	uint32_t tmp1 = __HAL_UART_GET_FLAG(&huart5, UART_FLAG_RXNE);
+  /* USER CODE BEGIN UART5_IRQn 0 */
 
-	if(tmp1 != RESET)
-	{
-		extern void Usart6RXHandle(void);
-		Usart5RXHandle();
-	}
-	else
-	{
-		HAL_UART_IRQHandler(&huart5);
-	}
+  /* USER CODE END UART5_IRQn 0 */
+  HAL_UART_IRQHandler(&huart5);
+  /* USER CODE BEGIN UART5_IRQn 1 */
+
+  /* USER CODE END UART5_IRQn 1 */
 }
-
 
 /**
   * @brief This function handles DMA2 stream3 global interrupt.
@@ -420,6 +433,20 @@ void OTG_FS_IRQHandler(void)
   /* USER CODE BEGIN OTG_FS_IRQn 1 */
 
   /* USER CODE END OTG_FS_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream7 global interrupt.
+  */
+void DMA2_Stream7_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream7_IRQn 0 */
+
+  /* USER CODE END DMA2_Stream7_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_tx);
+  /* USER CODE BEGIN DMA2_Stream7_IRQn 1 */
+
+  /* USER CODE END DMA2_Stream7_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

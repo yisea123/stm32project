@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    stm32f4xx_it.h
@@ -30,6 +31,7 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F4xx_IT_H
@@ -39,56 +41,27 @@
  extern "C" {
 #endif 
 
-enum
-{
-	ISR_PRIORITY_TICK		= 15,
-	ISR_PRIORITY_ETH		= 7,
-	ISR_PRIORITY_USB		= 14,
-	ISR_PRIORITY_CAN		= 9,
-	ISR_PRIORITY_TIM6		= 6,
-	ISR_PRIORITY_ADC1 		= 5,
-	ISR_PRIORITY_UART       = 12,
-	ISR_PRIORITY_USART_DMA  = 12,
-	ISR_PRIORITY_SDIO 		= 4,
-	ISR_PRIORITY_SDIO_DMA   = 5,
-	ISR_PRIORITY_TIMER		= 8,
-};
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-/*  */
-enum
-{
-	ISR_SUB_PRIORITY_TICK		= 0,
-	ISR_SUB_PRIORITY_I2C2DMA	= 0,
-	ISR_SUB_PRIORITY_I2C2_ER	= 8,
-	ISR_SUB_PRIORITY_I2C2_EV 	= 9,
+/* USER CODE END Includes */
 
-
-	ISR_SUB_PRIORITY_SPI2  		= 0,
-	ISR_SUB_PRIORITY_SPI5  		= 8,
-
-	ISR_SUB_PRIORITY_ADC1 		= 0,
-	ISR_SUB_PRIORITY_ADC3	 	= 1,
-	ISR_SUB_PRIORITY_CAN1_TX	= 0,
-	ISR_SUB_PRIORITY_CAN1_RX	= 1,
-	ISR_SUB_PRIORITY_CAN1_SCE	= 2,
-	ISR_SUB_PRIORITY_CAN2_TX	= 3,
-	ISR_SUB_PRIORITY_CAN2_RX	= 4,
-	ISR_SUB_PRIORITY_CAN2_SCE	= 5,
-	ISR_SUB_PRIORITY_EXIT		= 0,
-
-
-	ISR_SUB_PRIORITY_UART_DMA	= 0,
-	ISR_SUB_PRIORITY_UART       = 8,
-	ISR_SUB_PRIORITY_TIMER      = 0,
-	ISR_SUB_PRIORITY_AD_TIMER   = 0,
-};
-
-/* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/
-/* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */
+/* USER CODE BEGIN ET */
 
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);
@@ -96,23 +69,23 @@ void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void SysTick_Handler(void);
-void ADC_IRQHandler(void);
+void RCC_IRQHandler(void);
+void DMA1_Stream3_IRQHandler(void);
+void DMA1_Stream4_IRQHandler(void);
+void DMA1_Stream6_IRQHandler(void);
 void CAN1_RX0_IRQHandler(void);
 void CAN1_RX1_IRQHandler(void);
 void CAN1_SCE_IRQHandler(void);
-void SDIO_IRQHandler(void);
-void DMA2_Stream3_IRQHandler(void);
-void OTG_FS_IRQHandler(void);
-void DMA2_Stream6_IRQHandler(void);
-void DMA2_Stream7_IRQHandler(void);
-void USART6_IRQHandler(void);
-void TIM6_DAC_IRQHandler(void);
-void RCC_IRQHandler(void);
-void DMA1_Stream3_IRQHandler(void);
-void DMA1_Stream6_IRQHandler(void);
+void USART1_IRQHandler(void);
+void USART2_IRQHandler(void);
+void USART3_IRQHandler(void);
 void DMA1_Stream7_IRQHandler(void);
+void UART4_IRQHandler(void);
+void UART5_IRQHandler(void);
+void DMA2_Stream3_IRQHandler(void);
 void ETH_IRQHandler(void);
 void OTG_FS_IRQHandler(void);
+void DMA2_Stream7_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

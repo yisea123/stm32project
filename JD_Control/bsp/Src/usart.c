@@ -49,10 +49,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
-
+#include "bsp.h"
 /* USER CODE BEGIN 0 */
-#define UART_BUFF_SIZE 		128
-#define UART_IDX_MSK		(0x00007FU)
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart4;
@@ -61,6 +60,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_uart5_tx;
+DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart2_tx;
 DMA_HandleTypeDef hdma_usart3_tx;
 
@@ -237,7 +237,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_uart5_tx);
 
     /* UART5 interrupt Init */
-    HAL_NVIC_SetPriority(UART5_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(UART5_IRQn, ISR_SUB_PRIORITY_UART, 0);
     HAL_NVIC_EnableIRQ(UART5_IRQn);
   /* USER CODE BEGIN UART5_MspInit 1 */
 
@@ -263,6 +263,28 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+    /* USART1 DMA Init */
+    /* USART1_TX Init */
+    hdma_usart1_tx.Instance = DMA2_Stream7;
+    hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+    hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+    hdma_usart1_tx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart1_tx);
+
+    /* USART1 interrupt Init */
+    HAL_NVIC_SetPriority(USART1_IRQn, ISR_SUB_PRIORITY_UART, 1);
+    HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
   /* USER CODE END USART1_MspInit 1 */
@@ -307,7 +329,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart2_tx);
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(USART2_IRQn, ISR_SUB_PRIORITY_UART, 2);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -353,7 +375,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart3_tx);
 
     /* USART3 interrupt Init */
-    HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(USART3_IRQn, ISR_SUB_PRIORITY_UART, 3);
     HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE BEGIN USART3_MspInit 1 */
 
@@ -423,6 +445,11 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6|GPIO_PIN_7);
 
+    /* USART1 DMA DeInit */
+    HAL_DMA_DeInit(uartHandle->hdmatx);
+
+    /* USART1 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspDeInit 1 */
 
   /* USER CODE END USART1_MspDeInit 1 */
@@ -475,76 +502,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
   }
 } 
 
-
-
 /* USER CODE BEGIN 1 */
 
-
-uint16_t NewUartData(uint16_t type,uint8_t* ptrData)
-{
-
-
-	static uint8_t uartBuff[UART_BUFF_SIZE];
-	static uint32_t uartShellIdx = 0;
-	static uint32_t lastId = 0;
-	uint16_t ret = OK;
-	if(type == 0)
-	{
-		uartBuff[uartShellIdx&UART_IDX_MSK] = *ptrData;
-		uartShellIdx++;
-	}
-	else // not whole data
-	{
-		if(lastId < uartShellIdx)
-		{
-			*ptrData = uartBuff[lastId&UART_IDX_MSK];
-			lastId++;
-		}
-		else
-		{
-			ret = FATAL_ERROR;
-		}
-	}
-	return ret;
-}
-static uint8_t shellData1[UART_BUFF_SIZE];
-
-void Usart5RXHandle(void)
-{
-	uint8_t data = (uint8_t)(huart5.Instance->DR & (uint8_t)0x00FFU);
-	static uint8_t uartBuff[UART_BUFF_SIZE];
-	static uint8_t uartShellIdx = 0;
-
-	if ('\r' == data ||'\n' == data)
-	{
-		if(uartShellIdx != 0)
-		{
-			uartBuff[uartShellIdx++] = '\n';
-			memset((void*)shellData1,0,sizeof(shellData1));
-			memcpy((void*)shellData1,(void*)uartBuff,uartShellIdx);
-			MsgPush(SHELL_RX_ID, (uint32_t)&shellData1[0],0);
-		}
-		else if('\r' == data)
-		{
-			MsgPush(SHELL_RX_ID, 0,0);
-		}
-		uartShellIdx = 0;
-	}
-	else
-	{
-		uartBuff[uartShellIdx++] = data;
-		if(uartShellIdx >= UART_BUFF_SIZE)
-			uartShellIdx = 0;
-	}
-}
 /* USER CODE END 1 */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

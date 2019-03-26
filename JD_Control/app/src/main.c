@@ -11,6 +11,9 @@
 #include "unit_parameter.h"
 #include "unit_rtc_cfg.h"
 #include "unit_sys_info.h"
+#include "shell_io.h"
+#include "dev_ad5689.h"
+#include "dev_ad7190.h"
 void vApplicationMallocFailedHook(void);
 
 extern void MX_FREERTOS_Init(void);
@@ -214,6 +217,33 @@ uint16_t LoadDefaultCfg(uint16_t id)
 	return ret;
 }
 
+void Adc_Setup()
+{
+
+	uint16_t data = 0x1000;
+	TraceUser("检测到  AD7190 !\n");
+	weight_ad7190_conf();
+
+	uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
+	TraceUser("zero:%d\n",weight_Zero_Data);
+	TraceUser("硬石DAC（AD5689）模块模拟量电压输出\n");
+
+	AD5689_Init();
+	AD5689_WriteUpdate_DACREG(DAC_A,data);
+	AD5689_WriteUpdate_DACREG(DAC_B,0xFFFF-data);
+	TraceUser("data:%d\n",data);
+	if (AD7190_Init() == 0)
+	{
+		TraceUser("获取不到 AD7190 !\n");
+		while (1)
+		{
+			HAL_Delay(1000);
+			if (AD7190_Init())
+				break;
+		}
+	}
+}
+
 __IO uint32_t kernelStarted = 0;
 osMessageQId usbQueue;
 int main(int argc, char* argv[])
@@ -223,14 +253,7 @@ int main(int argc, char* argv[])
 	trace_puts("Hello ARM World!\n");
 	osMessageQDef(USBH_Queue, 10, uint16_t);
 	usbQueue = osMessageCreate (osMessageQ(USBH_Queue), NULL);
-	/* init code for LWIP */
-	MX_LWIP_Init();
 
-	/* init code for USB_HOST */
-	MX_USB_HOST_Init();
-
-	/* init code for FATFS */
-	MX_FATFS_Init();
   //	Init_RTC();
 	CreateAllQid();
 	// At this stage the system clock should have already been configured
@@ -246,10 +269,19 @@ int main(int argc, char* argv[])
 		//lint -e655 -e655 -e655
 		subSystem[i]->Initialize(subSystem[i], INIT_HARDWARE|INIT_TASKS|INIT_CALCULATION|INIT_DATA);
 	}
+	/* init code for LWIP */
+	MX_LWIP_Init();
 
+	/* init code for USB_HOST */
+	MX_USB_HOST_Init();
+
+	/* init code for FATFS */
+	MX_FATFS_Init();
+	Adc_Setup();
 	/* Call init function for freertos objects (in freertos.c) */
 	MX_FREERTOS_Init();
 	kernelStarted = 1;
+
 
 	/* Start scheduler */
 	osKernelStart();

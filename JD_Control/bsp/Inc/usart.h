@@ -77,7 +77,7 @@ void MX_USART2_UART_Init(void);
 void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void Usart5RXHandle(void);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

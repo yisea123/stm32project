@@ -11,7 +11,7 @@ extern "C"
 #include "t_data_obj.h"
 #include "t_unit.h"
 #include "Common_crc.h"
-
+#include "def.h"
 
 #define 	LEN_T		2 //sizeof(uint16_t);
 
@@ -63,6 +63,24 @@ typedef struct
 #define OFFSET_OF(TYPE, MEMBER) ((size_t) & ((TYPE *)0)->MEMBER )
 #define IN_RANGE(x,min,max)		(((x)>=(min)) && ((x)<(max)))
 
+
+
+//shell
+#ifdef TEST_L_BUS
+extern UART_HandleTypeDef huart3;
+
+#define shellUart		(&huart3)
+
+#else
+extern UART_HandleTypeDef huart1;
+#define shellUart		(&huart1)
+#define ShellUartInit	MX_USART1_UART_Init
+#endif
+
+
+
+
+
 void* MallocMem(uint16_t size);
 void FreeMem(void*);
 void bsp_init(void);
@@ -77,7 +95,7 @@ int dbg_printf(const char* format, ...);
 void delay_us(const uint32_t count);
 void delayms(uint32_t timeout);
 
-
+void ShellRXHandle(void);
 
 
 #ifdef __cplusplus

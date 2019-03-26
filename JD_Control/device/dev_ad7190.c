@@ -64,7 +64,7 @@ void MX_WEIGHT_SPI_Init(void)
   hspi_weight.Init.CLKPolarity = SPI_POLARITY_HIGH;
   hspi_weight.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi_weight.Init.NSS = SPI_NSS_SOFT;
-  hspi_weight.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+  hspi_weight.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi_weight.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi_weight.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi_weight.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
