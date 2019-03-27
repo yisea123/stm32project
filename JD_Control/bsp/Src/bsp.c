@@ -123,8 +123,8 @@ OS_RSEMA OS_CreateSemaphore(void)
 
 void bsp_init(void)
 {
-	HAL_Init();
-	SystemClock_Config();
+//	HAL_Init();
+//	SystemClock_Config();
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
     MX_DMA_Init();
@@ -151,6 +151,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
   /**Configure the main internal regulator output voltage 
   */
@@ -158,12 +159,12 @@ void SystemClock_Config(void)
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
   /**Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 168;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -183,15 +184,13 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
- 	// HAL_RCC_GetHCLKFreq()/1000    1msÖÐ¶ÏÒ»´Î
-	// HAL_RCC_GetHCLKFreq()/100000	 10usÖÐ¶ÏÒ»´Î
-	// HAL_RCC_GetHCLKFreq()/1000000 1usÖÐ¶ÏÒ»´Î
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // ÅäÖÃ²¢Æô¶¯ÏµÍ³µÎ´ð¶¨Ê±Æ÷
-  /* ÏµÍ³µÎ´ð¶¨Ê±Æ÷Ê±ÖÓÔ´ */
+  HAL_RCC_EnableCSS();                          
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* ÏµÍ³µÎ´ð¶¨Ê±Æ÷ÖÐ¶ÏÓÅÏÈ¼¶ÅäÖÃ */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+  /* SysTick_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(SysTick_IRQn, ISR_PRIORITY_TICK, ISR_SUB_PRIORITY_TICK);
 }
 
 /* USER CODE BEGIN 4 */

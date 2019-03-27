@@ -42,6 +42,7 @@ osMessageQId USART_RX_EVENT			= NULL;
 osMessageQId PRINT_ID = NULL;
 osMessageQId SCH_LB_ID = NULL;
 
+uint16_t dummyRam = 0;
 uint16_t                printCtrlCfg[MSG_TYPE_MAX] = {0,1,1,1};
 
 static const QueIDInit QID[]=
@@ -221,6 +222,16 @@ void Adc_Setup()
 {
 
 	uint16_t data = 0x1000;
+	if (AD7190_Init() == 0)
+	{
+		TraceUser("获取不到 AD7190 !\n");
+		while (1)
+		{
+			HAL_Delay(1000);
+			if (AD7190_Init())
+				break;
+		}
+	}
 	TraceUser("检测到  AD7190 !\n");
 	weight_ad7190_conf();
 
@@ -232,16 +243,7 @@ void Adc_Setup()
 	AD5689_WriteUpdate_DACREG(DAC_A,data);
 	AD5689_WriteUpdate_DACREG(DAC_B,0xFFFF-data);
 	TraceUser("data:%d\n",data);
-	if (AD7190_Init() == 0)
-	{
-		TraceUser("获取不到 AD7190 !\n");
-		while (1)
-		{
-			HAL_Delay(1000);
-			if (AD7190_Init())
-				break;
-		}
-	}
+
 }
 
 __IO uint32_t kernelStarted = 0;
@@ -270,13 +272,13 @@ int main(int argc, char* argv[])
 		subSystem[i]->Initialize(subSystem[i], INIT_HARDWARE|INIT_TASKS|INIT_CALCULATION|INIT_DATA);
 	}
 	/* init code for LWIP */
-	MX_LWIP_Init();
+//	MX_LWIP_Init();
 
 	/* init code for USB_HOST */
-	MX_USB_HOST_Init();
+//	MX_USB_HOST_Init();
 
 	/* init code for FATFS */
-	MX_FATFS_Init();
+//	MX_FATFS_Init();
 	Adc_Setup();
 	/* Call init function for freertos objects (in freertos.c) */
 	MX_FREERTOS_Init();

@@ -13,7 +13,7 @@
 #include "diag/Trace.h"
 #include "cmsis_os.h"
 #include "bsp.h"
-#include "t_unit.h"
+#include "t_unit_head.h"
 
 #ifdef __cplusplus
  extern "C" {
@@ -34,7 +34,7 @@ extern osMessageQId PRINT_ID;
 extern osMessageQId SCH_LB_ID;
 #define IS_ROM_ADR(x)	(((x)>=0x08000000)&&((x)<0x08200000) )
 #define IS_RAM_ADR(x)	((x)<0x001FFFFF)
-
+extern uint16_t dummyRam;
 #define NULL_T_DATA_OBJ		CONSTRUCT_SIMPLE_U16(&dummyRam, RAM)
 #define NMT_TRIGGER			0x01
 #define NEW_MEAS_DATA		0x01
