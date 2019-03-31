@@ -96,8 +96,8 @@ void delay_us(const uint32_t count);
 void delayms(uint32_t timeout);
 
 void ShellRXHandle(void);
-
-
+void Adc_Setup(void);
+void ad7190_unipolar_multichannel_conf(void);
 #ifdef __cplusplus
 }
 #endif

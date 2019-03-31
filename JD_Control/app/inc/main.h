@@ -32,6 +32,11 @@ extern osMessageQId FILE_TSK_ID;
 extern osMessageQId USART_RX_EVENT;
 extern osMessageQId PRINT_ID;
 extern osMessageQId SCH_LB_ID;
+extern osMessageQId ADC_MONITOR;
+extern osMessageQId OUTPUT_QID;
+extern osMessageQId WELD_CTRL;
+extern osMessageQId MOTOR_CTRL;
+
 #define IS_ROM_ADR(x)	(((x)>=0x08000000)&&((x)<0x08200000) )
 #define IS_RAM_ADR(x)	((x)<0x001FFFFF)
 extern uint16_t dummyRam;
@@ -71,14 +76,15 @@ typedef enum
 	TSK_RESETIO,
 	TSK_FINISH,
 	TSK_FORCE_BREAK,
+	TSK_FORCE_STOP,
+	TSK_STATE_MAX,
 } TSK_STATE;
 
 
 
+extern const char* mainTskStateDsp[TSK_STATE_MAX];
 
 typedef void (*ptrTskCallBack)(uint16_t ret, uint16_t val);
-#define TSK_MSG_CONVERT(x)		((TSK_MSG*)(x))
-
 
 typedef struct
 {
@@ -95,6 +101,10 @@ typedef struct
  	uint32_t lineNum;
 } TSK_MSG;
 
+#define TSK_MSG_CONVERT(x)		((TSK_MSG*)(x))
+
+#define TSK_MSG_RELASE		TracePrint(taskID, "owner: %d, %s: %x,\t%s\n",TSK_MSG_CONVERT(event.value.p)->lineNum, mainTskStateDsp[mainTskState], tskState, taskStateDsp[tskState]); \
+	UnuseTskMsg( TSK_MSG_CONVERT(event.value.p) )
 #pragma GCC diagnostic pop
 
 enum
@@ -127,11 +137,15 @@ typedef enum
 	TSK_ID_TST,
 	TSK_ID_CAN1_TSK,
 	TSK_ID_LOCAL_BUS,
+	TSK_ID_ADC_MONITOR,
+	TSK_ID_OUTPUT,
+	TSK_ID_MOTOR,
+	TSK_ID_WELD,
 	MAX_TASK_ID
 
 } TaskId_e;
 
-
+#define TIME_UNIT						100u
 
 extern uint8_t		printChnMap[MAX_TASK_ID];
 extern uint8_t		printMsgMap[MAX_TASK_ID];
@@ -153,18 +167,39 @@ extern const char*		TskName[MAX_TASK_ID];
 extern uint32_t	freeRtosTskTick[MAX_TASK_ID];
 extern uint8_t freeRtosTskState[MAX_TASK_ID];
 #define SHELL_RX_DATA			0x01
+
+
+
+/************************* TSK message interfaces ***********************/
+
+void UnuseTskMsg(TSK_MSG* gMsg);
+void SendTskMsg_LOC(osThreadId thread_id, TSK_MSG* msg,uint32_t lineNum  );
+void SendTskMsg_INST(osThreadId thread_id, TSK_STATE tskState, uint32_t val, ptrTskCallBack ptrCallFin, ptrTskCallBack ptrCallUpdate,uint32_t lineNum );
+void StateFinishAct(TSK_MSG* ptrTask, uint16_t taskId, uint16_t ret, uint16_t result, uint32_t line);
+osStatus MessagePush(uint32_t line, char* file, osMessageQId queue_id, uint32_t info,
+		uint32_t millisec);
+osStatus MessagePurge(uint32_t line, char* file, osMessageQId queue_id, uint32_t info,
+		uint32_t millisec);
+
+
+#define SendTskMsg(x,y,z,w,u) SendTskMsg_INST(x,y,z,w,u,__LINE__)
+#define SendTskMsgLOC(x,y) SendTskMsg_LOC(x,y,__LINE__)
+
+#define MsgPush(x,y,z)		MessagePush(__LINE__,__FILE__,x,y,z)
+#define MsgPurge(x,y,z)		MessagePurge(__LINE__,__FILE__,x,y,z)
+osStatus SignalPush(osThreadId thread_id, int32_t signal);
+#define SigPush(x,y)		SignalPush(x,y)
+#define TSK_FINISH_ACT(x,y,z,w)		StateFinishAct(x,y,z,w,__LINE__)
+
+
+
+
+void UpdateWeldSetting(void);
 void CheckSimuAction(void );
 
 int main(int argc, char* argv[]);
+void InitTaskMsg(TSK_MSG* ptrMsg);
 
-osStatus MessagePush(uint32_t line, osMessageQId queue_id, uint32_t info,
-		uint32_t millisec);
-osStatus MessagePurge(uint32_t line, osMessageQId queue_id, uint32_t info,
-		uint32_t millisec);
-#define MsgPush(x,y,z)		MessagePush(__LINE__,x,y,z)
-#define MsgPurge(x,y,z)		MessagePurge(__LINE__,x,y,z)
-osStatus SignalPush(osThreadId thread_id, int32_t signal);
-#define SigPush(x,y)		SignalPush(x,y)
 void RenitUsb_User(void);
 extern __IO uint32_t kernelStarted;
 

@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//app/src/tsk_monitor.c=UTF-8
 encoding//bsp/Src/bsp.c=UTF-8
 encoding//device/dev_ad7190.c=UTF-8
 encoding//device/dev_ad7190.h=UTF-8

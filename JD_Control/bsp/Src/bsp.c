@@ -129,10 +129,10 @@ void bsp_init(void)
 	MX_GPIO_Init();
     MX_DMA_Init();
 	MX_SPI2_Init();
-	MX_SPI1_Init();
+//	MX_SPI1_Init();
 	MX_CAN1_Init();
 	MX_TIM2_Init();
-	MX_TIM3_Init();
+	//MX_TIM3_Init();
 	MX_UART4_Init();
 	MX_USART3_UART_Init();
 	MX_USART1_UART_Init();
@@ -222,12 +222,55 @@ void delay_us(uint32_t count)
 		;
 }
 
-osStatus MessagePush (uint32_t line,osMessageQId queue_id, uint32_t info, uint32_t millisec)
+
+osStatus MessagePush (uint32_t line,char* file, osMessageQId queue_id, uint32_t info, uint32_t millisec)
 {
 	if(queue_id == NULL)
 		return osErrorResource;
 //	assert_param(queue_id);
-	return osMessagePut(queue_id,info, millisec);
+	osStatus ret = osMessagePut(queue_id,info, millisec);
+
+	if(ret == osOK)
+	{
+	//	if(queue_id == SCH_IO_ID)
+	//		TracePrint(0xFFFF, "Queue push : %d, line: %d\n",queue_id, line);
+		//it is ok
+	}
+	else
+	{
+		TraceDBG(TSK_ID_PRINT, "Queue push Error: %d,%x,file:%s line: %d\n",queue_id,queue_id,file, line);
+		//xQueueReset( queue_id);
+		osMessagePut(queue_id,info, millisec);
+	}
+
+	return ret;
+
+
+}
+
+void Adc_Setup(void)
+{
+
+	uint16_t data = 0x1000;
+	if (AD7190_Init() == 0)
+	{
+		TraceUser("No  AD7190 !\n");
+		while (1)
+		{
+			HAL_Delay(1000);
+			if (AD7190_Init())
+				break;
+		}
+	}
+	TraceUser("detect AD7190 !\n");
+	AD7190_conf();
+
+	uint32_t weight_Zero_Data = AD7190_ReadAvg(6);
+	TraceUser("zero:%d\n",weight_Zero_Data);
+	TraceUser("AD5689 output\n");
+
+
+
 }
 
 

@@ -13,25 +13,25 @@
 #include "stm32f4xx_hal.h"
 /* 类型定义 ------------------------------------------------------------------*/
 /* 宏定义 --------------------------------------------------------------------*/
-#define WEIGHT_SPIx                 SPI2
-#define WEIGHT_SPIx_CLK_ENABLE()    __HAL_RCC_SPI2_CLK_ENABLE()
-#define WEIGHT_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();__HAL_RCC_GPIOH_CLK_ENABLE();}
-#define WEIGHT_CS_Pin              GPIO_PIN_6
-#define WEIGHT_CS_GPIO_Port        GPIOH
-#define WEIGHT_SCK_Pin             GPIO_PIN_13
-#define WEIGHT_SCK_GPIO_Port       GPIOB
-#define WEIGHT_MISO_Pin            GPIO_PIN_14
-#define WEIGHT_MISO_GPIO_Port      GPIOB
-#define WEIGHT_MOSI_Pin            GPIO_PIN_15
-#define WEIGHT_MOSI_GPIO_Port      GPIOB
+#define AD7190_SPIx                 SPI2
+#define AD7190_SPIx_CLK_ENABLE()    __HAL_RCC_SPI2_CLK_ENABLE()
+#define AD7190_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();__HAL_RCC_GPIOH_CLK_ENABLE();}
+#define AD7190_CS_Pin              GPIO_PIN_6
+#define AD7190_CS_GPIO_Port        GPIOH
+#define AD7190_SCK_Pin             GPIO_PIN_13
+#define AD7190_SCK_GPIO_Port       GPIOB
+#define AD7190_MISO_Pin            GPIO_PIN_14
+#define AD7190_MISO_GPIO_Port      GPIOB
+#define AD7190_MOSI_Pin            GPIO_PIN_15
+#define AD7190_MOSI_GPIO_Port      GPIOB
 
-#define WEIGHT_CS_ENABLE()         HAL_GPIO_WritePin(WEIGHT_CS_GPIO_Port,WEIGHT_CS_Pin,GPIO_PIN_RESET)
-#define WEIGHT_CS_DISABLE()        HAL_GPIO_WritePin(WEIGHT_CS_GPIO_Port,WEIGHT_CS_Pin,GPIO_PIN_SET)
+#define AD7190_CS_ENABLE()         HAL_GPIO_WritePin(AD7190_CS_GPIO_Port,AD7190_CS_Pin,GPIO_PIN_RESET)
+#define AD7190_CS_DISABLE()        HAL_GPIO_WritePin(AD7190_CS_GPIO_Port,AD7190_CS_Pin,GPIO_PIN_SET)
 
 
 
 /* AD7190 GPIO */
-#define AD7190_RDY_STATE       (WEIGHT_MISO_GPIO_Port->IDR & WEIGHT_MISO_Pin)
+#define AD7190_RDY_STATE       (AD7190_MISO_GPIO_Port->IDR & AD7190_MISO_Pin)
 
 /* AD7190 Register Map */
 #define AD7190_REG_COMM         0 // Communications Register (WO, 8-bit)
@@ -133,7 +133,7 @@
 
 
 /* 扩展变量 ------------------------------------------------------------------*/
-extern SPI_HandleTypeDef hspi_weight;
+extern SPI_HandleTypeDef hspi_AD7190;
 
 /* 函数声明 ------------------------------------------------------------------*/
 
@@ -145,7 +145,8 @@ void AD7190_RangeSetup(uint8_t polarity, uint8_t range);
 uint32_t AD7190_SingleConversion(void);
 uint32_t AD7190_ContinuousReadAvg(uint8_t sampleNumber);
 uint32_t AD7190_TemperatureRead(void);
-void weight_ad7190_conf(void);
-uint32_t weight_ad7190_ReadAvg(uint8_t sampleNumber);
+void AD7190_conf(void);
+uint32_t AD7190_ReadAvg(uint8_t sampleNumber);
 
+void AD7190_MultiChannelSelect(uint16_t channel);
 #endif /* DEV_AD7190_H_ */

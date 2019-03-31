@@ -40,6 +40,7 @@
 #include "cmd.h"
 
 #include "dev_eep.h"
+#include "tsk_head.h"
 /* USER CODE END Includes */
 
 
@@ -81,11 +82,12 @@ static const TaskConfiguration_t TaskConfiguration[] =
 
 	//	{{"can rx1",		StartCanRXTask,		osPriorityHigh, 	0,		384},		TSK_ID_CAN_RX1, NULL},
 	//	{{"can error",		StartCanErrTask,	osPriorityBelowNormal, 	0,		128},		TSK_ID_CAN_ERR, NULL},
-	//	{{"can tx1",		StartCanTXTask,		osPriorityBelowNormal, 	0,		384},		TSK_ID_CAN_TX1, NULL},
+		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		384},		TSK_ID_MOTOR, NULL},
 
-	//	{{"AD monitor",		MonitorADTask,		osPriorityNormal, 		0,		256},		TSK_ID_AD_MONITOR, NULL},
-	//	{{"Gpio task",		StartGpioTask,		osPriorityNormal, 		0,		128},		TSK_ID_GPIO, NULL},
+		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 		0,		256},		TSK_ID_WELD, NULL},
+		{{"Output Tsk",		StartOutputTsk,		osPriorityAboveNormal, 	0,		256},		TSK_ID_OUTPUT, NULL},
 
+		{{"ADC Monitor",	StartADCMonitor,		osPriorityNormal, 	0,		256},			TSK_ID_ADC_MONITOR, NULL},
 		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_TX, NULL},
 		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			384},			TSK_ID_SHELL_RX, NULL},
 //		{{"arcLink",		StartArcLinkTask,		osPriorityLow, 	0,			384},			TSK_ID_TST, NULL},

@@ -8,8 +8,8 @@
 #include "main.h"
 #include "t_unit_head.h"
 #include "unit_weld_cfg.h"
-
-
+#include "tsk_head.h"
+#include "shell_io.h"
 //! unit global attributes
 
 static uint16_t _State;     // Subsystem state
@@ -17,14 +17,15 @@ static OS_RSEMA _Semaphore;
 static const uint8_t fileID_Default = 0x0F;
 
 
-CaliPoints currCaliPoint[MAX_CALI_CURR]			__attribute__ ((section (".configbuf_static")));
-CaliPoints voltCaliPoint[2]						__attribute__ ((section (".configbuf_static")));
-CaliPoints speedCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
-uint32_t   speedRation							__attribute__ ((section (".configbuf_static")));
-uint32_t   caliTime								__attribute__ ((section (".configbuf_static")));
-int32_t motorPosHome							__attribute__ ((section (".configbuf_static")));
-uint16_t   currCaliPointNum						__attribute__ ((section (".configbuf_static")));
-uint32_t   rev_loc[15]							__attribute__ ((section (".configbuf_static")));
+CaliPoints 	currCaliPoint[MAX_CALI_CURR]		__attribute__ ((section (".configbuf_static")));
+CaliPoints 	voltCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
+CaliPoints 	speedCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
+float   	ang2CntRation						__attribute__ ((section (".configbuf_static")));
+uint32_t   	caliTime							__attribute__ ((section (".configbuf_static")));
+int32_t 	motorPosHome						__attribute__ ((section (".configbuf_static")));
+
+uint16_t   	currCaliPointNum					__attribute__ ((section (".configbuf_static")));
+uint32_t   	rev_loc[15]							__attribute__ ((section (".configbuf_static")));
 
 
 static uint8_t fileId1							__attribute__ ((section (".configbuf_measdata")));
@@ -34,11 +35,28 @@ WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 
-uint16_t	weldStatus = 0;
+int32_t 	lastMotorPos_PowerDown = 0;
+uint32_t  adcValue[4];
+uint32_t  adcValueFinal[4];
+uint16_t  daOutput[2];
+uint32_t  digitOutput;
+uint32_t  digitInput;
+
+uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
+volatile  int32_t   motorPos_Read;
+float 	  motorSpeed_Read;
+int32_t  motorPos_WeldStart;
+int32_t  motorPos_WeldFinish;
+uint16_t  weldStartStatus;
+uint16_t  weldStatus = 0;
+uint16_t  weldState = WELD_IDLE;
 
 SegWeld tmp_SegWeld;
 CaliPoints tmp_CaliPointCurr;
 uint16_t clearCurrCali = 0;
+
+
+
 static const CaliPoints currCaliPoint_Default[MAX_CALI_CURR] = {
                                                     {10.0f, 3500, 0},
 													{30.0f, 10000, 0},
@@ -65,7 +83,7 @@ static const CaliPoints speedCaliPoint_Default[2] =
 
 static const uint16_t currCaliPointNum_Default = 10;
 
-static const uint32_t speedRation_Default = 78*2*32;
+static const float ang2CntRation_Default = 78*2*32/360.0;
 /*
  * 	float weldSpeed;
 	float currHigh;
@@ -135,12 +153,19 @@ static const  T_DATACLASS _ClassList[]=
 static const T_DATA_OBJ _ObjList[] =
 {
 
+	//test interfaces:
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutput[0],sizeof(daOutput)/sizeof(uint16_t),	 RAM),
+		CONSTRUCT_SIMPLE_U32(&digitOutput,	 RAM),
+		CONSTRUCT_ARRAY_SIMPLE_U32(&adcValueFinal[0],sizeof(adcValueFinal)/sizeof(uint32_t),	 RAM),
+		CONSTRUCT_SIMPLE_U32(&digitInput,	 RAM),
+		NULL_T_DATA_OBJ,
+
     //0
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[1], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&speedCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&speedCaliPoint[1], NON_VOLATILE),
-		CONSTRUCT_SIMPLE_U16(&speedRation,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&ang2CntRation,	 NON_VOLATILE),
 
     //5
 		CONSTRUCT_SIMPLE_U32(&motorPosHome,	 NON_VOLATILE),
@@ -271,15 +296,15 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 
     	memcpy((void*)&motorPosHome, (void*)&motorPosHome_Default, sizeof(motorPosHome));
     	memcpy((void*)&segWeld, (void*)&segWeld_Default, sizeof(segWeld));
-    	memcpy((void*)&speedRation, (void*)&speedRation_Default, sizeof(speedRation));
+    	memcpy((void*)&ang2CntRation, (void*)&ang2CntRation_Default, sizeof(ang2CntRation));
     	memcpy((void*)&currCaliPointNum, (void*)&currCaliPointNum_Default, sizeof(currCaliPointNum));
     	memcpy((void*)&speedCaliPoint[0], (void*)&speedCaliPoint_Default[0], sizeof(speedCaliPoint));
     	memcpy((void*)&voltCaliPoint[0], (void*)&voltCaliPoint_Default[0], sizeof(voltCaliPoint));
     	memcpy((void*)&currCaliPoint[0], (void*)&currCaliPoint_Default[0], sizeof(currCaliPoint));
     	Trigger_EEPSave((void*)motorPosHome, sizeof(motorPosHome),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&segWeld[0], sizeof(segWeld),SYNC_CYCLE);
-    	Trigger_EEPSave((void*)speedRation, sizeof(speedRation),SYNC_CYCLE);
-    	Trigger_EEPSave((void*)currCaliPointNum, sizeof(currCaliPointNum),SYNC_CYCLE);
+    	Trigger_EEPSave((void*)&ang2CntRation, sizeof(ang2CntRation),SYNC_CYCLE);
+    	Trigger_EEPSave((void*)&currCaliPointNum, sizeof(currCaliPointNum),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&speedCaliPoint[0], sizeof(speedCaliPoint),SYNC_CYCLE);
        	Trigger_EEPSave((void*)&voltCaliPoint[0], sizeof(voltCaliPoint),SYNC_CYCLE);
        	Trigger_EEPSave((void*)&currCaliPoint[0], sizeof(currCaliPoint),SYNC_CYCLE);
@@ -288,7 +313,18 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
     }
     return result;
 }
-
+float GetSpeedDuty(float speed1)
+{
+	float speed = speed1;
+	if(speed1 < 0)
+		speed= -speed1;
+	float outVal = (speed - speedCaliPoint[0].setValue) / (speedCaliPoint[1].setValue - speedCaliPoint[0].setValue) * \
+			(speedCaliPoint[1].deviceValue - speedCaliPoint[0].deviceValue) + speedCaliPoint[0].deviceValue;
+	float duty = (outVal/655.36f);
+	if(speed1 < 0)
+		duty = -duty;
+	return duty;
+}
 
 uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
                      void * ptrValue)
@@ -303,6 +339,12 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 	{
 		switch(objectIndex)
 		{
+		case OBJ_IDX_OUTPUTDA:
+			SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR), NULL, NULL);
+		break;
+		case OBJ_IDX_OUTPUTDO:
+			SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
+			break;
 		default:
 			break;
 		}
@@ -311,3 +353,128 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 	return result;
 }
 
+void UpdateWeldFInishPos(void)
+{
+	for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
+	{
+		if(segWeld[i].endAng != 0)
+			segWeldCnt[i] = (int32_t)(segWeld[i].endAng * ang2CntRation);
+		else
+			segWeldCnt[i] = 0;
+	}
+}
+
+
+int32_t GetWeldFinishPos(uint16_t id)
+{
+	int32_t pos = 0;
+	if(id < MAX_SEG_SIZE)
+	{
+		if(segWeld[id].endAng != 0)
+			pos = (int32_t)(segWeld[id].endAng * ang2CntRation);
+
+	}
+	else
+	{
+		for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
+		{
+			if(segWeld[i].endAng != 0)
+				pos = (int32_t)(segWeld[i].endAng * ang2CntRation);
+			else
+				break;
+		}
+	}
+	return pos;
+}
+
+
+int32_t GetWeldSegSpeed(uint16_t id)
+{
+	int32_t pos = 0;
+	if(id < MAX_SEG_SIZE)
+	{
+		if(segWeld[id].endAng != 0)
+			pos = (int32_t)(segWeld[id].weldSpeed * 360 * ang2CntRation);
+
+	}
+	else
+	{
+		for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
+		{
+			if(segWeld[i].endAng != 0)
+				pos = (int32_t)(segWeld[i].weldSpeed * 360 * ang2CntRation);
+			else
+				break;
+		}
+	}
+	return pos;
+}
+
+
+float GetWeldSpeed(int32_t cnt)
+{
+	int32_t pos = cnt;
+	float weldSpeed = 0;
+	if(cnt < 0)
+		pos = -cnt;
+	uint16_t ret = FATAL_ERROR;
+	for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
+	{
+		if(segWeld[i].endAng != 0)
+		{
+			if(segWeldCnt[i] > pos)
+			{
+				weldSpeed = segWeld[i].weldSpeed;
+			}
+			else if(segWeldCnt[i] < pos)
+			{
+				ret = OK;
+			}
+		}
+		else
+			break;
+	}
+	if(ret == OK)
+		return weldSpeed;
+	else
+		return 0;
+}
+
+uint16_t GetSpeedOutput(float speed)
+{
+	//todo
+	return 0;
+}
+
+uint16_t GetCurrOutput(float curr)
+{
+	//todo
+	return 0;
+}
+
+
+float ConvertCurr(uint32_t ad)
+{
+	//todo
+	return 0;
+}
+
+float ConvertVolt(uint32_t ad)
+{
+	//todo
+	return 0;
+}
+
+
+uint16_t ConvertMotorPos(int32_t cnt)
+{
+	//todo
+	return 0;
+}
+
+
+float ConvertMotorSpeed(int32_t cnt)
+{
+	//todo
+	return 0;
+}

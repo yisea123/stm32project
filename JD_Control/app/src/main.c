@@ -11,6 +11,7 @@
 #include "unit_parameter.h"
 #include "unit_rtc_cfg.h"
 #include "unit_sys_info.h"
+#include "unit_weld_cfg.h"
 #include "shell_io.h"
 #include "dev_ad5689.h"
 #include "dev_ad7190.h"
@@ -41,9 +42,24 @@ osMessageQId FILE_TSK_ID			= NULL;
 osMessageQId USART_RX_EVENT			= NULL;
 osMessageQId PRINT_ID = NULL;
 osMessageQId SCH_LB_ID = NULL;
-
+osMessageQId ADC_MONITOR = NULL;
+osMessageQId OUTPUT_QID = NULL;
+osMessageQId WELD_CTRL = NULL;
+osMessageQId MOTOR_CTRL = NULL;
 uint16_t dummyRam = 0;
-uint16_t                printCtrlCfg[MSG_TYPE_MAX] = {0,1,1,1};
+uint16_t printCtrlCfg[MSG_TYPE_MAX] = {0,1,1,1};
+
+
+const char* mainTskStateDsp[] =
+{
+		TO_STR(TSK_IDLE),
+		TO_STR(TSK_INIT),
+		TO_STR(TSK_SUBSTEP),
+		TO_STR(TSK_RESETIO),
+		TO_STR(TSK_FINISH),
+		TO_STR(TSK_FORCE_BREAK),
+		TO_STR(TSK_FORCE_STOP),
+};
 
 static const QueIDInit QID[]=
 {
@@ -53,13 +69,18 @@ static const QueIDInit QID[]=
 	{&USART_RX_EVENT,		2},
 	{&PRINT_ID,				4},
 	{&SCH_LB_ID,			4},
+	{&ADC_MONITOR,			4},
+	{&OUTPUT_QID,			16},
+	{&WELD_CTRL,			4},
+	{&MOTOR_CTRL,			4},
 };
 
 const T_UNIT*  subSystem[] =
 {
 		&rtcCfg,
-	//	&parameter,
+		&weldCfg,
 		&sysInfo,
+
 };
 
 uint8_t		printChnMap[MAX_TASK_ID];
@@ -80,6 +101,10 @@ const char* TskName[MAX_TASK_ID] =
 	TO_STR(TSK_ID_SHELL_TX),
 	TO_STR(TSK_ID_GPIO),
 	TO_STR(TSK_ID_TST),
+
+	TO_STR(TSK_ID_CAN1_TSK),
+	TO_STR(TSK_ID_LOCAL_BUS),
+	TO_STR(TSK_ID_ADC_MONITOR),
 
 };
 void AssertReset(void)
@@ -183,11 +208,90 @@ void vApplicationMallocFailedHook(void)
 		;
 }
 
+void InitTaskMsg(TSK_MSG* ptrMsg)
+{
+	ptrMsg->callBackFinish = NULL;
+	ptrMsg->callBackUpdate = NULL;
+	ptrMsg->val.value = 0;
+	ptrMsg->tskState = TSK_SUBSTEP;
+	ptrMsg->msgState = 0xFFFF;
+	ptrMsg->threadId = 0xFFFF;
+}
+
 
 const T_UNIT* GetSubsystem(uint16_t subID)
 {
 	assert(subID < IDX_SUB_MAX);
 	return subSystem[subID];
+}
+#define MAX_G_MSG_QSIZE		180
+
+static TSK_MSG gMsgQueue[MAX_G_MSG_QSIZE];
+
+static TSK_MSG* GetNewTskMsg(uint16_t count)
+{
+	static uint32_t msgId = 0;
+	TSK_MSG* msg = NULL;
+	for(uint16_t i=0;i<MAX_G_MSG_QSIZE;i++)
+	{
+		if(gMsgQueue[msgId%MAX_G_MSG_QSIZE].msgState == 0)
+		{
+			msg = &gMsgQueue[msgId%MAX_G_MSG_QSIZE];
+			msg->msgState = count;
+			msgId++;
+			break;
+		}
+		else
+			msgId++;
+	}
+	assert(msg != NULL);
+	return msg;
+}
+void SendTskMsg_LOC(osThreadId thread_id, TSK_MSG* msg,uint32_t lineNum  )
+{
+	msg->threadId = (uint32_t)thread_id;
+	msg->tskState = TSK_SUBSTEP;
+	msg->lineNum = lineNum;
+	MsgPush(thread_id, (uint32_t) msg, 0);
+}
+void SendTskMsg_INST(osThreadId thread_id, TSK_STATE tskState, uint32_t val,ptrTskCallBack ptrCallFin, ptrTskCallBack ptrCallUpdate,uint32_t lineNum  )
+{
+	TSK_MSG* msg = GetNewTskMsg(1);
+	msg->callBackFinish = ptrCallFin;
+    msg->callBackUpdate = ptrCallUpdate;
+	msg->val.value = val;
+	msg->tskState = tskState;
+	msg->threadId = (uint32_t)thread_id;
+	msg->lineNum = lineNum;
+	MsgPush(thread_id, (uint32_t) msg, 0);
+}
+void UnuseTskMsg(TSK_MSG* gMsg)
+{
+	if(gMsg && gMsg->msgState)
+		gMsg->msgState--;
+}
+
+
+void StateFinishAct(TSK_MSG* ptrTask, uint16_t taskId, uint16_t ret, uint16_t result, uint32_t line)
+{
+	if(ptrTask)
+	{
+		if(ptrTask->callBackFinish)
+		{
+			ptrTask->callBackFinish(ret, result);
+			ptrTask->callBackFinish = NULL;
+			ptrTask->callBackUpdate = NULL;
+		}
+		else if(ptrTask->callBackUpdate)
+		{
+			ptrTask->callBackUpdate(ret, result);
+			ptrTask->callBackFinish = NULL;
+			ptrTask->callBackUpdate = NULL;
+		}
+		else
+		{}
+		TracePrint(taskId, "finish is called in line %d, result, %d , %d\n",line, ret,result);
+	}
 }
 
 uint16_t LoadDefaultCfg(uint16_t id)
@@ -218,33 +322,6 @@ uint16_t LoadDefaultCfg(uint16_t id)
 	return ret;
 }
 
-void Adc_Setup()
-{
-
-	uint16_t data = 0x1000;
-	if (AD7190_Init() == 0)
-	{
-		TraceUser("获取不到 AD7190 !\n");
-		while (1)
-		{
-			HAL_Delay(1000);
-			if (AD7190_Init())
-				break;
-		}
-	}
-	TraceUser("检测到  AD7190 !\n");
-	weight_ad7190_conf();
-
-	uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
-	TraceUser("zero:%d\n",weight_Zero_Data);
-	TraceUser("硬石DAC（AD5689）模块模拟量电压输出\n");
-
-	AD5689_Init();
-	AD5689_WriteUpdate_DACREG(DAC_A,data);
-	AD5689_WriteUpdate_DACREG(DAC_B,0xFFFF-data);
-	TraceUser("data:%d\n",data);
-
-}
 
 __IO uint32_t kernelStarted = 0;
 osMessageQId usbQueue;
@@ -279,7 +356,7 @@ int main(int argc, char* argv[])
 
 	/* init code for FATFS */
 //	MX_FATFS_Init();
-	Adc_Setup();
+
 	/* Call init function for freertos objects (in freertos.c) */
 	MX_FREERTOS_Init();
 	kernelStarted = 1;

@@ -11,7 +11,7 @@
 
 /* 私有类型定义 --------------------------------------------------------------*/
 /* 私有宏定义 ----------------------------------------------------------------*/
-#define SOFT_SPI  0  // 1:使用软件模拟SPI   0：使用硬件SPI外设
+#define SOFT_SPI  1  // 1:使用软件模拟SPI   0：使用硬件SPI外设
 
 /* 私有变量 ------------------------------------------------------------------*/
 SPI_HandleTypeDef hspi_AD5689;
@@ -61,6 +61,9 @@ static void MX_AD5689_SPI_Init(void)
   HAL_GPIO_Init(AD5689_SYNC_GPIO_Port, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = AD5689_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(AD5689_RST_GPIO_Port, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = AD5689_SCK_Pin;
@@ -86,6 +89,11 @@ static void MX_AD5689_SPI_Init(void)
   hspi_AD5689.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi_AD5689.Init.CRCPolynomial = 0;
   HAL_SPI_Init(&hspi_AD5689);
+  GPIO_InitStruct.Pin = AD5689_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(AD5689_RST_GPIO_Port, &GPIO_InitStruct);
 #endif
 }
 
@@ -123,7 +131,6 @@ void AD5689_SetRegisterValue(uint8_t command,DACHANNEL channel,uint16_t data)
   reg |=data;
 
   AD5689_SYNC_LOW();
-  TraceUser(":%08X\n",reg);
   delay();
 
 	for(i=0;i<24;i++)
