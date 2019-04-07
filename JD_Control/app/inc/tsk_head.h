@@ -39,3 +39,5 @@ void StartADCMonitor(void const * argument);
 void StartMotorTsk(void const * argument);
 void StartOutputTsk(void const * argument);
 void StartWeldTask(void const * argument);
+void StartLBTask(void const * argument);
+void StartEthernet(void const * argument);

@@ -11,17 +11,6 @@
 #define	MAX_SEG_SIZE 20
 #define	MAX_CALI_CURR 20
 
-enum
-{
-	WELD_IDLE,
-	WELD_PRE,
-	WELD_ING,
-	WELD_POST,
-	WELD_HOME,
-	WELD_POSTGAS,
-	WELD_FINISH,
-};
-
 extern SegWeld segWeld[MAX_SEG_SIZE];
 
 typedef struct
@@ -66,7 +55,8 @@ enum
 	CHN_OUT_ARC_ON,
 	CHN_OUT_WATER,
 	CHN_OUT_GAS,
-	CHN_OUT_MAX,
+	CHN_OUT_AD_CUT,
+	CHN_OUT_MAX=16,
 };
 
 enum
@@ -78,7 +68,7 @@ enum
 	CHN_IN_FAULT_MOTOR,
 	CHN_IN_MAX,
 };
-
+#define CURR_DETECT_LIMIT  30.0f
 extern WeldProcessCfg weldProcess;
 extern MotorSpeed motorSpeedSet  ;
 extern volatile int32_t  motorPos_Read;
@@ -93,13 +83,19 @@ extern int32_t 	motorPosHome;
 extern uint32_t adcValue[CHN_AD_MAX];
 extern uint32_t adcValueFinal[CHN_AD_MAX];
 extern uint16_t daOutput[CHN_DA_MAX];
-
+extern uint16_t daOutputSet[CHN_DA_MAX];
+extern float     weldCurr_Read;
 extern uint32_t  digitOutput;
 extern uint32_t  digitInput;
-
+extern float     rPMRatio;
 extern int32_t	lastMotorPos_PowerDown;
-
+extern uint16_t voltCaliReq;
 extern const T_UNIT weldCfg;
+
+extern uint16_t  daOutputPwm[2];
+extern uint16_t  daOutputPwmTime[2];
+extern int16_t  currMicroAdjust;
+
 float GetSpeedDuty(float speed);
 float GetWeldSpeed(int32_t cnt);
 
@@ -114,5 +110,7 @@ enum
 	OBJ_IDX_OUTPUTDO,
 	OBJ_IDX_OUTPUTAD,
 	OBJ_IDX_INPUT_DI,
+
+	OBJ_IDX_SPEED_RATION = 9,
 };
 #endif /* SUBSYSTEM_UNIT_WELD_CFG_H_ */

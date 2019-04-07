@@ -121,8 +121,7 @@ zero. */
 #else
 	#define queueYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
 #endif
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpadded"
+
 /*
  * Definition of the queue used by the scheduler.
  * Items are queued by copy, not reference.  See the following link for the
@@ -164,7 +163,7 @@ typedef struct QueueDefinition
 	#endif
 
 } xQUEUE;
-#pragma GCC diagnostic pop
+
 /* The old xQUEUE name is maintained above then typedefed to the new Queue_t
 name below to enable the use of older kernel aware debuggers. */
 typedef xQUEUE Queue_t;
@@ -206,46 +205,46 @@ typedef xQUEUE Queue_t;
  * to indicate that a task may require unblocking.  When the queue in unlocked
  * these lock counts are inspected, and the appropriate action taken.
  */
-static void prvUnlockQueue( Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+PRIVILEGED_FUNCTION static void prvUnlockQueue( Queue_t * const pxQueue );
 
 /*
  * Uses a critical section to determine if there is any data in a queue.
  *
  * @return pdTRUE if the queue contains no items, otherwise pdFALSE.
  */
-static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
+PRIVILEGED_FUNCTION static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue );
 
 /*
  * Uses a critical section to determine if there is any space in a queue.
  *
  * @return pdTRUE if there is no space, otherwise pdFALSE;
  */
-static BaseType_t prvIsQueueFull( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
+PRIVILEGED_FUNCTION static BaseType_t prvIsQueueFull( const Queue_t *pxQueue );
 
 /*
  * Copies an item into the queue, either at the front of the queue or the
  * back of the queue.
  */
-static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
+PRIVILEGED_FUNCTION static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition );
 
 /*
  * Copies an item out of a queue.
  */
-static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
+PRIVILEGED_FUNCTION static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer );
 
 #if ( configUSE_QUEUE_SETS == 1 )
 	/*
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
 	 * the queue set that the queue contains data.
 	 */
-	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition ) PRIVILEGED_FUNCTION;
+	PRIVILEGED_FUNCTION static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition );
 #endif
 
 /*
  * Called after a Queue_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
+PRIVILEGED_FUNCTION static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue );
 
 /*
  * Mutexes are a special type of queue.  When a mutex is created, first the
@@ -253,7 +252,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
  * as a mutex.
  */
 #if( configUSE_MUTEXES == 1 )
-	static void prvInitialiseMutex( Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
+	PRIVILEGED_FUNCTION static void prvInitialiseMutex( Queue_t *pxNewQueue );
 #endif
 
 /*-----------------------------------------------------------*/
@@ -897,8 +896,6 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				if( xTaskResumeAll() == pdFALSE )
 				{
 					portYIELD_WITHIN_API();
-				//	if(uxCurrentNumberOfTasks == 0)
-						return pdPASS;
 				}
 			}
 			else

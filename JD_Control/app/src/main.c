@@ -348,8 +348,7 @@ int main(int argc, char* argv[])
 		//lint -e655 -e655 -e655
 		subSystem[i]->Initialize(subSystem[i], INIT_HARDWARE|INIT_TASKS|INIT_CALCULATION|INIT_DATA);
 	}
-	/* init code for LWIP */
-//	MX_LWIP_Init();
+
 
 	/* init code for USB_HOST */
 //	MX_USB_HOST_Init();

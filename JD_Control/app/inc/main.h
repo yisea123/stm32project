@@ -14,7 +14,7 @@
 #include "cmsis_os.h"
 #include "bsp.h"
 #include "t_unit_head.h"
-
+#include "shell_io.h"
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -141,6 +141,7 @@ typedef enum
 	TSK_ID_OUTPUT,
 	TSK_ID_MOTOR,
 	TSK_ID_WELD,
+	TSK_ID_ETHERNET,
 	MAX_TASK_ID
 
 } TaskId_e;

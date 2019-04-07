@@ -22,7 +22,7 @@ static const PinInst digitInputPins[CHN_IN_MAX] =
 		{IN5_GPIO_Port, IN5_Pin},
 };
 
-
+#if 0
 static const PinInst digitOutputPins[CHN_OUT_MAX] =
 {
 		{OUT1_GPIO_Port, OUT1_Pin},
@@ -30,7 +30,26 @@ static const PinInst digitOutputPins[CHN_OUT_MAX] =
 		{OUT3_GPIO_Port, OUT3_Pin},
 		{OUT4_GPIO_Port, OUT4_Pin},
 };
-
+#endif
+static const PinInst digitOutputPins_Relay[CHN_OUT_MAX] =
+{
+		{RO_1_GPIO_Port, RO_1_Pin},
+		{RO_2_GPIO_Port, RO_2_Pin},
+		{RO_3_GPIO_Port, RO_3_Pin},
+		{RO_4_GPIO_Port, RO_4_Pin},
+		{RO_5_GPIO_Port, RO_5_Pin},
+		{RO_6_GPIO_Port, RO_6_Pin},
+		{RO_7_GPIO_Port, RO_7_Pin},
+		{RO_8_GPIO_Port, RO_8_Pin},
+		{RO_9_GPIO_Port, RO_9_Pin},
+		{RO_10_GPIO_Port, RO_10_Pin},
+		{RO_11_GPIO_Port, RO_11_Pin},
+		{RO_12_GPIO_Port, RO_12_Pin},
+		{RO_13_GPIO_Port, RO_13_Pin},
+		{RO_14_GPIO_Port, RO_14_Pin},
+		{RO_15_GPIO_Port, RO_15_Pin},
+		{RO_16_GPIO_Port, RO_16_Pin},
+};
 
 static void OutputPins(uint32_t _digitOutput, uint16_t chnNum)
 {
@@ -38,9 +57,9 @@ static void OutputPins(uint32_t _digitOutput, uint16_t chnNum)
 	for(uint16_t i=0; i< chnNum;i++)
 	{
 		if( (_digitOutput & (1<<i)) != 0)
-			HAL_GPIO_WritePin(digitOutputPins[i].port, digitOutputPins[i].pin, GPIO_PIN_SET );
+			HAL_GPIO_WritePin(digitOutputPins_Relay[i].port, digitOutputPins_Relay[i].pin, GPIO_PIN_SET );
 		else
-			HAL_GPIO_WritePin(digitOutputPins[i].port, digitOutputPins[i].pin, GPIO_PIN_RESET );
+			HAL_GPIO_WritePin(digitOutputPins_Relay[i].port, digitOutputPins_Relay[i].pin, GPIO_PIN_RESET );
 	}
 }
 
@@ -65,21 +84,22 @@ static const char* taskStateDsp[] =
 void StartOutputTsk(void const * argument)
 {
 	(void)argument; // pc lint
-	uint32_t tickOut = 1000;
+	uint32_t tickOut = osWaitForever;
 	osEvent event;
-
+	uint32_t pwmCnt = 0;
 	TSK_MSG localMsg;
 	const uint8_t taskID = TSK_ID_OUTPUT;
 	ST_WELD_STATE tskState = ST_WELD_IDLE;
 	uint32_t valMsg = 0;
 	InitTaskMsg(&localMsg);
 	TracePrint(taskID,"started  \n");
-
-	Adc_Setup();
+	OutputPins(digitOutput, CHN_OUT_MAX);
+#if USE_EXT_DEV
 	AD5689_Init();
-	uint16_t data = 0x2000;
-//	AD5689_WriteUpdate_DACREG(DAC_A,data);
-//	AD5689_WriteUpdate_DACREG(DAC_B,0xFFFF-data);
+	uint16_t data = 0x1000;
+	AD5689_WriteUpdate_DACREG(DAC_A,data);
+	AD5689_WriteUpdate_DACREG(DAC_B,data);
+#endif
 //	TraceUser("data:%d\n",data);
 	while (TASK_LOOP_ST)
 	{
@@ -92,22 +112,32 @@ void StartOutputTsk(void const * argument)
 			localMsg = *(TSK_MSG_CONVERT(event.value.p));
 			if(((valMsg & DA_OUT_REFRESH_CURR) != 0) || ((valMsg & DA_OUT_REFRESH_SPEED) != 0))
 			{
-				AD5689_WriteUpdate_DACREG(DAC_A,daOutput[CHN_DA_CURR_OUT]);
-				AD5689_WriteUpdate_DACREG(DAC_B,daOutput[CHN_DA_SPEED_OUT]);
-				TraceUser("DA out:%x,%x\n",daOutput[CHN_DA_CURR_OUT], daOutput[CHN_DA_SPEED_OUT]);
+#if USE_EXT_DEV
+				AD5689_WriteUpdate_DACREG(DAC_A,daOutputSet[CHN_DA_CURR_OUT]);
+				AD5689_WriteUpdate_DACREG(DAC_B,daOutputSet[CHN_DA_SPEED_OUT]);
+#endif
+				TraceUser("DA out:%x,%x\n",daOutputSet[CHN_DA_CURR_OUT], daOutputSet[CHN_DA_SPEED_OUT]);
 			}
 			if((valMsg & DO_OUT_REFRESH) != 0)
 			{
 				OutputPins(digitOutput, CHN_OUT_MAX);
 				TraceUser("DO out:%x\n",digitOutput);
-
 			}
+			pwmCnt = 0;
 			tickOut = 5;
+		}
+		else if((weldStatus > ST_WELD_ARC_ON_DELAY ) && (weldStatus < ST_WELD_STOP))
+		{
+			tickOut = daOutputPwmTime[pwmCnt%2];
+#if USE_EXT_DEV
+			AD5689_WriteUpdate_DACREG(DAC_A,daOutputPwm[pwmCnt%2]);
+			AD5689_WriteUpdate_DACREG(DAC_B,daOutputSet[CHN_DA_SPEED_OUT]);
+#endif
+			pwmCnt++;
 		}
 		else
 		{
-			AD5689_WriteUpdate_DACREG(DAC_A,daOutput[CHN_DA_CURR_OUT]);
-			AD5689_WriteUpdate_DACREG(DAC_B,daOutput[CHN_DA_SPEED_OUT]);
+			tickOut = 5;
 		}
 		//uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
 		//TraceUser("zero:%d\n",weight_Zero_Data);

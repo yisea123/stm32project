@@ -38,18 +38,28 @@ static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 int32_t 	lastMotorPos_PowerDown = 0;
 uint32_t  adcValue[4];
 uint32_t  adcValueFinal[4];
+uint16_t  daOutputSet[2];
 uint16_t  daOutput[2];
 uint32_t  digitOutput;
 uint32_t  digitInput;
+uint16_t  daOutputPwm[2];
+uint16_t  daOutputPwmTime[2];
+int16_t  currMicroAdjust = 0;
 
+float     rPMRatio = 1.0f;
 uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
 volatile  int32_t   motorPos_Read;
 float 	  motorSpeed_Read;
+float     weldCurr_Read;
+float 	  weldVolt_Read;
 int32_t  motorPos_WeldStart;
 int32_t  motorPos_WeldFinish;
 uint16_t  weldStartStatus;
 uint16_t  weldStatus = 0;
-uint16_t  weldState = WELD_IDLE;
+uint16_t  weldState = 0;
+
+uint16_t voltCaliReq = 0;
+
 
 SegWeld tmp_SegWeld;
 CaliPoints tmp_CaliPointCurr;
@@ -154,11 +164,11 @@ static const T_DATA_OBJ _ObjList[] =
 {
 
 	//test interfaces:
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutput[0],sizeof(daOutput)/sizeof(uint16_t),	 RAM),
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputSet[0],sizeof(daOutputSet)/sizeof(uint16_t),	 RAM),
 		CONSTRUCT_SIMPLE_U32(&digitOutput,	 RAM),
 		CONSTRUCT_ARRAY_SIMPLE_U32(&adcValueFinal[0],sizeof(adcValueFinal)/sizeof(uint32_t),	 RAM),
 		CONSTRUCT_SIMPLE_U32(&digitInput,	 RAM),
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutput[0],sizeof(daOutput)/sizeof(uint16_t),	 RAM),
 
     //0
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[0], NON_VOLATILE),
@@ -170,8 +180,8 @@ static const T_DATA_OBJ _ObjList[] =
     //5
 		CONSTRUCT_SIMPLE_U32(&motorPosHome,	 NON_VOLATILE),
 		CONSTRUCT_SIMPLE_U16(&weldStatus,	 RAM),
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwm, sizeof(daOutputPwm)/sizeof(uint16_t),    RAM),
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwmTime, sizeof(daOutputPwmTime)/sizeof(uint16_t),    RAM),
 		NULL_T_DATA_OBJ,
 	//10
 		CONSTRUCT_STRUCT_CALIPOINT(&tmp_CaliPointCurr,RAM),
@@ -311,46 +321,22 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
        	Trigger_EEPSave((void*)&caliTime, sizeof(caliTime),SYNC_IM);
 
     }
+    rPMRatio = ang2CntRation*60.0f;//*360/60
     return result;
 }
+
+//get output da duty
 float GetSpeedDuty(float speed1)
 {
 	float speed = speed1;
 	if(speed1 < 0)
 		speed= -speed1;
 	float outVal = (speed - speedCaliPoint[0].setValue) / (speedCaliPoint[1].setValue - speedCaliPoint[0].setValue) * \
-			(speedCaliPoint[1].deviceValue - speedCaliPoint[0].deviceValue) + speedCaliPoint[0].deviceValue;
+			(float)(speedCaliPoint[1].deviceValue - speedCaliPoint[0].deviceValue) + (float)speedCaliPoint[0].deviceValue;
 	float duty = (outVal/655.36f);
 	if(speed1 < 0)
 		duty = -duty;
 	return duty;
-}
-
-uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
-                     void * ptrValue)
-{
-	uint16_t result = OK;
-	VIP_ASSERT(me == &weldCfg);
-	VIP_ASSERT(ptrValue);
-	VIP_ASSERT(*(me->ptrState)>=INITIALIZED); // exception if not initialized
-	assert(me->ptrObjectList);
-	result = Put_T_UNIT(me,objectIndex,attributeIndex,ptrValue);
-	if(result == OK)
-	{
-		switch(objectIndex)
-		{
-		case OBJ_IDX_OUTPUTDA:
-			SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR), NULL, NULL);
-		break;
-		case OBJ_IDX_OUTPUTDO:
-			SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
-			break;
-		default:
-			break;
-		}
-	}
-
-	return result;
 }
 
 void UpdateWeldFInishPos(void)
@@ -363,6 +349,7 @@ void UpdateWeldFInishPos(void)
 			segWeldCnt[i] = 0;
 	}
 }
+
 
 
 int32_t GetWeldFinishPos(uint16_t id)
@@ -388,26 +375,59 @@ int32_t GetWeldFinishPos(uint16_t id)
 }
 
 
-int32_t GetWeldSegSpeed(uint16_t id)
+uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
+                     void * ptrValue)
 {
-	int32_t pos = 0;
+	uint16_t result = OK;
+	VIP_ASSERT(me == &weldCfg);
+	VIP_ASSERT(ptrValue);
+	VIP_ASSERT(*(me->ptrState)>=INITIALIZED); // exception if not initialized
+	assert(me->ptrObjectList);
+	result = Put_T_UNIT(me,objectIndex,attributeIndex,ptrValue);
+	if(result == OK)
+	{
+		switch(objectIndex)
+		{
+		case OBJ_IDX_OUTPUTDA:
+			SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR), NULL, NULL);
+		break;
+		case OBJ_IDX_OUTPUTDO:
+			SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
+			break;
+		case OBJ_IDX_SPEED_RATION:
+			rPMRatio = ang2CntRation*60.0f;//*360/60
+			UpdateWeldFInishPos();
+			break;
+		default:
+			break;
+		}
+	}
+
+	return result;
+}
+
+
+
+
+float GetWeldSegSpeed(uint16_t id)
+{
+	float speed = 0;
 	if(id < MAX_SEG_SIZE)
 	{
 		if(segWeld[id].endAng != 0)
-			pos = (int32_t)(segWeld[id].weldSpeed * 360 * ang2CntRation);
-
+			speed = segWeld[id].weldSpeed;
 	}
 	else
 	{
 		for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
 		{
 			if(segWeld[i].endAng != 0)
-				pos = (int32_t)(segWeld[i].weldSpeed * 360 * ang2CntRation);
+				speed = segWeld[i].weldSpeed;
 			else
 				break;
 		}
 	}
-	return pos;
+	return speed;
 }
 
 
@@ -440,10 +460,18 @@ float GetWeldSpeed(int32_t cnt)
 		return 0;
 }
 
-uint16_t GetSpeedOutput(float speed)
+float GetSpeedOutput(float speed)
 {
 	//todo
-	return 0;
+	float outVal = (speed - speedCaliPoint[0].setValue)/(speedCaliPoint[1].setValue - speedCaliPoint[0].setValue)*\
+			(float)(speedCaliPoint[1].deviceValue - speedCaliPoint[0].deviceValue);
+
+	if(outVal >= 65536)
+		outVal = 0xFFFF;
+	else if(outVal < 0)
+		outVal = 0;
+
+	return outVal/655.36f;
 }
 
 uint16_t GetCurrOutput(float curr)

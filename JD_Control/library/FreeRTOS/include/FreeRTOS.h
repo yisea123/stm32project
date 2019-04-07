@@ -97,7 +97,6 @@ extern "C" {
 /* Application specific configuration options. */
 #include "FreeRTOSConfig.h"
 
-#include "cpu_utils.h"
 /* Basic FreeRTOS definitions. */
 #include "projdefs.h"
 
@@ -347,8 +346,7 @@ extern "C" {
 #ifndef traceTASK_SWITCHED_IN
 	/* Called after a task has been selected to run.  pxCurrentTCB holds a pointer
 	to the task control block of the selected task. */
-		#define traceTASK_SWITCHED_IN()	   extern void StartIdleMonitor(void); \
-        							   		StartIdleMonitor()
+	#define traceTASK_SWITCHED_IN()
 #endif
 
 #ifndef traceINCREASE_TICK_COUNT
@@ -370,8 +368,7 @@ extern "C" {
 #ifndef traceTASK_SWITCHED_OUT
 	/* Called before a task has been selected to run.  pxCurrentTCB holds a pointer
 	to the task control block of the task being switched out. */
-	#define traceTASK_SWITCHED_OUT()	extern void EndIdleMonitor(void); \
-        								EndIdleMonitor()
+	#define traceTASK_SWITCHED_OUT()
 #endif
 
 #ifndef traceTASK_PRIORITY_INHERIT
@@ -896,7 +893,7 @@ typedef struct xSTATIC_LIST
 	void *pvDummy2;
 	StaticMiniListItem_t xDummy3;
 } StaticList_t;
-#pragma GCC diagnostic ignored "-Wpadded"
+
 /*
  * In line with software engineering best practice, especially when supplying a
  * library that is likely to change in future versions, FreeRTOS implements a
@@ -953,8 +950,6 @@ typedef struct xSTATIC_TCB
 	#endif
 
 } StaticTask_t;
-
-
 
 /*
  * In line with software engineering best practice, especially when supplying a
@@ -1059,10 +1054,6 @@ typedef struct xSTATIC_TIMER
 	#endif
 
 } StaticTimer_t;
-
-
-#pragma GCC diagnostic pop
-
 
 #ifdef __cplusplus
 }

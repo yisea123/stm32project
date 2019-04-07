@@ -73,8 +73,10 @@ void StartADCMonitor(void const * argument)
 	bias_data[1]=BIAS_VOLTAGE_IN2;
 	bias_data[2]=BIAS_VOLTAGE_IN3;
 	bias_data[3]=BIAS_VOLTAGE_IN4;
+#if USE_EXT_DEV
 	Adc_Setup();
 	ad7190_unipolar_multichannel_conf();
+#endif
 	while (TASK_LOOP_ST)
 	{
 		event = osMessageGet(ADC_MONITOR, tickOut);
@@ -84,11 +86,13 @@ void StartADCMonitor(void const * argument)
 			if(tickOut < 2)
 				tickOut = 2;
 		}
-
+#if USE_EXT_DEV
 		GetAdData();
-
+#endif
 		//uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
 		digitInput = GetInputPins();
+
+
 		cnt++;
 		if(cnt % 1000 == 0)
 		{

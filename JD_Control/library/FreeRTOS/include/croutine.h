@@ -79,8 +79,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpadded"
+
 /* Used to hide the implementation of the co-routine control block.  The
 control block structure however has to be included in the header due to
 the macro implementation of the co-routine functionality. */
@@ -98,7 +97,7 @@ typedef struct corCoRoutineControlBlock
 	UBaseType_t 		uxIndex;			/*< Used to distinguish between co-routines when multiple co-routines use the same co-routine function. */
 	uint16_t 			uxState;			/*< Used internally by the co-routine implementation. */
 } CRCB_t; /* Co-routine control block.  Note must be identical in size down to uxPriority with TCB_t. */
-#pragma GCC diagnostic pop
+
 /**
  * croutine. h
  *<pre>

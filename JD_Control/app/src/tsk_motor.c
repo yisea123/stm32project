@@ -168,7 +168,7 @@ static void SetMotorSpeed(float duty)
 	lastDuty = duty;
 	if(val >= 65536)
 		val = 65535;
-	daOutput[CHN_DA_SPEED_OUT] = (uint16_t)(val);
+	daOutputSet[CHN_DA_SPEED_OUT] = (uint16_t)(val);
 	SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH), NULL, NULL);
 }
 
@@ -186,17 +186,16 @@ void UpdateWeldSetting(void)
 		if(cnt - last_cnt >= 200)
 		{
 			int32_t cntLoc = motorPos_Read - last_motorPos_Read;
-			motorSpeed_Read = cntLoc/ang2CntRation/72.0;//5/360.0*cntLoc/ang2CntRation;
+			motorSpeed_Read = (cntLoc*5.0f)/rPMRatio;//5/360.0*cntLoc/ang2CntRation;
 			last_cnt = cnt;
 		}
-
 	}
 	else
 	{
 		last_cnt = cnt;
 		last_motorPos_Read = motorPos_Read;
 	}
-	if(weldState == WELD_ING)
+	if(weldState != ST_WELD_IDLE)
 	{
 		//update weldSpeed
 		//Update DA timeSetting
@@ -214,7 +213,7 @@ void StartMotorTsk(void const * argument)
 	MOTOR_STATE tskState = ST_MOTOR_IDLE;
 
 	float targetJogDuty;
-	float targetJogDutyAcc = 0.1;
+	float targetJogDutyAcc = 0.1f;
 	uint16_t weldDir = MOTOR_DIR_CW;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"started  \n");
@@ -228,7 +227,7 @@ void StartMotorTsk(void const * argument)
 	/* ÎÞÏÞÑ­»· */
 	while (TASK_LOOP_ST)
 	{
-		event = osMessageGet(OUTPUT_QID, tickOut);
+		event = osMessageGet(MOTOR_CTRL, tickOut);
 		if (event.status != osEventMessage)
 		{
 			TracePrint(taskID, "Timeout: %d,\t%s, Time%d\n",tskState, taskStateDsp[tskState], tickOut);
@@ -300,7 +299,7 @@ void StartMotorTsk(void const * argument)
 				if(duty <= 0.00001f)
 				{
 					tskState = ST_MOTOR_WELD_END;
-					SendTskMsgLOC(WELD_CTRL, &locMsg);
+					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 				}
 				if(weldDir == MOTOR_DIR_CW)
 					SetMotorSpeed(duty);
@@ -311,7 +310,7 @@ void StartMotorTsk(void const * argument)
 				break;
 			default:
 				tskState = ST_WELD_IDLE;
-				MsgPush(WELD_CTRL, (uint32_t) &locMsg, 0);
+				SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 				break;
 			}
 		}
@@ -326,7 +325,7 @@ void StartMotorTsk(void const * argument)
 				tskState = ST_WELD_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				MsgPush(WELD_CTRL, (uint32_t ) &locMsg, 0);
+				SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 				//force state change to be break;
 			}
 			else if (TSK_RESETIO == mainTskState)
@@ -334,7 +333,7 @@ void StartMotorTsk(void const * argument)
 				tskState = ST_WELD_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				MsgPush(WELD_CTRL, (uint32_t ) &locMsg, 0);
+				SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 
 			//	Reset_IO();
 			}
@@ -346,7 +345,7 @@ void StartMotorTsk(void const * argument)
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
 				tskState = GetStateRequest(tskState);
-				SendTskMsgLOC(WELD_CTRL, &locMsg);
+				SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 
 				targetJogDuty = GetSpeedDuty(motorSpeedSet.jogSpeed);
 				targetJogDutyAcc = GetSpeedDuty(motorSpeedSet.accSpeedPerSeond);
@@ -400,7 +399,7 @@ void StartMotorTsk(void const * argument)
 					break;
 					default:
 						tskState = ST_WELD_IDLE;
-						SendTskMsgLOC(WELD_CTRL, &locMsg);
+						SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 						break;
 				}
 				//when finish->call back;

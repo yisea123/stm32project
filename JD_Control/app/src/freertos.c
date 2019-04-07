@@ -41,6 +41,7 @@
 
 #include "dev_eep.h"
 #include "tsk_head.h"
+#include "tsk_ethernet.h"
 /* USER CODE END Includes */
 
 
@@ -81,13 +82,14 @@ static const TaskConfiguration_t TaskConfiguration[] =
 	//	{{"file task",		StartFileTask,		osPriorityHigh, 	0,		768},		TSK_ID_FILE, NULL},
 
 	//	{{"can rx1",		StartCanRXTask,		osPriorityHigh, 	0,		384},		TSK_ID_CAN_RX1, NULL},
-	//	{{"can error",		StartCanErrTask,	osPriorityBelowNormal, 	0,		128},		TSK_ID_CAN_ERR, NULL},
+//		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		384},		TSK_ID_LOCAL_BUS, NULL},
 		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		384},		TSK_ID_MOTOR, NULL},
 
-		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 		0,		256},		TSK_ID_WELD, NULL},
-		{{"Output Tsk",		StartOutputTsk,		osPriorityAboveNormal, 	0,		256},		TSK_ID_OUTPUT, NULL},
+		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		256},		TSK_ID_WELD, NULL},
+		//		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
+		{{"Ethernet Tsk",		StartEthernet,		osPriorityNormal, 	0,		384},		TSK_ID_ETHERNET, NULL},
 
-		{{"ADC Monitor",	StartADCMonitor,		osPriorityNormal, 	0,		256},			TSK_ID_ADC_MONITOR, NULL},
+//		{{"ADC Monitor",	StartADCMonitor,		osPriorityAboveNormal, 	0,		256},			TSK_ID_ADC_MONITOR, NULL},
 		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_TX, NULL},
 		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			384},			TSK_ID_SHELL_RX, NULL},
 //		{{"arcLink",		StartArcLinkTask,		osPriorityLow, 	0,			384},			TSK_ID_TST, NULL},

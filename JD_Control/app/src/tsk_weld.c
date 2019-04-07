@@ -36,6 +36,39 @@ static void Break_RO()
 	SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
 }
 
+
+void OutPutPins_Call(uint16_t pinChn, uint16_t val)
+{
+	if(val)
+	{
+		digitOutput |= 1<<pinChn;
+	}
+	else
+	{
+		digitOutput &= ~(1<<pinChn);
+	}
+	SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
+}
+
+void VoltMonitorChk(void)
+{
+	if(voltCaliReq != 0)
+	{
+		OutPutPins_Call(CHN_OUT_AD_CUT,1);
+	}
+	if(weldStatus <= ST_WELD_PRE_GAS_DELAY)
+	{
+		OutPutPins_Call(CHN_OUT_AD_CUT,1);
+	}
+	else if(ST_WELD_ARC_ON == weldStatus  ||  weldStatus == ST_WELD_ARC_ON_DELAY)
+	{
+		OutPutPins_Call(CHN_OUT_AD_CUT,0);
+	}
+	else
+	{
+		OutPutPins_Call(CHN_OUT_AD_CUT,1);
+	}
+}
 ST_WELD_STATE GetStateRequest(ST_WELD_STATE tskState)
 {
 
@@ -65,8 +98,7 @@ ST_WELD_STATE GetStateRequest(ST_WELD_STATE tskState)
 	return tskState;
 }
 
-#define WELD_MOTION_DELAY_TIME		50
-
+#define WELD_DELAY_TIME		10
 void StartWeldTask(void const * argument)
 {
 	(void)argument; // pc lint
@@ -75,6 +107,7 @@ void StartWeldTask(void const * argument)
 	ST_WELD_STATE tskState = ST_WELD_IDLE;
 	TSK_MSG locMsg;
 	const uint8_t taskID = TSK_ID_WELD;
+	uint32_t tickStartArc = 0;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"task started  \n");
 	while (TASK_LOOP_ST)
@@ -82,6 +115,7 @@ void StartWeldTask(void const * argument)
 		freeRtosTskTick[taskID]++;
 		freeRtosTskState[taskID] = tskState;
 		event = osMessageGet(WELD_CTRL, tickOut);
+
 		if (event.status != osEventMessage)
 		{
 			TracePrint(taskID, "Timeout: %d,\t%s, Time%d\n",tskState, taskStateDsp[tskState], tickOut);
@@ -95,16 +129,32 @@ void StartWeldTask(void const * argument)
 				SendTskMsgLOC(WELD_CTRL, &locMsg);
 				break;
 			case ST_WELD_ARC_ON_DELAY:
-				TraceDBG(taskID,"No arc detect in time: %d %s\n", tskState, taskStateDsp[tskState]);
-				tskState = ST_WELD_STOP;
-				SendTskMsgLOC(WELD_CTRL, &locMsg);
+			{
+				uint32_t delay = HAL_GetTick() - tickStartArc;
+				if(weldCurr_Read > CURR_DETECT_LIMIT)
+				{
+					tskState = ST_WELD_MOTION;
+					SendTskMsgLOC(WELD_CTRL, &locMsg);
+				}
+				else if(weldProcess.preDelay*TIME_UNIT <= delay)
+				{
+					tskState = ST_WELD_STOP;
+					SendTskMsgLOC(WELD_CTRL, &locMsg);
+					TraceDBG(taskID,"No arc detect in time: %d %s\n", delay, taskStateDsp[tskState]);
+				}
+				else
+				{}
+				tickOut = WELD_DELAY_TIME;
+
+			}
 				break;
 			case ST_WELD_MOTION_CYC:
 				//todo
-				//check weld pos, change pwm
+				//check weld pos, change pwm timer
 				//or close ;ST_WELD_STOP
-
-				tickOut = WELD_MOTION_DELAY_TIME;
+				//daOutputPwm, daOutputPwmTime; +- currMicroAdjust
+				//daOutputSet; speed
+				tickOut = WELD_DELAY_TIME;
 				break;
 			case ST_WELD_POST_HOME_DELAY:
 				TraceDBG(taskID,"wrong state: %d %s\n", tskState, taskStateDsp[tskState]);
@@ -139,8 +189,6 @@ void StartWeldTask(void const * argument)
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
 				MsgPush(WELD_CTRL, (uint32_t ) &locMsg, 0);
-
-
 			}
 			else if ( mainTskState == TSK_INIT)
 			{
@@ -176,16 +224,18 @@ void StartWeldTask(void const * argument)
 
 					case ST_WELD_ARC_ON:
 						tskState = ST_WELD_ARC_ON_DELAY;
-						tickOut = weldProcess.preDelay*TIME_UNIT;
+						tickStartArc = HAL_GetTick();
+						tickOut = WELD_DELAY_TIME;
 						break;
 					case ST_WELD_ARC_ON_DELAY:
 						tskState = ST_WELD_MOTION;
+						SendTskMsgLOC(WELD_CTRL, &locMsg);
 						break;
 					case ST_WELD_MOTION:
 						//start motion
 						//start timer
 						//start pwm
-						tickOut = WELD_MOTION_DELAY_TIME;//pwm time
+						tickOut = WELD_DELAY_TIME;//pwm time
 						tskState = ST_WELD_MOTION_CYC;
 						break;
 					case ST_WELD_STOP:
@@ -225,7 +275,7 @@ void StartWeldTask(void const * argument)
 
 		}
 		//call when IO task is executed;
-
+		VoltMonitorChk();
 	}
 }
 
