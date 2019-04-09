@@ -73,7 +73,7 @@ LWIP_MEMPOOL_DECLARE(PPPOL2TP_PCB, MEMP_NUM_PPPOL2TP_INTERFACES, sizeof(pppol2tp
 static err_t pppol2tp_write(ppp_pcb *ppp, void *ctx, struct pbuf *p);
 static err_t pppol2tp_netif_output(ppp_pcb *ppp, void *ctx, struct pbuf *p, u_short protocol);
 static err_t pppol2tp_destroy(ppp_pcb *ppp, void *ctx);    /* Destroy a L2TP control block */
-static void pppol2tp_connect(ppp_pcb *ppp, void *ctx);    /* Be a LAC, connect to a LNS. */
+static err_t pppol2tp_connect(ppp_pcb *ppp, void *ctx);    /* Be a LAC, connect to a LNS. */
 static void pppol2tp_disconnect(ppp_pcb *ppp, void *ctx);  /* Disconnect */
 
  /* Prototypes for procedures local to this file. */
@@ -113,10 +113,6 @@ ppp_pcb *pppol2tp_create(struct netif *pppif,
   ppp_pcb *ppp;
   pppol2tp_pcb *l2tp;
   struct udp_pcb *udp;
-#if !PPPOL2TP_AUTH_SUPPORT
-  LWIP_UNUSED_ARG(secret);
-  LWIP_UNUSED_ARG(secret_len);
-#endif /* !PPPOL2TP_AUTH_SUPPORT */
 
   if (ipaddr == NULL) {
     goto ipaddr_check_failed;
@@ -255,10 +251,8 @@ static err_t pppol2tp_destroy(ppp_pcb *ppp, void *ctx) {
 }
 
 /* Be a LAC, connect to a LNS. */
-static void pppol2tp_connect(ppp_pcb *ppp, void *ctx) {
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
+static err_t pppol2tp_connect(ppp_pcb *ppp, void *ctx) {
   err_t err;
-#endif
   pppol2tp_pcb *l2tp = (pppol2tp_pcb *)ctx;
   lcp_options *lcp_wo;
   lcp_options *lcp_ao;
@@ -309,7 +303,7 @@ static void pppol2tp_connect(ppp_pcb *ppp, void *ctx) {
     udp_bind(l2tp->udp, IP6_ADDR_ANY, 0);
   } else
 #endif /* LWIP_IPV6 */
-  udp_bind(l2tp->udp, IP_ADDR_ANY, 0);
+  udp_bind(l2tp->udp, IP4_ADDR_ANY, 0);
 
 #if PPPOL2TP_AUTH_SUPPORT
   /* Generate random vector */
@@ -324,14 +318,11 @@ static void pppol2tp_connect(ppp_pcb *ppp, void *ctx) {
   /* save state, in case we fail to send SCCRQ */
   l2tp->sccrq_retried = 0;
   l2tp->phase = PPPOL2TP_STATE_SCCRQ_SENT;
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
   if ((err = pppol2tp_send_sccrq(l2tp)) != 0) {
     PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send SCCRQ, error=%d\n", err));
   }
-#else
-  pppol2tp_send_sccrq(l2tp);
-#endif
   sys_timeout(PPPOL2TP_CONTROL_TIMEOUT, pppol2tp_timeout, l2tp);
+  return err;
 }
 
 /* Disconnect */
@@ -682,7 +673,7 @@ nextavp:
         PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send SCCCN, error=%d\n", err));
       }
 #else
-      pppol2tp_send_scccn(l2tp, l2tp->our_ns);
+			pppol2tp_send_scccn(l2tp, l2tp->our_ns);
 #endif
       l2tp->our_ns++;
 #if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
@@ -690,7 +681,7 @@ nextavp:
         PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send ICRQ, error=%d\n", err));
       }
 #else
-      pppol2tp_send_icrq(l2tp, l2tp->our_ns);
+			pppol2tp_send_icrq(l2tp, l2tp->our_ns);
 #endif
       sys_untimeout(pppol2tp_timeout, l2tp);
       sys_timeout(PPPOL2TP_CONTROL_TIMEOUT, pppol2tp_timeout, l2tp);
@@ -706,7 +697,7 @@ nextavp:
         PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send ICCN, error=%d\n", err));
       }
 #else
-      pppol2tp_send_iccn(l2tp, l2tp->our_ns);
+			pppol2tp_send_iccn(l2tp, l2tp->our_ns);
 #endif
       sys_untimeout(pppol2tp_timeout, l2tp);
       sys_timeout(PPPOL2TP_CONTROL_TIMEOUT, pppol2tp_timeout, l2tp);
@@ -727,7 +718,7 @@ packet_too_short:
 /* L2TP Timeout handler */
 static void pppol2tp_timeout(void *arg) {
   pppol2tp_pcb *l2tp = (pppol2tp_pcb*)arg;
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
+#if defined(LWIP_DEBUG) && (LOG_DEBUG && LWIP_DBG_ON)
   err_t err;
 #endif
   u32_t retry_wait;
@@ -746,15 +737,15 @@ static void pppol2tp_timeout(void *arg) {
       }
       retry_wait = LWIP_MIN(PPPOL2TP_CONTROL_TIMEOUT * l2tp->sccrq_retried, PPPOL2TP_SLOW_RETRY);
       PPPDEBUG(LOG_DEBUG, ("pppol2tp: sccrq_retried=%d\n", l2tp->sccrq_retried));
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
+#if defined(LWIP_DEBUG) && (LOG_DEBUG && LWIP_DBG_ON)
       if ((err = pppol2tp_send_sccrq(l2tp)) != 0) {
         l2tp->sccrq_retried--;
         PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send SCCRQ, error=%d\n", err));
       }
 #else
-      if(pppol2tp_send_sccrq(l2tp) !=0) {
-        l2tp->sccrq_retried--;
-      }        
+			if(pppol2tp_send_sccrq(l2tp) != 0){
+			  l2tp->sccrq_retried--;
+			}
 #endif
       sys_timeout(retry_wait, pppol2tp_timeout, l2tp);
       break;
@@ -767,7 +758,7 @@ static void pppol2tp_timeout(void *arg) {
       }
       PPPDEBUG(LOG_DEBUG, ("pppol2tp: icrq_retried=%d\n", l2tp->icrq_retried));
       if (l2tp->peer_nr <= l2tp->our_ns -1) { /* the SCCCN was not acknowledged */
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
+#if defined(LWIP_DEBUG) && (LOG_DEBUG && LWIP_DBG_ON)
         if ((err = pppol2tp_send_scccn(l2tp, l2tp->our_ns -1)) != 0) {
 	  l2tp->icrq_retried--;
 	  PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send SCCCN, error=%d\n", err));
@@ -776,13 +767,13 @@ static void pppol2tp_timeout(void *arg) {
 	}
 #else
         if (pppol2tp_send_scccn(l2tp, l2tp->our_ns -1) != 0) {
-	  l2tp->icrq_retried--;
+	  l2tp->icrq_retried--;					
 	  sys_timeout(PPPOL2TP_CONTROL_TIMEOUT, pppol2tp_timeout, l2tp);
 	  break;
-	}
+	}	
 #endif
       }
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
+#if defined(LWIP_DEBUG) && (LOG_DEBUG && LWIP_DBG_ON)
       if ((err = pppol2tp_send_icrq(l2tp, l2tp->our_ns)) != 0) {
 	l2tp->icrq_retried--;
 	PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send ICRQ, error=%d\n", err));
@@ -802,7 +793,7 @@ static void pppol2tp_timeout(void *arg) {
         return;
       }
       PPPDEBUG(LOG_DEBUG, ("pppol2tp: iccn_retried=%d\n", l2tp->iccn_retried));
-#if defined(LWIP_DEBUG) && (LOG_DEBUG == LWIP_DBG_ON)
+#if defined(LWIP_DEBUG) && (LOG_DEBUG && LWIP_DBG_ON)
       if ((err = pppol2tp_send_iccn(l2tp, l2tp->our_ns)) != 0) {
 	l2tp->iccn_retried--;
 	PPPDEBUG(LOG_DEBUG, ("pppol2tp: failed to send ICCN, error=%d\n", err));

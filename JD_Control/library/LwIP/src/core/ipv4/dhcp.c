@@ -103,40 +103,26 @@
 
 #define REBOOT_TRIES                2
 
-#if LWIP_DNS && LWIP_DHCP_MAX_DNS_SERVERS
-#if DNS_MAX_SERVERS > LWIP_DHCP_MAX_DNS_SERVERS
-#define LWIP_DHCP_PROVIDE_DNS_SERVERS LWIP_DHCP_MAX_DNS_SERVERS
-#else
-#define LWIP_DHCP_PROVIDE_DNS_SERVERS DNS_MAX_SERVERS
-#endif
-#else
-#define LWIP_DHCP_PROVIDE_DNS_SERVERS 0
-#endif
-
 /** Option handling: options are parsed in dhcp_parse_reply
  * and saved in an array where other functions can load them from.
  * This might be moved into the struct dhcp (not necessarily since
  * lwIP is single-threaded and the array is only used while in recv
  * callback). */
-enum dhcp_option_idx {
-  DHCP_OPTION_IDX_OVERLOAD = 0,
-  DHCP_OPTION_IDX_MSG_TYPE,
-  DHCP_OPTION_IDX_SERVER_ID,
-  DHCP_OPTION_IDX_LEASE_TIME,
-  DHCP_OPTION_IDX_T1,
-  DHCP_OPTION_IDX_T2,
-  DHCP_OPTION_IDX_SUBNET_MASK,
-  DHCP_OPTION_IDX_ROUTER,
-#if LWIP_DHCP_PROVIDE_DNS_SERVERS
-  DHCP_OPTION_IDX_DNS_SERVER,
-  DHCP_OPTION_IDX_DNS_SERVER_LAST = DHCP_OPTION_IDX_DNS_SERVER + LWIP_DHCP_PROVIDE_DNS_SERVERS - 1,
-#endif /* LWIP_DHCP_PROVIDE_DNS_SERVERS */
+#define DHCP_OPTION_IDX_OVERLOAD    0
+#define DHCP_OPTION_IDX_MSG_TYPE    1
+#define DHCP_OPTION_IDX_SERVER_ID   2
+#define DHCP_OPTION_IDX_LEASE_TIME  3
+#define DHCP_OPTION_IDX_T1          4
+#define DHCP_OPTION_IDX_T2          5
+#define DHCP_OPTION_IDX_SUBNET_MASK 6
+#define DHCP_OPTION_IDX_ROUTER      7
+#define DHCP_OPTION_IDX_DNS_SERVER  8
 #if LWIP_DHCP_GET_NTP_SRV
-  DHCP_OPTION_IDX_NTP_SERVER,
-  DHCP_OPTION_IDX_NTP_SERVER_LAST = DHCP_OPTION_IDX_NTP_SERVER + LWIP_DHCP_MAX_NTP_SERVERS - 1,
+#define DHCP_OPTION_IDX_NTP_SERVER  (DHCP_OPTION_IDX_DNS_SERVER + DNS_MAX_SERVERS)
+#define DHCP_OPTION_IDX_MAX         (DHCP_OPTION_IDX_NTP_SERVER + LWIP_DHCP_MAX_NTP_SERVERS)
+#else /* LWIP_DHCP_GET_NTP_SRV */
+#define DHCP_OPTION_IDX_MAX         (DHCP_OPTION_IDX_DNS_SERVER + DNS_MAX_SERVERS)
 #endif /* LWIP_DHCP_GET_NTP_SRV */
-  DHCP_OPTION_IDX_MAX
-};
 
 /** Holds the decoded option values, only valid while in dhcp_recv.
     @todo: move this into struct dhcp? */
@@ -149,10 +135,8 @@ u8_t  dhcp_rx_options_given[DHCP_OPTION_IDX_MAX];
 static u8_t dhcp_discover_request_options[] = {
   DHCP_OPTION_SUBNET_MASK,
   DHCP_OPTION_ROUTER,
-  DHCP_OPTION_BROADCAST
-#if LWIP_DHCP_PROVIDE_DNS_SERVERS
-  , DHCP_OPTION_DNS_SERVER
-#endif /* LWIP_DHCP_PROVIDE_DNS_SERVERS */
+  DHCP_OPTION_BROADCAST,
+  DHCP_OPTION_DNS_SERVER
 #if LWIP_DHCP_GET_NTP_SRV
   , DHCP_OPTION_NTP
 #endif /* LWIP_DHCP_GET_NTP_SRV */
@@ -208,6 +192,8 @@ static void dhcp_option_hostname(struct dhcp *dhcp, struct netif *netif);
 #endif /* LWIP_NETIF_HOSTNAME */
 /* always add the DHCP options trailer to end and pad */
 static void dhcp_option_trailer(struct dhcp *dhcp);
+
+#define netif_dhcp_data(netif) ((struct dhcp*)netif_get_client_data(netif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP))
 
 /** Ensure DHCP PCB is allocated and bound */
 static err_t
@@ -586,9 +572,9 @@ dhcp_handle_ack(struct netif *netif)
 {
   struct dhcp *dhcp = netif_dhcp_data(netif);
 
-#if LWIP_DHCP_PROVIDE_DNS_SERVERS || LWIP_DHCP_GET_NTP_SRV
+#if LWIP_DNS || LWIP_DHCP_GET_NTP_SRV
   u8_t n;
-#endif /* LWIP_DHCP_PROVIDE_DNS_SERVERS || LWIP_DHCP_GET_NTP_SRV */
+#endif /* LWIP_DNS || LWIP_DHCP_GET_NTP_SRV */
 #if LWIP_DHCP_GET_NTP_SRV
   ip4_addr_t ntp_server_addrs[LWIP_DHCP_MAX_NTP_SERVERS];
 #endif
@@ -654,14 +640,14 @@ dhcp_handle_ack(struct netif *netif)
   dhcp_set_ntp_servers(n, ntp_server_addrs);
 #endif /* LWIP_DHCP_GET_NTP_SRV */
 
-#if LWIP_DHCP_PROVIDE_DNS_SERVERS
+#if LWIP_DNS
   /* DNS servers */
-  for (n = 0; (n < LWIP_DHCP_PROVIDE_DNS_SERVERS) && dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n); n++) {
+  for (n = 0; (n < DNS_MAX_SERVERS) && dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n); n++) {
     ip_addr_t dns_addr;
     ip_addr_set_ip4_u32(&dns_addr, lwip_htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n)));
     dns_setserver(n, &dns_addr);
   }
-#endif /* LWIP_DHCP_PROVIDE_DNS_SERVERS */
+#endif /* LWIP_DNS */
 }
 
 /**
@@ -736,7 +722,7 @@ dhcp_start(struct netif *netif)
 
   /* no DHCP client attached yet? */
   if (dhcp == NULL) {
-    LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_start(): mallocing new DHCP client\n"));
+    LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_start(): starting new DHCP client\n"));
     dhcp = (struct dhcp *)mem_malloc(sizeof(struct dhcp));
     if (dhcp == NULL) {
       LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_start(): could not allocate dhcp\n"));
@@ -1500,7 +1486,7 @@ again:
   offset_max = options_idx_max;
   options = (u8_t*)q->payload;
   /* at least 1 byte to read and no end marker, then at least 3 bytes to read? */
-  while ((q != NULL) && (offset < offset_max) && (options[offset] != DHCP_OPTION_END)) {
+  while ((q != NULL) && (options[offset] != DHCP_OPTION_END) && (offset < offset_max)) {
     u8_t op = options[offset];
     u8_t len;
     u8_t decode_len = 0;
@@ -1531,7 +1517,6 @@ again:
         LWIP_ERROR("len >= decode_len", len >= decode_len, return ERR_VAL;);
         decode_idx = DHCP_OPTION_IDX_ROUTER;
         break;
-#if LWIP_DHCP_PROVIDE_DNS_SERVERS
       case(DHCP_OPTION_DNS_SERVER):
         /* special case: there might be more than one server */
         LWIP_ERROR("len %% 4 == 0", len % 4 == 0, return ERR_VAL;);
@@ -1540,7 +1525,6 @@ again:
         LWIP_ERROR("len >= decode_len", len >= decode_len, return ERR_VAL;);
         decode_idx = DHCP_OPTION_IDX_DNS_SERVER;
         break;
-#endif /* LWIP_DHCP_PROVIDE_DNS_SERVERS */
       case(DHCP_OPTION_LEASE_TIME):
         LWIP_ERROR("len == 4", len == 4, return ERR_VAL;);
         decode_idx = DHCP_OPTION_IDX_LEASE_TIME;
@@ -1557,8 +1541,6 @@ again:
 #endif /* LWIP_DHCP_GET_NTP_SRV*/
       case(DHCP_OPTION_OVERLOAD):
         LWIP_ERROR("len == 1", len == 1, return ERR_VAL;);
-        /* decode overload only in options, not in file/sname: invalid packet */
-        LWIP_ERROR("overload in file/sname", options_idx == DHCP_OPTIONS_OFS, return ERR_VAL;);
         decode_idx = DHCP_OPTION_IDX_OVERLOAD;
         break;
       case(DHCP_OPTION_MESSAGE_TYPE):
@@ -1617,7 +1599,7 @@ decode_next:
       offset_max -= q->len;
       if ((offset < offset_max) && offset_max) {
         q = q->next;
-        LWIP_ERROR("next pbuf was null", q != NULL, return ERR_VAL;);
+        LWIP_ASSERT("next pbuf was null", q);
         options = (u8_t*)q->payload;
       } else {
         /* We've run out of bytes, probably no end marker. Don't proceed. */
@@ -1832,7 +1814,7 @@ dhcp_create_msg(struct netif *netif, struct dhcp *dhcp, u8_t message_type)
            (dhcp->p_out->len >= sizeof(struct dhcp_msg)));
 
   /* DHCP_REQUEST should reuse 'xid' from DHCPOFFER */
-  if ((message_type != DHCP_REQUEST) || (dhcp->state == DHCP_STATE_REBOOTING)) {
+  if (message_type != DHCP_REQUEST) {
     /* reuse transaction identifier in retransmissions */
     if (dhcp->tries == 0) {
 #if DHCP_CREATE_RAND_XID && defined(LWIP_RAND)
@@ -1942,8 +1924,7 @@ dhcp_supplied_address(const struct netif *netif)
 {
   if ((netif != NULL) && (netif_dhcp_data(netif) != NULL)) {
     struct dhcp* dhcp = netif_dhcp_data(netif);
-    return (dhcp->state == DHCP_STATE_BOUND) || (dhcp->state == DHCP_STATE_RENEWING) ||
-           (dhcp->state == DHCP_STATE_REBINDING);
+    return (dhcp->state == DHCP_STATE_BOUND) || (dhcp->state == DHCP_STATE_RENEWING);
   }
   return 0;
 }

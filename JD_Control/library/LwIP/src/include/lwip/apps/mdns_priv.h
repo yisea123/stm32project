@@ -31,7 +31,7 @@
  *
  * This file is part of the lwIP TCP/IP stack.
  *
- * Author: Erik Ekman <erik@kryo.se>
+ * Author: Erik Ekman <erik.ekman@verisure.com>
  *
  */
 #ifndef LWIP_HDR_MDNS_PRIV_H

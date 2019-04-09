@@ -38,7 +38,8 @@
 
 #if LWIP_DNS && LWIP_SOCKET
 
-#include "lwip/arch.h"
+#include <stddef.h> /* for size_t */
+
 #include "lwip/inet.h"
 #include "lwip/sockets.h"
 

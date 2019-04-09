@@ -61,13 +61,9 @@
 #include "lwip/err.h"
 
 #include <string.h>
-
-#if MEM_LIBC_MALLOC
-#include <stdlib.h> /* for malloc()/free() */
-#endif
+#include <stdlib.h>
 
 #if MEM_LIBC_MALLOC || MEM_USE_POOLS
-
 /** mem_init is not used when using pools instead of a heap or using
  * C library malloc().
  */
@@ -166,7 +162,7 @@ void *
 mem_malloc(mem_size_t size)
 {
   void *ret;
-  struct memp_malloc_helper *element = NULL;
+  struct memp_malloc_helper *element;
   memp_t poolnr;
   mem_size_t required_size = size + LWIP_MEM_ALIGN_SIZE(sizeof(struct memp_malloc_helper));
 

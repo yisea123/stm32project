@@ -40,7 +40,7 @@
 #if !NO_SYS
 
 #include "cmsis_os.h"
-#include "task.h"
+
 #if defined(LWIP_SOCKET_SET_ERRNO) && defined(LWIP_PROVIDE_ERRNO)
 int errno;
 #endif
@@ -73,7 +73,7 @@ err_t sys_mbox_new(sys_mbox_t *mbox, int size)
 */
 void sys_mbox_free(sys_mbox_t *mbox)
 {
-	if (osMessageWaiting(*mbox) )
+	if( osMessageWaiting(*mbox) )
 	{
 		/* Line for breakpoint.  Should never break here! */
 		portNOP();
