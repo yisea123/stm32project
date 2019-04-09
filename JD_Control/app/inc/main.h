@@ -20,6 +20,7 @@
 #endif
 #define VALID_PASSWORD_ID			6000
 #define TASK_LOOP_ST			true
+#define USE_DHCP       /* enable DHCP, if disabled static address is used */
 
 
  extern uint32_t putValidNum;

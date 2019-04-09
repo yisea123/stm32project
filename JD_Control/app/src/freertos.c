@@ -61,6 +61,21 @@ typedef struct{
 
 
 /* Function prototypes -------------------------------------------------------*/
+/* Hook prototypes */
+void configureTimerForRunTimeStats(void);
+unsigned long getRunTimeCounterValue(void);
+
+/* USER CODE BEGIN 1 */
+/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
+void configureTimerForRunTimeStats(void)
+{
+
+}
+
+unsigned long getRunTimeCounterValue(void)
+{
+return 0;
+}
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 extern void StartShellRXTask(void const * argument);
@@ -86,7 +101,7 @@ static const TaskConfiguration_t TaskConfiguration[] =
 		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		384},		TSK_ID_MOTOR, NULL},
 
 		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		256},		TSK_ID_WELD, NULL},
-		//		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
+//		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
 		{{"Ethernet Tsk",		StartEthernet,		osPriorityNormal, 	0,		384},		TSK_ID_ETHERNET, NULL},
 
 //		{{"ADC Monitor",	StartADCMonitor,		osPriorityAboveNormal, 	0,		256},			TSK_ID_ADC_MONITOR, NULL},

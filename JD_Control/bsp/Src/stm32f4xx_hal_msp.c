@@ -117,8 +117,8 @@ void HAL_MspInit(void)
   /* PendSV_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(PendSV_IRQn, 15, 0);
   /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, ISR_PRIORITY_TICK, ISR_SUB_PRIORITY_TICK);
-  HAL_NVIC_EnableIRQ(SysTick_IRQn);
+//  HAL_NVIC_SetPriority(SysTick_IRQn, ISR_PRIORITY_TICK, ISR_SUB_PRIORITY_TICK);
+ // HAL_NVIC_EnableIRQ(SysTick_IRQn);
   /* SysTick_IRQn interrupt configuration */
   /* USER CODE END MspInit 1 */
 }

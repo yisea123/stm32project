@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 #include <sys/types.h>
-#include "Trace.h"
+#include "../../include/diag/Trace.h"
 
 // ----------------------------------------------------------------------------
 

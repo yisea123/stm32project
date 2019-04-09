@@ -20,11 +20,11 @@ void DHCP_Periodic_Handle(struct netif *netif);
 
 
 
-/*Static IP ADDRESS*/
+/* USER CODE BEGIN Includes */
 #define IP_ADDR0   (uint8_t) 192
 #define IP_ADDR1   (uint8_t) 168
 #define IP_ADDR2   (uint8_t) 31
-#define IP_ADDR3   (uint8_t) 10
+#define IP_ADDR3   (uint8_t) 14
 
 /*NETMASK*/
 #define NETMASK_ADDR0   (uint8_t) 255

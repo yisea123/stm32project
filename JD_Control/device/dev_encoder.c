@@ -79,6 +79,7 @@ void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef* htim_base)
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull=GPIO_PULLDOWN;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM4;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
     HAL_GPIO_Init(ENCODER_TIM_CH1_GPIO, &GPIO_InitStruct);
 
     /* 定时器通道2功能引脚IO初始化 */

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    LwIP/LwIP_HTTP_Server_Netconn_RTOS/Inc/app_ethernet.h 
+  * @file    LwIP/LwIP_HTTP_Server_Socket_RTOS/Inc/httpserver-socket.h
   * @author  MCD Application Team
-  * @brief   Header for app_ethernet.c module
+  * @brief   header file for httpserver-socket.c
   ******************************************************************************
   * @attention
   *
@@ -43,43 +43,17 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __APP_ETHERNET_H
-#define __APP_ETHERNET_H
-
-#ifdef __cplusplus
- extern "C" {
-#endif
+#ifndef __HTTPSERVER_SOCKET_H__
+#define __HTTPSERVER_SOCKET_H__
 
 /* Includes ------------------------------------------------------------------*/
-#include "lwip/netif.h"
-
 /* Exported types ------------------------------------------------------------*/
-struct link_str {
-	struct netif *netif;
-	osSemaphoreId semaphore;
-};
 /* Exported constants --------------------------------------------------------*/
-/* DHCP process states */
-#define DHCP_OFF                   (uint8_t) 0
-#define DHCP_START                 (uint8_t) 1
-#define DHCP_WAIT_ADDRESS          (uint8_t) 2
-#define DHCP_ADDRESS_ASSIGNED      (uint8_t) 3
-#define DHCP_TIMEOUT               (uint8_t) 4
-#define DHCP_LINK_DOWN             (uint8_t) 5
-   
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void User_notification(struct netif *netif);
-#ifdef USE_DHCP
-void DHCP_thread(void const * argument);
-#endif
+void http_server_socket_init(void);
+void DynWebPage(int conn);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __APP_ETHERNET_H */
-
+#endif /* __HTTPSERVER_SOCKET_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
