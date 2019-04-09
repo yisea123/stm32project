@@ -9,7 +9,7 @@
 #include "main.h"
 #include "stdio.h"
 #include "string.h"
-
+#include "lwipopts.h"
 /* 类型定义 ------------------------------------------------------------------*/
 /* TCP服务器连接状态 */
 enum tcp_echoserver_states

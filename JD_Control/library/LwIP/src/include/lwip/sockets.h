@@ -436,13 +436,14 @@ typedef struct fd_set
  * by your system, set this to 0 and include <sys/time.h> in cc.h */
 #ifndef LWIP_TIMEVAL_PRIVATE
 #define LWIP_TIMEVAL_PRIVATE 1
-#endif
-
-#if LWIP_TIMEVAL_PRIVATE
 struct timeval {
   long    tv_sec;         /* seconds */
   long    tv_usec;        /* and microseconds */
 };
+#endif
+
+#if LWIP_TIMEVAL_PRIVATE
+
 #endif /* LWIP_TIMEVAL_PRIVATE */
 
 #define lwip_socket_init() /* Compatibility define, no init needed. */

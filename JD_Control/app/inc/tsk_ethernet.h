@@ -38,5 +38,7 @@ void DHCP_Periodic_Handle(struct netif *netif);
 #define GW_ADDR2   (uint8_t) 31
 #define GW_ADDR3   (uint8_t) 1
 
+#define TCP_SERVER_RX_BUFSIZE	200		//¶¨Òåtcp server×î´ó½ÓÊÕÊý¾Ý³¤¶È
+#define TCP_SERVER_PORT			1234	//¶¨Òåtcp serverµÄ¶Ë¿Ú
 
 #endif /* INC_TSK_ETHERNET_H_ */

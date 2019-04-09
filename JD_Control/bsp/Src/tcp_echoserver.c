@@ -16,7 +16,7 @@
   */
 /* 包含头文件 ----------------------------------------------------------------*/
 #include "tcp_echoserver.h"
-
+#include "tsk_ethernet.h"
 #if LWIP_TCP
 /* 私有类型定义 --------------------------------------------------------------*/
 struct tcp_pcb *tcp_echoserver_pcb;
@@ -51,14 +51,14 @@ void tcp_echoserver_connect(void)
   
   if (tcp_echoserver_pcb != NULL)
   {
-    printf("创建一个新的pcb\n");
+    TraceUser("创建一个新的pcb\n");
     err_t err;
     
     /* 将本地的IP与指定的端口绑定在一起，TCP_SERVER_PORT即为指定的端口 */
     err = tcp_bind(tcp_echoserver_pcb, IP_ADDR_ANY, TCP_SERVER_PORT);
     if (err == ERR_OK)
     {
-      printf("绑定pcb成功\n");
+      TraceUser("绑定pcb成功\n");
       /* tcp pcb进入监听状态 */
       tcp_echoserver_pcb = tcp_listen(tcp_echoserver_pcb);
       
@@ -69,12 +69,12 @@ void tcp_echoserver_connect(void)
     {      
       /* 重新为pcb释放内存 */
       memp_free(MEMP_TCP_PCB, tcp_echoserver_pcb);
-      printf("绑定pcb失败\n");
+      TraceUser("绑定pcb失败\n");
     }
   }
   else
   {
-    printf("创建新的pcb失败\n");
+    TraceUser("创建新的pcb失败\n");
   }
 }
 
@@ -87,7 +87,7 @@ void tcp_echoserver_connect(void)
 void tcp_echoserver_close(void)
 {
 	tcp_echoserver_connection_close(tcp_echoserver_pcb,tcp_echoserver_es);
-	printf("关闭tcp server\n");
+	TraceUser("关闭tcp server\n");
 }
 
 
@@ -134,7 +134,7 @@ static err_t tcp_echoserver_accept(void *arg, struct tcp_pcb *newpcb, err_t err)
 		ServerIp[1]=(newpcb->remote_ip.addr>>8)&0xff;  	//IADDR3
 		ServerIp[2]=(newpcb->remote_ip.addr>>16)&0xff; 	//IADDR2
 		ServerIp[3]=(newpcb->remote_ip.addr>>24)&0xff; 	//IADDR1 
-    printf("连接的电脑端IP为：%d %d %d %d\n",ServerIp[0],ServerIp[1],ServerIp[2],ServerIp[3]);
+    TraceUser("连接的电脑端IP为：%d %d %d %d\n",ServerIp[0],ServerIp[1],ServerIp[2],ServerIp[3]);
     ret_err = ERR_OK;
   }
   else
@@ -210,7 +210,7 @@ static err_t tcp_echoserver_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
     if(recdata!=NULL)
     {
       memcpy(recdata,p->payload,p->len);
-      printf("TCP_Server_Rec:%s\n",recdata);
+      TraceUser("TCP_Server_Rec:%s\n",recdata);
     }
     free(recdata);    
     
@@ -229,7 +229,7 @@ static err_t tcp_echoserver_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
 			if(recdata!=NULL)
 			{
 				memcpy(recdata,p->payload,p->len);
-				printf("TCP_Server_Rec:%s\n",recdata);
+				TraceUser("TCP_Server_Rec:%s\n",recdata);
 			}
 			free(recdata);  
       /* send back received data */

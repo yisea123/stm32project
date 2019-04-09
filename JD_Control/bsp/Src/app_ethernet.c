@@ -63,57 +63,6 @@ void User_notification(struct netif *netif)
   } 
 }
 
-/**
-  * 函数功能: 对链接状态进行通知
-  * 输入参数: 无
-  * 返 回 值: 无
-  * 说    明: 无
-  */
-void ethernetif_notify_conn_changed(struct netif *netif)
-{
-#ifndef USE_DHCP
-  ip_addr_t ipaddr;
-  ip_addr_t netmask;
-  ip_addr_t gw;
-#endif
-  
-  if(netif_is_link_up(netif))
-  {
-    TraceUser ("The network cable is now connected \n");
-    
-#ifdef USE_DHCP
-    /* Update DHCP state machine */
-    DHCP_state = DHCP_START;
-#else
-    IP_ADDR4(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
-    IP_ADDR4(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
-    IP_ADDR4(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);  
-    
-    netif_set_addr(netif, &ipaddr , &netmask, &gw);  
-     
-    uint8_t iptxt[20];
-    sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));
-    TraceUser ("Static IP address: %s\n", iptxt);
-#endif /* USE_DHCP */   
-    
-    /* When the netif is fully configured this function must be called.*/
-    netif_set_up(netif);     
-  }
-  else
-  {
-#ifdef USE_DHCP
-    /* Update DHCP state machine */
-    DHCP_state = DHCP_LINK_DOWN;
-#endif /* USE_DHCP */
-    
-    /*  When the netif link is down this function must be called.*/
-    netif_set_down(netif);
-    
-    TraceUser ("The network cable is not connected \n");
-    
-  }
-}
-
 #ifdef USE_DHCP
 /**
   * 函数功能: DHCP获取函数
@@ -128,7 +77,6 @@ void DHCP_thread(void const * argument)
   ip_addr_t netmask;
   ip_addr_t gw;
   struct dhcp *dhcp;   
-#ifdef USE_LCD 
   uint8_t iptxt[20];
   for (;;)
   {  

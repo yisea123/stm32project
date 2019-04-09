@@ -33,7 +33,7 @@ static void Netif_Config(void);
 #include <lwip/err.h>
 #include <lwip/sys.h>
 
-
+extern void tcp_server_init(void);
 
 
 /**
@@ -56,8 +56,8 @@ void StartEthernet(void const * argument)
   osThreadCreate (osThread(DHCP), &gnetif);
 #endif
 
-
-	tcp_echoserver_connect();
+  tcp_server_init();
+//	tcp_echoserver_connect();
   for( ;; )
   {
     /* Delete the Init Thread */ 

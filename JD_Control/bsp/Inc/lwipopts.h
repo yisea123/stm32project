@@ -129,7 +129,6 @@ a lot of data that needs to be copied, this should be set high. */
 /* TCP receive window. */
 #define TCP_WND                 (2*TCP_MSS)
 
-
 /* ---------- ICMP options ---------- */
 #define LWIP_ICMP                       1
 
@@ -217,8 +216,8 @@ The STM32F4xx allows computing and verifying the IP, UDP, TCP and ICMP checksums
 /**
  * LWIP_SOCKET==1: Enable Socket API (require to use sockets.c)
  */
-#define LWIP_SOCKET                     0
-
+#define LWIP_SOCKET                     1
+#define LWIP_TIMEVAL_PRIVATE 1
 /*
    ---------------------------------
    ---------- OS options ----------
