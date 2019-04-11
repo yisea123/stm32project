@@ -59,6 +59,7 @@ enum
 {
 	FROM_UART,
 	FROM_CAN,
+	FROM_ETH,
 };
 typedef struct
 {

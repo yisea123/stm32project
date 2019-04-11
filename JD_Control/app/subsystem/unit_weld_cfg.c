@@ -10,6 +10,7 @@
 #include "unit_weld_cfg.h"
 #include "tsk_head.h"
 #include "shell_io.h"
+#include "dev_encoder.h"
 //! unit global attributes
 
 static uint16_t _State;     // Subsystem state
@@ -20,6 +21,7 @@ static const uint8_t fileID_Default = 0x0F;
 CaliPoints 	currCaliPoint[MAX_CALI_CURR]		__attribute__ ((section (".configbuf_static")));
 CaliPoints 	voltCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
 CaliPoints 	speedCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
+//	cnter per 1/360
 float   	ang2CntRation						__attribute__ ((section (".configbuf_static")));
 uint32_t   	caliTime							__attribute__ ((section (".configbuf_static")));
 int32_t 	motorPosHome						__attribute__ ((section (".configbuf_static")));
@@ -35,6 +37,7 @@ WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 
+uint16_t weldDir = MOTOR_DIR_CW;
 int32_t 	lastMotorPos_PowerDown = 0;
 uint32_t  adcValue[4];
 uint32_t  adcValueFinal[4];
@@ -46,8 +49,7 @@ uint16_t  daOutputPwm[2];
 uint16_t  daOutputPwmTime[2];
 int16_t  currMicroAdjust = 0;
 
-float     rPMRatio = 1.0f;
-uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
+static uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
 volatile  int32_t   motorPos_Read;
 float 	  motorSpeed_Read;
 float     weldCurr_Read;
@@ -321,7 +323,6 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
        	Trigger_EEPSave((void*)&caliTime, sizeof(caliTime),SYNC_IM);
 
     }
-    rPMRatio = ang2CntRation*60.0f;//*360/60
     return result;
 }
 
@@ -395,7 +396,6 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 			SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
 			break;
 		case OBJ_IDX_SPEED_RATION:
-			rPMRatio = ang2CntRation*60.0f;//*360/60
 			UpdateWeldFInishPos();
 			break;
 		default:
@@ -417,34 +417,25 @@ float GetWeldSegSpeed(uint16_t id)
 		if(segWeld[id].endAng != 0)
 			speed = segWeld[id].weldSpeed;
 	}
-	else
-	{
-		for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
-		{
-			if(segWeld[i].endAng != 0)
-				speed = segWeld[i].weldSpeed;
-			else
-				break;
-		}
-	}
 	return speed;
 }
 
 
-float GetWeldSpeed(int32_t cnt)
+const SegWeld* GetWeldSeg(int32_t cnt)
 {
+	static const SegWeld segWeld_C = {0,0,0,0,0,0,0,};
 	int32_t pos = cnt;
-	float weldSpeed = 0;
 	if(cnt < 0)
 		pos = -cnt;
 	uint16_t ret = FATAL_ERROR;
+	const SegWeld* ptrSeg = &segWeld_C;
 	for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
 	{
 		if(segWeld[i].endAng != 0)
 		{
 			if(segWeldCnt[i] > pos)
 			{
-				weldSpeed = segWeld[i].weldSpeed;
+				ptrSeg = &segWeld[i];
 			}
 			else if(segWeldCnt[i] < pos)
 			{
@@ -454,10 +445,7 @@ float GetWeldSpeed(int32_t cnt)
 		else
 			break;
 	}
-	if(ret == OK)
-		return weldSpeed;
-	else
-		return 0;
+	return ptrSeg;
 }
 
 float GetSpeedOutput(float speed)

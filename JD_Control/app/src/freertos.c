@@ -97,7 +97,7 @@ static const TaskConfiguration_t TaskConfiguration[] =
 	//	{{"file task",		StartFileTask,		osPriorityHigh, 	0,		768},		TSK_ID_FILE, NULL},
 
 	//	{{"can rx1",		StartCanRXTask,		osPriorityHigh, 	0,		384},		TSK_ID_CAN_RX1, NULL},
-//		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		384},		TSK_ID_LOCAL_BUS, NULL},
+		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		384},		TSK_ID_LOCAL_BUS, NULL},
 		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		384},		TSK_ID_MOTOR, NULL},
 
 		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		256},		TSK_ID_WELD, NULL},

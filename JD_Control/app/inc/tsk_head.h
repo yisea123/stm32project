@@ -32,7 +32,7 @@ typedef enum
 	ST_WELD_POST_GAS_DELAY,
 	ST_WELD_FINISH,
 }ST_WELD_STATE;
-
+void SetMotorSpeed(float duty, uint16_t updateType);
 void UpdateWeldSetting(void);
 uint32_t GetInputPins(void);
 void StartADCMonitor(void const * argument);

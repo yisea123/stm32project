@@ -130,8 +130,10 @@ void StartOutputTsk(void const * argument)
 		{
 			tickOut = daOutputPwmTime[pwmCnt%2];
 #if USE_EXT_DEV
+			OutputPins(digitOutput, CHN_OUT_MAX);
 			AD5689_WriteUpdate_DACREG(DAC_A,daOutputPwm[pwmCnt%2]);
 			AD5689_WriteUpdate_DACREG(DAC_B,daOutputSet[CHN_DA_SPEED_OUT]);
+
 #endif
 			pwmCnt++;
 		}

@@ -71,6 +71,7 @@ enum
 #define CURR_DETECT_LIMIT  30.0f
 extern WeldProcessCfg weldProcess;
 extern MotorSpeed motorSpeedSet  ;
+extern uint16_t weldDir;
 extern volatile int32_t  motorPos_Read;
 extern float 	 motorSpeed_Read;
 extern float   	ang2CntRation;

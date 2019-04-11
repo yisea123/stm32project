@@ -151,7 +151,7 @@ float LocPIDCalc(int32_t NextPoint)
 	return OutVal/100.0f;
 }
 
-static void SetMotorSpeed(float duty)
+void SetMotorSpeed(float duty, uint16_t updateType)
 {
 	float val = (duty*655.36f);
 	if(duty >= 0)
@@ -169,7 +169,8 @@ static void SetMotorSpeed(float duty)
 	if(val >= 65536)
 		val = 65535;
 	daOutputSet[CHN_DA_SPEED_OUT] = (uint16_t)(val);
-	SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH), NULL, NULL);
+	if(updateType == 0)
+		SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH), NULL, NULL);
 }
 
 
@@ -186,7 +187,7 @@ void UpdateWeldSetting(void)
 		if(cnt - last_cnt >= 200)
 		{
 			int32_t cntLoc = motorPos_Read - last_motorPos_Read;
-			motorSpeed_Read = (cntLoc*5.0f)/rPMRatio;//5/360.0*cntLoc/ang2CntRation;
+			motorSpeed_Read = (cntLoc*0.8333333333333333f)/ang2CntRation;//5*cntLoc*60/(ang2CntRation*360.0)
 			last_cnt = cnt;
 		}
 	}
@@ -214,14 +215,14 @@ void StartMotorTsk(void const * argument)
 
 	float targetJogDuty;
 	float targetJogDutyAcc = 0.1f;
-	uint16_t weldDir = MOTOR_DIR_CW;
+
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"started  \n");
 	/* 编码器初始化及使能编码器模式 */
 	ENCODER_TIMx_Init();
 	/* 设定占空比 */
 
-	SetMotorSpeed(0);  // 0% 占空比
+	SetMotorSpeed(0, 0);  // 0% 占空比
 	/* PID 参数初始化 */
 	PID_ParamInit();
 	/* 无限循环 */
@@ -261,7 +262,7 @@ void StartMotorTsk(void const * argument)
 						duty = targetJogDuty;
 					}
 				}
-				SetMotorSpeed(duty);
+				SetMotorSpeed(duty, 0);
 				tskState = ST_MOTOR_JOG_CYC;
 				tickOut = MOTOR_CTRL_TIME;
 			}
@@ -287,25 +288,11 @@ void StartMotorTsk(void const * argument)
 					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 				}
 				/* 输出PWM */
-				SetMotorSpeed( duty );
+				SetMotorSpeed( duty, 0 );
 				tickOut = MOTOR_CTRL_TIME;
 			}
 			break;
 			case ST_MOTOR_WELD_CYC:
-				tskState = ST_MOTOR_WELD_CYC;
-				tickOut = MOTOR_WELD_CYC_TIME;
-				//only output speed, not control the weld current;
-				duty = GetSpeedDuty(GetWeldSpeed(motorPos_Read-motorPos_WeldStart));
-				if(duty <= 0.00001f)
-				{
-					tskState = ST_MOTOR_WELD_END;
-					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
-				}
-				if(weldDir == MOTOR_DIR_CW)
-					SetMotorSpeed(duty);
-				else
-					SetMotorSpeed(-duty);
-
 
 				break;
 			default:
@@ -389,7 +376,7 @@ void StartMotorTsk(void const * argument)
 						motorPos_WeldFinish = motorPos_WeldStart-GetWeldFinishPos(0xFFFF);
 						duty = -duty;
 					}
-					SetMotorSpeed(duty);
+					SetMotorSpeed(duty, 0);
 					tickOut = 0;
 					tskState = ST_MOTOR_WELD_CYC;
 					break;

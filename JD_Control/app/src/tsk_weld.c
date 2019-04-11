@@ -9,6 +9,7 @@
 #include "unit_head.h"
 #include "tsk_head.h"
 #include "shell_io.h"
+#include "dev_encoder.h"
 
 static const char* taskStateDsp[] =
 {
@@ -108,6 +109,7 @@ void StartWeldTask(void const * argument)
 	TSK_MSG locMsg;
 	const uint8_t taskID = TSK_ID_WELD;
 	uint32_t tickStartArc = 0;
+	SegWeld* ptrCurrWeldSeg = NULL;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"task started  \n");
 	while (TASK_LOOP_ST)
@@ -149,6 +151,28 @@ void StartWeldTask(void const * argument)
 			}
 				break;
 			case ST_WELD_MOTION_CYC:
+			{
+				ptrCurrWeldSeg = GetWeldSeg(motorPos_Read-motorPos_WeldStart);
+				float speed = ptrCurrWeldSeg->weldSpeed;
+				daOutputPwmTime[0] =ptrCurrWeldSeg->currHighMs;
+				daOutputPwmTime[1] =ptrCurrWeldSeg->currLowMs;
+				daOutputPwm[0] = GetCurrOutput(ptrCurrWeldSeg->currHigh);
+				daOutputPwm[1] = GetCurrOutput(ptrCurrWeldSeg->currLow);
+				tskState = ST_WELD_MOTION_CYC;
+				tickOut = WELD_DELAY_TIME;
+				//only output speed, not control the weld current;
+				float duty = GetSpeedDuty(speed);
+				if(speed <= 0.00001f)
+				{
+					tskState = ST_WELD_STOP;
+					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
+				}
+				if(weldDir == MOTOR_DIR_CW)
+					SetMotorSpeed(duty, 1);
+				else
+					SetMotorSpeed(-duty, 1);
+
+			}
 				//todo
 				//check weld pos, change pwm timer
 				//or close ;ST_WELD_STOP
@@ -232,6 +256,7 @@ void StartWeldTask(void const * argument)
 						SendTskMsgLOC(WELD_CTRL, &locMsg);
 						break;
 					case ST_WELD_MOTION:
+						ptrCurrWeldSeg =
 						//start motion
 						//start timer
 						//start pwm

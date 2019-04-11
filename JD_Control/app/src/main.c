@@ -324,6 +324,8 @@ uint16_t LoadDefaultCfg(uint16_t id)
 
 
 __IO uint32_t kernelStarted = 0;
+uint16_t tt = 120;
+uint8_t* ptrVal = &tt;
 osMessageQId usbQueue;
 int main(int argc, char* argv[])
 {
@@ -332,7 +334,7 @@ int main(int argc, char* argv[])
 	trace_puts("Hello ARM World!\n");
 	osMessageQDef(USBH_Queue, 10, uint16_t);
 	usbQueue = osMessageCreate (osMessageQ(USBH_Queue), NULL);
-
+	ptrVal[1] = 0x30;
   //	Init_RTC();
 	CreateAllQid();
 	// At this stage the system clock should have already been configured
