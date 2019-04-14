@@ -65,6 +65,10 @@ static void OutputPins(uint32_t _digitOutput, uint16_t chnNum)
 
 uint32_t GetInputPins(void)
 {
+#define MAX_SAMPLE_NUM			3
+	static uint32_t cnt = 0;
+	static uint32_t resultPins = 0;
+	static uint32_t lastInputPins[MAX_SAMPLE_NUM] = {0,0,0};
 	uint32_t inputPins = 0;
 	for(uint16_t i=0; i< CHN_IN_MAX;i++)
 	{
@@ -73,7 +77,13 @@ uint32_t GetInputPins(void)
 		if(state == GPIO_PIN_SET)
 			inputPins = (inputPins | (1<<i));
 	}
-	return inputPins;
+	lastInputPins[cnt%MAX_SAMPLE_NUM] = inputPins;
+	cnt++;
+	if((lastInputPins[0] == lastInputPins[1]) &&(lastInputPins[1] == lastInputPins[2]))
+	{
+		resultPins = lastInputPins[0];
+	}
+	return resultPins;
 }
 static const char* taskStateDsp[] =
 {
@@ -126,7 +136,7 @@ void StartOutputTsk(void const * argument)
 			pwmCnt = 0;
 			tickOut = 5;
 		}
-		else if((weldStatus > ST_WELD_ARC_ON_DELAY ) && (weldStatus < ST_WELD_STOP))
+		else if((weldState > ST_WELD_ARC_ON_DELAY ) && (weldState < ST_WELD_STOP))
 		{
 			tickOut = daOutputPwmTime[pwmCnt%2];
 #if USE_EXT_DEV

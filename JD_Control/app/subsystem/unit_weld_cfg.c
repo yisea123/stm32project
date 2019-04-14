@@ -18,9 +18,9 @@ static OS_RSEMA _Semaphore;
 static const uint8_t fileID_Default = 0x0F;
 
 
-CaliPoints 	currCaliPoint[MAX_CALI_CURR]		__attribute__ ((section (".configbuf_static")));
-CaliPoints 	voltCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
-CaliPoints 	speedCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
+static CaliCurrent	currCaliPoint[MAX_CALI_CURR]		__attribute__ ((section (".configbuf_static")));
+CaliVolt 	voltCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
+CaliSpeed 	speedCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
 //	cnter per 1/360
 float   	ang2CntRation						__attribute__ ((section (".configbuf_static")));
 uint32_t   	caliTime							__attribute__ ((section (".configbuf_static")));
@@ -28,7 +28,7 @@ int32_t 	motorPosHome						__attribute__ ((section (".configbuf_static")));
 
 uint16_t   	currCaliPointNum					__attribute__ ((section (".configbuf_static")));
 uint32_t   	rev_loc[15]							__attribute__ ((section (".configbuf_static")));
-
+float		currConvertRation					__attribute__ ((section (".configbuf_static")));
 
 static uint8_t fileId1							__attribute__ ((section (".configbuf_measdata")));
 SegWeld segWeld[MAX_SEG_SIZE]					__attribute__ ((section (".configbuf_measdata")));
@@ -37,6 +37,8 @@ WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 
+float currCaliSet = 0.0;
+uint16_t   devLock  = 10;
 uint16_t weldDir = MOTOR_DIR_CW;
 int32_t 	lastMotorPos_PowerDown = 0;
 uint32_t  adcValue[4];
@@ -45,6 +47,7 @@ uint16_t  daOutputSet[2];
 uint16_t  daOutput[2];
 uint32_t  digitOutput;
 uint32_t  digitInput;
+uint32_t  digitInputWeld;
 uint16_t  daOutputPwm[2];
 uint16_t  daOutputPwmTime[2];
 int16_t  currMicroAdjust = 0;
@@ -61,37 +64,56 @@ uint16_t  weldStatus = 0;
 uint16_t  weldState = 0;
 
 uint16_t voltCaliReq = 0;
+uint16_t currCaliReq = 0;
+uint16_t speedCaliReq = 0;
+
+float speedCaliOutput = 0.0f;
+float currCaliOutput = 0.0f;
+float voltCaliInput = 0.0f;
 
 
+uint16_t caliAllReq = 0;
+SegWeld* ptrCurrWeldSeg = &segWeld[0];
 SegWeld tmp_SegWeld;
-CaliPoints tmp_CaliPointCurr;
+CaliCurrent tmp_CaliPointCurr;
 uint16_t clearCurrCali = 0;
+float speedAdjust = 1.0f;
 
 
+uint16_t uiBtn_Weld = 0;
+uint16_t uiBtn_Cali = 0;
+uint16_t uiBtn_JogP = 0;
+uint16_t uiBtn_JogN = 0;
 
-static const CaliPoints currCaliPoint_Default[MAX_CALI_CURR] = {
-                                                    {10.0f, 3500, 0},
-													{30.0f, 10000, 0},
-													{50.0f, 16500, 0},
-													{70.0f, 23000, 0},
-													{90.0f, 29500, 0},
-													{110.0f, 36000, 0},
-													{130.0f, 42500, 0},
-													{150.0f, 49000, 0},
-													{170.0f, 55500, 0},
-													{190.0f, 62000, 0},
+static const float currConvertRation_Default = 20.0f;
+
+static const CaliCurrent currCaliPoint_Default[MAX_CALI_CURR] = {
+                                                    {1.0f, 	20.0f, 0},
+													{2.0f, 	40.0f, 0},
+													{3.0f, 	60.0f, 0},
+													{4.0f, 	80.0f, 0},
+													{5.0f, 	100.0f, 0},
+													{6.0f, 	120.0f, 0},
+													{7.0f, 	140.0f, 0},
+													{8.0f, 	160.0f, 0},
+													{9.0f, 	180.0f, 0},
+													{10.0f, 200.0f, 0},
 												};
-static const CaliPoints voltCaliPoint_Default[2] =
+
+static CaliCurrent	currCaliPointUsed[MAX_CALI_CURR+2];
+static const CaliVolt voltCaliPoint_Default[2] =
 {
-		{5.0f,	0x00200000,	0},
-		{40.0f,	0x00900000,	0},
+		{0.36f,	1.8f,	0},
+		{3.6f,	18.0f,	0},
 };
 
-static const CaliPoints speedCaliPoint_Default[2] =
+static const CaliSpeed speedCaliPoint_Default[2] =
 {
-		{0.1f,	1000,	0},
-		{5.0f,	50000,	0},
+		{1.0f,	1.2f,	0},
+		{8.0f,	9.6f,	0},
 };
+
+
 
 static const uint16_t currCaliPointNum_Default = 10;
 
@@ -151,12 +173,16 @@ static const  T_DATACLASS _ClassList[]=
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId2,fileID_Default),
 
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(segWeld,segWeld_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(currConvertRation,currConvertRation_Default),
 
 
 //	CONSTRUCTOR_DC_STATIC_CONSTDEF(caliFactor,caliFactor_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(motorSpeedSet,motorSpeedSet_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(weldProcess,weldProcess_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(segWeldNum,segWeldNum_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(currCaliPoint,currCaliPoint_Default),
+
+
 };
 
 
@@ -220,7 +246,7 @@ static const T_DATA_OBJ _ObjList[] =
 
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&motorSpeedSet, sizeof(motorSpeedSet)/sizeof(float),    NON_VOLATILE),
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&weldProcess, sizeof(weldProcess)/sizeof(uint16_t),    NON_VOLATILE),
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_FLOAT(&currConvertRation,    NON_VOLATILE),
 		NULL_T_DATA_OBJ,
 	//40
 		CONSTRUCT_STRUCT_CALIPOINT(&currCaliPoint[0], NON_VOLATILE),
@@ -279,6 +305,37 @@ const T_UNIT weldCfg =
     GetObjectName_T_UNIT
 };
 
+uint16_t GetInputState(uint16_t chn)
+{
+	assert(chn < CHN_IN_MAX);
+	return (digitInput & (1<<chn));
+}
+
+static void SortCurrentCali(void)
+{
+	CaliCurrent tmp;
+	uint16_t idx = 0;
+	currCaliPointUsed[0].actCurrent = 0;
+	currCaliPointUsed[0].outValue = 0;
+	currCaliPointUsed[0].caliFlag = 0;
+	currCaliPointUsed[MAX_CALI_CURR+1].actCurrent = MAX_CURRENT_OUTPUT;
+	currCaliPointUsed[MAX_CALI_CURR+1].outValue = 12.0f;
+	currCaliPointUsed[MAX_CALI_CURR+1].caliFlag = 0;
+	memcpy((void*)&currCaliPointUsed[1],(void*)&currCaliPoint[0],sizeof(currCaliPoint));
+
+	for(uint16_t i=1;i<MAX_CALI_CURR+1;i++)
+	{
+		for(uint16_t j=i;j<MAX_CALI_CURR+1;j++)
+		{
+			if(currCaliPointUsed[j].actCurrent <= currCaliPointUsed[i].actCurrent)
+			{
+				tmp = currCaliPointUsed[j];
+				currCaliPointUsed[j] = currCaliPointUsed[i];
+				currCaliPointUsed[i] = tmp;
+			}
+		}
+	}
+}
 
 uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 {
@@ -322,23 +379,13 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
        	Trigger_EEPSave((void*)&currCaliPoint[0], sizeof(currCaliPoint),SYNC_CYCLE);
        	Trigger_EEPSave((void*)&caliTime, sizeof(caliTime),SYNC_IM);
 
+
     }
+    SortCurrentCali();
     return result;
 }
 
-//get output da duty
-float GetSpeedDuty(float speed1)
-{
-	float speed = speed1;
-	if(speed1 < 0)
-		speed= -speed1;
-	float outVal = (speed - speedCaliPoint[0].setValue) / (speedCaliPoint[1].setValue - speedCaliPoint[0].setValue) * \
-			(float)(speedCaliPoint[1].deviceValue - speedCaliPoint[0].deviceValue) + (float)speedCaliPoint[0].deviceValue;
-	float duty = (outVal/655.36f);
-	if(speed1 < 0)
-		duty = -duty;
-	return duty;
-}
+
 
 void UpdateWeldFInishPos(void)
 {
@@ -398,6 +445,39 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 		case OBJ_IDX_SPEED_RATION:
 			UpdateWeldFInishPos();
 			break;
+		case OBJ_IDX_CURR_CALI_NEW:
+			if(attributeIndex == 2)
+			{
+				if(tmp_CaliPointCurr.caliFlag == 0x33)
+				{
+					if(currCaliPointNum >= MAX_CALI_CURR)
+					{
+						result = RULE_VIOLATION_ERR;
+					}
+					else
+					{
+						currCaliPoint[currCaliPointNum] = tmp_CaliPointCurr;
+
+						currCaliPointNum++;
+						Trigger_EEPSave((void*)&currCaliPointNum, sizeof(currCaliPointNum),SYNC_CYCLE);
+						Trigger_EEPSave((void*)&currCaliPoint[0], sizeof(currCaliPoint),SYNC_CYCLE);
+						SortCurrentCali();
+					}
+				}
+			}
+			break;
+		case OBJ_IDX_CURR_CALI_CLR:
+			if(clearCurrCali != 0)
+			{
+				clearCurrCali = 0;
+				currCaliPointNum = 0;
+				memcpy((void*)&currCaliPoint[0],(void*)&currCaliPoint_Default,sizeof(currCaliPoint));
+				Trigger_EEPSave((void*)&currCaliPointNum, sizeof(currCaliPointNum),SYNC_CYCLE);
+				Trigger_EEPSave((void*)&currCaliPoint[0], sizeof(currCaliPoint),SYNC_CYCLE);
+				SortCurrentCali();
+			}
+			break;
+
 		default:
 			break;
 		}
@@ -448,49 +528,50 @@ const SegWeld* GetWeldSeg(int32_t cnt)
 	return ptrSeg;
 }
 
-float GetSpeedOutput(float speed)
+float GetSpeedCtrlOutput(float speed)
 {
 	//todo
-	float outVal = (speed - speedCaliPoint[0].setValue)/(speedCaliPoint[1].setValue - speedCaliPoint[0].setValue)*\
-			(float)(speedCaliPoint[1].deviceValue - speedCaliPoint[0].deviceValue);
+	float outVal = (speed - speedCaliPoint[0].actSpeed)/(speedCaliPoint[1].actSpeed - speedCaliPoint[0].actSpeed)*\
+			(float)(speedCaliPoint[1].outValue - speedCaliPoint[0].outValue);
 
-	if(outVal >= 65536)
-		outVal = 0xFFFF;
-	else if(outVal < 0)
+	if(outVal < 0)
 		outVal = 0;
 
-	return outVal/655.36f;
+	return outVal;
 }
 
-uint16_t GetCurrOutput(float curr)
+float GetCurrCtrlOutput(float curr)
 {
 	//todo
-	return 0;
+	float outVal = 0;
+	for(uint16_t i=0; i<MAX_CALI_CURR-1;i++)
+	{
+		if((currCaliPointUsed[i].actCurrent <=curr) && (currCaliPointUsed[i+1].actCurrent >=curr) )
+		{
+			outVal = (curr - currCaliPointUsed[i].actCurrent)/(currCaliPointUsed[i+1].actCurrent - currCaliPointUsed[i].actCurrent) * \
+					(currCaliPointUsed[i+1].outValue - currCaliPointUsed[i].outValue) + currCaliPointUsed[i].outValue;
+		}
+	}
+
+	return outVal;
+}
+
+float GetVoltRead(float curr)
+{
+	float outVal = (curr - voltCaliPoint[0].adValue)/(voltCaliPoint[1].adValue - voltCaliPoint[0].adValue)*\
+			(voltCaliPoint[1].actRead - voltCaliPoint[0].actRead) + voltCaliPoint[0].actRead;
+	if(outVal <= 0.0f)
+		outVal = 0.0f;
+	return outVal;
+
 }
 
 
-float ConvertCurr(uint32_t ad)
+float GetCurrRead(float curr)
 {
-	//todo
-	return 0;
-}
+	float outVal = curr*currConvertRation;
+	if(outVal <= 0.0f)
+		outVal = 0.0f;
+	return outVal;
 
-float ConvertVolt(uint32_t ad)
-{
-	//todo
-	return 0;
-}
-
-
-uint16_t ConvertMotorPos(int32_t cnt)
-{
-	//todo
-	return 0;
-}
-
-
-float ConvertMotorSpeed(int32_t cnt)
-{
-	//todo
-	return 0;
 }

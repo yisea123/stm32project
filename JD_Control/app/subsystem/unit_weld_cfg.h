@@ -12,7 +12,7 @@
 #define	MAX_CALI_CURR 20
 
 extern SegWeld segWeld[MAX_SEG_SIZE];
-
+extern float currConvertRation;
 typedef struct
 {
 	float homeSpeed;
@@ -25,7 +25,7 @@ typedef struct
 {
 	uint16_t preGasTime;
 	uint16_t postGasTime;
-	uint16_t preVolt;
+	uint16_t preCurr;
 	uint16_t preDelay;
 	uint16_t upSlopeAcc;
 	uint16_t upSlopeAccTime;
@@ -69,6 +69,31 @@ enum
 	CHN_IN_MAX,
 };
 #define CURR_DETECT_LIMIT  30.0f
+
+enum
+{
+	BTN_UNKNOWN = 1,
+	BTN_PUSHDOWN = 2,
+	BTN_RELEASE = 4,
+
+	BTN_CHKED = 0x8000,
+};
+
+
+extern uint16_t uiBtn_Weld;
+extern uint16_t uiBtn_Cali;
+extern uint16_t uiBtn_JogP;
+extern uint16_t uiBtn_JogN;
+
+
+
+
+
+
+
+
+extern float speedAdjust;
+
 extern WeldProcessCfg weldProcess;
 extern MotorSpeed motorSpeedSet  ;
 extern uint16_t weldDir;
@@ -78,7 +103,6 @@ extern float   	ang2CntRation;
 extern int32_t  motorPos_WeldStart;
 extern int32_t  motorPos_WeldFinish;
 extern uint16_t  weldStartStatus;
-extern uint16_t  weldStatus;
 extern uint16_t  weldState;
 extern int32_t 	motorPosHome;
 extern uint32_t adcValue[CHN_AD_MAX];
@@ -86,13 +110,24 @@ extern uint32_t adcValueFinal[CHN_AD_MAX];
 extern uint16_t daOutput[CHN_DA_MAX];
 extern uint16_t daOutputSet[CHN_DA_MAX];
 extern float     weldCurr_Read;
+extern float 	  weldVolt_Read;
 extern uint32_t  digitOutput;
 extern uint32_t  digitInput;
+extern uint32_t  digitInputWeld;
 extern float     rPMRatio;
 extern int32_t	lastMotorPos_PowerDown;
 extern uint16_t voltCaliReq;
-extern const T_UNIT weldCfg;
+extern uint16_t currCaliReq;
+extern uint16_t speedCaliReq;
+extern uint16_t caliAllReq;
+extern float currCaliSet;
 
+extern float speedCaliOutput;
+extern float currCaliOutput;
+extern float voltCaliInput;
+
+extern const T_UNIT weldCfg;
+extern uint16_t   devLock;
 extern uint16_t  daOutputPwm[2];
 extern uint16_t  daOutputPwmTime[2];
 extern int16_t  currMicroAdjust;
@@ -103,7 +138,15 @@ float GetWeldSpeed(int32_t cnt);
 uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
                      void * ptrValue);
+uint16_t GetInputState(uint16_t chn);
 
+
+
+
+float GetSpeedCtrlOutput(float speed);
+float GetCurrCtrlOutput(float curr);
+float GetVoltRead(float curr);
+float GetCurrRead(float curr);
 
 enum
 {
@@ -113,5 +156,9 @@ enum
 	OBJ_IDX_INPUT_DI,
 
 	OBJ_IDX_SPEED_RATION = 9,
+	OBJ_IDX_CURR_CALI_NEW = 10,
+	OBJ_IDX_CURR_CALI_CLR = 12,
+	OBJ_IDX_CALI_CURR_ST = 40,
+	OBJ_IDX_CALI_CURR_END
 };
 #endif /* SUBSYSTEM_UNIT_WELD_CFG_H_ */

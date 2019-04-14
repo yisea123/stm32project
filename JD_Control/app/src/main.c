@@ -46,6 +46,9 @@ osMessageQId ADC_MONITOR = NULL;
 osMessageQId OUTPUT_QID = NULL;
 osMessageQId WELD_CTRL = NULL;
 osMessageQId MOTOR_CTRL = NULL;
+osMessageQId PWM_CTRL = NULL;
+osMessageQId SCH_CTRL = NULL;
+osMessageQId CURR_CALI = NULL;
 uint16_t dummyRam = 0;
 uint16_t printCtrlCfg[MSG_TYPE_MAX] = {0,1,1,1};
 
@@ -73,6 +76,8 @@ static const QueIDInit QID[]=
 	{&OUTPUT_QID,			16},
 	{&WELD_CTRL,			4},
 	{&MOTOR_CTRL,			4},
+	{&PWM_CTRL,				4},
+	{&SCH_CTRL,				8},
 };
 
 const T_UNIT*  subSystem[] =

@@ -37,7 +37,9 @@ extern osMessageQId ADC_MONITOR;
 extern osMessageQId OUTPUT_QID;
 extern osMessageQId WELD_CTRL;
 extern osMessageQId MOTOR_CTRL;
-
+extern osMessageQId PWM_CTRL;
+extern osMessageQId SCH_CTRL;
+extern osMessageQId CURR_CALI;
 #define IS_ROM_ADR(x)	(((x)>=0x08000000)&&((x)<0x08200000) )
 #define IS_RAM_ADR(x)	((x)<0x001FFFFF)
 extern uint16_t dummyRam;
@@ -143,6 +145,9 @@ typedef enum
 	TSK_ID_MOTOR,
 	TSK_ID_WELD,
 	TSK_ID_ETHERNET,
+	TSK_ID_PWM,
+	TSK_ID_SCH,
+	TSK_ID_CURR_CALI,
 	MAX_TASK_ID
 
 } TaskId_e;

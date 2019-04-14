@@ -11,6 +11,8 @@
 #include "shell_io.h"
 #include "dev_encoder.h"
 
+#define HOME_DELAY_TIME		60000
+
 static const char* taskStateDsp[] =
 {
 	TO_STR(ST_WELD_IDLE),
@@ -36,7 +38,11 @@ static void Break_RO()
 	digitOutput = 0x0;
 	SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
 }
-
+static TSK_MSG locMsg;
+void HomeFinish(uint16_t ret, uint16_t val)
+{
+	SendTskMsgLOC(WELD_CTRL, &locMsg);
+}
 
 void OutPutPins_Call(uint16_t pinChn, uint16_t val)
 {
@@ -53,15 +59,12 @@ void OutPutPins_Call(uint16_t pinChn, uint16_t val)
 
 void VoltMonitorChk(void)
 {
-	if(voltCaliReq != 0)
+
+	if(weldState <= ST_WELD_PRE_GAS_DELAY)
 	{
 		OutPutPins_Call(CHN_OUT_AD_CUT,1);
 	}
-	if(weldStatus <= ST_WELD_PRE_GAS_DELAY)
-	{
-		OutPutPins_Call(CHN_OUT_AD_CUT,1);
-	}
-	else if(ST_WELD_ARC_ON == weldStatus  ||  weldStatus == ST_WELD_ARC_ON_DELAY)
+	else if(ST_WELD_ARC_ON == weldState  ||  weldState == ST_WELD_ARC_ON_DELAY)
 	{
 		OutPutPins_Call(CHN_OUT_AD_CUT,0);
 	}
@@ -73,7 +76,7 @@ void VoltMonitorChk(void)
 ST_WELD_STATE GetStateRequest(ST_WELD_STATE tskState)
 {
 
-	if(weldStatus > ST_WELD_INITPARA)
+	if(weldState > ST_WELD_INITPARA)
 	{
 		if(tskState <= ST_WELD_PRE_GAS_DELAY)
 		{
@@ -106,16 +109,18 @@ void StartWeldTask(void const * argument)
 	uint32_t tickOut = osWaitForever;
 	osEvent event;
 	ST_WELD_STATE tskState = ST_WELD_IDLE;
-	TSK_MSG locMsg;
+
 	const uint8_t taskID = TSK_ID_WELD;
 	uint32_t tickStartArc = 0;
-	SegWeld* ptrCurrWeldSeg = NULL;
+	uint32_t tickPostGas = 0;
+	weldState = tskState;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"task started  \n");
 	while (TASK_LOOP_ST)
 	{
 		freeRtosTskTick[taskID]++;
 		freeRtosTskState[taskID] = tskState;
+		weldState = tskState;
 		event = osMessageGet(WELD_CTRL, tickOut);
 
 		if (event.status != osEventMessage)
@@ -151,33 +156,12 @@ void StartWeldTask(void const * argument)
 			}
 				break;
 			case ST_WELD_MOTION_CYC:
-			{
 				ptrCurrWeldSeg = GetWeldSeg(motorPos_Read-motorPos_WeldStart);
-				float speed = ptrCurrWeldSeg->weldSpeed;
-				daOutputPwmTime[0] =ptrCurrWeldSeg->currHighMs;
-				daOutputPwmTime[1] =ptrCurrWeldSeg->currLowMs;
-				daOutputPwm[0] = GetCurrOutput(ptrCurrWeldSeg->currHigh);
-				daOutputPwm[1] = GetCurrOutput(ptrCurrWeldSeg->currLow);
-				tskState = ST_WELD_MOTION_CYC;
-				tickOut = WELD_DELAY_TIME;
-				//only output speed, not control the weld current;
-				float duty = GetSpeedDuty(speed);
-				if(speed <= 0.00001f)
+				if(ptrCurrWeldSeg->state == 0)
 				{
 					tskState = ST_WELD_STOP;
-					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
+					SendTskMsgLOC(WELD_CTRL, &locMsg);
 				}
-				if(weldDir == MOTOR_DIR_CW)
-					SetMotorSpeed(duty, 1);
-				else
-					SetMotorSpeed(-duty, 1);
-
-			}
-				//todo
-				//check weld pos, change pwm timer
-				//or close ;ST_WELD_STOP
-				//daOutputPwm, daOutputPwmTime; +- currMicroAdjust
-				//daOutputSet; speed
 				tickOut = WELD_DELAY_TIME;
 				break;
 			case ST_WELD_POST_HOME_DELAY:
@@ -185,11 +169,11 @@ void StartWeldTask(void const * argument)
 				break;
 			case ST_WELD_POST_GAS_DELAY:
 				tskState = ST_WELD_FINISH;
-				MsgPush(WELD_CTRL, (uint32_t) &locMsg, 0);
+				SendTskMsgLOC(WELD_CTRL, &locMsg);
 				break;
 			default:
 				tskState = ST_WELD_IDLE;
-				MsgPush(WELD_CTRL, (uint32_t) &locMsg, 0);
+				SendTskMsgLOC(WELD_CTRL, &locMsg);
 				break;
 			}
 		}
@@ -204,7 +188,7 @@ void StartWeldTask(void const * argument)
 				tskState = ST_WELD_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				MsgPush(WELD_CTRL, (uint32_t ) &locMsg, 0);
+				SendTskMsgLOC(WELD_CTRL, &locMsg);
 				//force state change to be break;
 			}
 			else if (TSK_RESETIO == mainTskState)
@@ -212,7 +196,7 @@ void StartWeldTask(void const * argument)
 				tskState = ST_WELD_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				MsgPush(WELD_CTRL, (uint32_t ) &locMsg, 0);
+				SendTskMsgLOC(WELD_CTRL, &locMsg);
 			}
 			else if ( mainTskState == TSK_INIT)
 			{
@@ -222,6 +206,8 @@ void StartWeldTask(void const * argument)
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
 				tskState = GetStateRequest(tskState);
+				weldDir = MOTOR_DIR_CW;
+				UpdateWeldFInishPos();
 				SendTskMsgLOC(WELD_CTRL, &locMsg);
 			}
 			else if ( mainTskState == TSK_SUBSTEP)
@@ -235,9 +221,26 @@ void StartWeldTask(void const * argument)
 						//init timer set
 						//init counter
 						//init motor pos
-
+						motorPos_WeldStart = motorPos_Read;
+						if(weldDir == MOTOR_DIR_CW)
+						{
+							motorPos_WeldStart = motorPos_Read;
+							motorPos_WeldFinish = GetWeldFinishPos(0xFFFF) + motorPos_WeldStart;
+						}
+						else
+						{
+							motorPos_WeldStart = motorPos_Read;
+							motorPos_WeldFinish = motorPos_WeldStart-GetWeldFinishPos(0xFFFF);
+						}
+						tskState = ST_WELD_PRE_GAS;
+						SendTskMsgLOC(WELD_CTRL, &locMsg);
 						break;
 					case ST_WELD_PRE_GAS:
+						digitOutput |= (1<<CHN_OUT_GAS);
+						daOutputSet[CHN_DA_CURR_OUT] = 0;
+						daOutputSet[CHN_DA_SPEED_OUT] = 0;
+						SendTskMsg(OUTPUT_QID, TSK_INIT, OUTPUT_REFRESH, NULL, NULL);
+
 						tickOut = weldProcess.preGasTime*TIME_UNIT;
 						tskState = ST_WELD_PRE_GAS_DELAY;
 						break;
@@ -247,6 +250,9 @@ void StartWeldTask(void const * argument)
 						break;
 
 					case ST_WELD_ARC_ON:
+						digitOutput &= ~(1<<CHN_OUT_ARC_ON);
+						SetSpeedOutVolt(0);
+						SetCurrOutVolt(GetCurrCtrlOutput(weldProcess.preCurr));
 						tskState = ST_WELD_ARC_ON_DELAY;
 						tickStartArc = HAL_GetTick();
 						tickOut = WELD_DELAY_TIME;
@@ -256,21 +262,28 @@ void StartWeldTask(void const * argument)
 						SendTskMsgLOC(WELD_CTRL, &locMsg);
 						break;
 					case ST_WELD_MOTION:
-						ptrCurrWeldSeg =
-						//start motion
-						//start timer
-						//start pwm
+					{
+						ptrCurrWeldSeg = GetWeldSeg(0);
+						SendTskMsg(PWM_CTRL,TSK_INIT, 0, NULL, NULL);
+						SendTskMsg(MOTOR_CTRL,TSK_INIT, ST_MOTOR_WELD_MOTION_START, NULL, NULL);
 						tickOut = WELD_DELAY_TIME;//pwm time
 						tskState = ST_WELD_MOTION_CYC;
+					}
 						break;
 					case ST_WELD_STOP:
 						//stop weld;
+						tickPostGas = HAL_GetTick();
 						tskState = ST_WELD_POST_HOME;
+						SendTskMsg(MOTOR_CTRL,TSK_INIT, ST_MOTOR_WELD_MOTION_FINISH, NULL, NULL);
+						SendTskMsg(PWM_CTRL,TSK_RESETIO, 0, NULL, NULL);
 						SendTskMsgLOC(WELD_CTRL, &locMsg);
 
 						break;
 					case ST_WELD_POST_HOME:
 						//send to motor task to home
+						SendTskMsg(MOTOR_CTRL,TSK_INIT, ST_MOTOR_HOME, HomeFinish, NULL);
+						SendTskMsg(PWM_CTRL,TSK_RESETIO, 0, NULL, NULL);
+						tickOut = HOME_DELAY_TIME;
 						break;
 					case ST_WELD_POST_HOME_DELAY:
 						TraceDBG(taskID,"wrong state: %d %s\n", tskState, taskStateDsp[tskState]);
@@ -279,8 +292,19 @@ void StartWeldTask(void const * argument)
 						break;
 					case ST_WELD_POST_GAS:
 						//output gas;
+					{
+						uint32_t curr = HAL_GetTick();
+						if(curr > tickPostGas)
+							tickPostGas = curr - tickPostGas;
+						else
+							tickPostGas = curr + (0xFFFFFFFF-tickPostGas) + 1;
 						tickOut = weldProcess.postGasTime*TIME_UNIT;
+						if(tickOut > tickPostGas)
+							tickOut -= tickPostGas;
+						else
+							tickOut = 0;
 						tskState = ST_WELD_POST_GAS_DELAY;
+					}
 						break;
 					case ST_WELD_POST_GAS_DELAY:
 						tskState = ST_WELD_IDLE;
@@ -297,10 +321,8 @@ void StartWeldTask(void const * argument)
 				}
 				//when finish->call back;
 			}
-
+			VoltMonitorChk();
 		}
-		//call when IO task is executed;
-		VoltMonitorChk();
 	}
 }
 

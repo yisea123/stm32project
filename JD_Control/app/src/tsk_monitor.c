@@ -23,14 +23,14 @@
 /* 私有变量 ------------------------------------------------------------------*/
 __IO int32_t ad7190_data[4]; // AD7190原始转换结果
 __IO int32_t bias_data[4];   // 零点电压的AD转换结果
-__IO double voltage_data[4]; // 电压值（单位：mV）
+__IO float voltage_data[4]; // 电压值（单位：mV）
 uint16_t cntFlag[4] = {0,0,0,0,};
 
 void GetAdData(void)
 {
   uint8_t sample[4];
   int8_t temp,number;
-
+  double valTmp = 0;
   if(AD7190_RDY_STATE==0)
   {
     HAL_SPI_Receive(&hspi_AD7190,sample,4,0xFF);
@@ -45,8 +45,8 @@ void GetAdData(void)
         ad7190_data[temp]=((sample[0]<<16) | (sample[1]<<8) | sample[2])-bias_data[temp];
 #endif
         number=temp;
-        voltage_data[number]=ad7190_data[number]>>4;
-        voltage_data[number]=voltage_data[number]*REFERENCE_VOLTAGE/OPA_RES_R2*OPA_RES_R1/0xFFFFF;
+        valTmp=ad7190_data[number]>>4;
+        voltage_data[number]=(float)(valTmp*REFERENCE_VOLTAGE*OPA_RES_R1/OPA_RES_R2/0xFFFFF);
         cntFlag[number] = cntFlag[number]+1;
       }
       else
@@ -91,8 +91,19 @@ void StartADCMonitor(void const * argument)
 #endif
 		//uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
 		digitInput = GetInputPins();
-
-
+		if(digitInput & (1<<CHN_IN_STARTSTOP))
+		{
+			if(((digitInputWeld&BTN_UNKNOWN) == BTN_UNKNOWN) || \
+					((digitInputWeld&BTN_RELEASE) == BTN_RELEASE))
+				digitInputWeld = BTN_PUSHDOWN;
+		}
+		else
+		{
+			if((digitInputWeld&BTN_PUSHDOWN) == BTN_PUSHDOWN)
+				digitInputWeld = BTN_RELEASE;
+		}
+		weldCurr_Read = GetCurrRead(voltage_data[CHN_CURR_READ]);
+		weldVolt_Read = GetVoltRead(voltage_data[CHN_VOLT_READ]);
 		cnt++;
 		if(cnt % 1000 == 0)
 		{

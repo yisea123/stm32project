@@ -55,20 +55,6 @@ PID_TypeDef  *ptr =  &sPID;
 /* 私有函数原形 --------------------------------------------------------------*/
 float lastDuty = 0;
 
-typedef enum
-{
-	ST_MOTOR_IDLE,
-	ST_MOTOR_JOG,
-	ST_MOTOR_JOG_CYC,
-	ST_MOTOR_JOG_FINISH,
-	ST_MOTOR_WELD_MOTION,
-	ST_MOTOR_WELD_CYC,
-	ST_MOTOR_WELD_END,
-	ST_MOTOR_HOME,
-	ST_MOTOR_HOME_PID,
-	ST_MOTOR_HOME_FINISH,
-	ST_MOTOR_FINISH,
-}MOTOR_STATE;
 
 
 static const char* taskStateDsp[] =
@@ -151,9 +137,20 @@ float LocPIDCalc(int32_t NextPoint)
 	return OutVal/100.0f;
 }
 
-void SetMotorSpeed(float duty, uint16_t updateType)
+static void SetDAOutputValue(uint16_t chn, float val)
 {
-	float val = (duty*655.36f);
+	assert(chn < CHN_DA_MAX);
+	if(val < 0)
+		val = -val;
+	val = (val*6553.6f);
+	if(val >= 65536)
+			val = 65535;
+	daOutputSet[chn] = (uint16_t)(val);
+	SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH), NULL, NULL);
+}
+
+void SetSpeedOutVolt(float duty)
+{
 	if(duty >= 0)
 	{
 		Motor_Dir = MOTOR_DIR_CW;
@@ -161,18 +158,18 @@ void SetMotorSpeed(float duty, uint16_t updateType)
 	}
 	else
 	{
-		val = -val;
 		Motor_Dir = MOTOR_DIR_CCW;
 		digitOutput &= ~(1<<CHN_OUT_MOTOR_DIR);
 	}
 	lastDuty = duty;
-	if(val >= 65536)
-		val = 65535;
-	daOutputSet[CHN_DA_SPEED_OUT] = (uint16_t)(val);
-	if(updateType == 0)
-		SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH), NULL, NULL);
+	SetDAOutputValue(CHN_DA_SPEED_OUT, duty);
 }
 
+
+void SetCurrOutVolt(float curr)
+{
+	SetDAOutputValue(CHN_DA_CURR_OUT, curr);
+}
 
 
 void UpdateWeldSetting(void)
@@ -196,13 +193,11 @@ void UpdateWeldSetting(void)
 		last_cnt = cnt;
 		last_motorPos_Read = motorPos_Read;
 	}
-	if(weldState != ST_WELD_IDLE)
-	{
-		//update weldSpeed
-		//Update DA timeSetting
-		//Update DA value;
-	}
+
 }
+
+#define MOTOR_SPEED_UPDATE_TIME		25
+#define JOG_TIME					200
 void StartMotorTsk(void const * argument)
 {
 	(void) argument;
@@ -212,17 +207,17 @@ void StartMotorTsk(void const * argument)
 	TSK_MSG locMsg;
 	const uint8_t taskID = TSK_ID_MOTOR;
 	MOTOR_STATE tskState = ST_MOTOR_IDLE;
-
+	uint32_t jogStartTick = 0;
 	float targetJogDuty;
 	float targetJogDutyAcc = 0.1f;
-
+	uint16_t jogDir = MOTOR_DIR_CW;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"started  \n");
 	/* 编码器初始化及使能编码器模式 */
 	ENCODER_TIMx_Init();
 	/* 设定占空比 */
 
-	SetMotorSpeed(0, 0);  // 0% 占空比
+	SetSpeedOutVolt(0);
 	/* PID 参数初始化 */
 	PID_ParamInit();
 	/* 无限循环 */
@@ -237,18 +232,19 @@ void StartMotorTsk(void const * argument)
 			{
 			case ST_MOTOR_IDLE:
 				break;
-			case ST_MOTOR_JOG_CYC:
+			case ST_MOTOR_JOG_DELAY:
 			{
-				uint32_t dir1 = (digitInput & (1<<CHN_IN_JOG_DIR));
 				float targetJogDuty1 = targetJogDuty;
 				float targetJogDutyAcc1 = targetJogDutyAcc;
-				if(dir1)
+				uint32_t newTick = HAL_GetTick();
+				uint32_t tickDiff;
+				if(jogDir != MOTOR_DIR_CW)
 				{
 					targetJogDuty = -targetJogDuty1;
 					targetJogDutyAcc1 = -targetJogDutyAcc1;
 				}
 				duty = lastDuty + targetJogDutyAcc1;
-				if(dir1)
+				if(jogDir != MOTOR_DIR_CW)
 				{
 					if(duty <= targetJogDuty)
 					{
@@ -262,9 +258,22 @@ void StartMotorTsk(void const * argument)
 						duty = targetJogDuty;
 					}
 				}
-				SetMotorSpeed(duty, 0);
-				tskState = ST_MOTOR_JOG_CYC;
+				SetSpeedOutVolt(duty);
+				tskState = ST_MOTOR_JOG_DELAY;
 				tickOut = MOTOR_CTRL_TIME;
+				if(newTick > jogStartTick)
+				{
+					tickDiff = newTick - jogStartTick;
+				}
+				else
+				{
+					tickDiff = newTick + (0xFFFFFFFF - jogStartTick)+1;
+				}
+				if(tickDiff > JOG_TIME)
+				{
+					tskState = ST_MOTOR_JOG_FINISH;
+					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
+				}
 			}
 				break;
 			case ST_MOTOR_HOME_PID:
@@ -288,12 +297,18 @@ void StartMotorTsk(void const * argument)
 					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 				}
 				/* 输出PWM */
-				SetMotorSpeed( duty, 0 );
+				SetSpeedOutVolt( duty);
 				tickOut = MOTOR_CTRL_TIME;
 			}
 			break;
-			case ST_MOTOR_WELD_CYC:
-
+			case ST_MOTOR_WELD_MOTION_CYC:
+				duty = GetSpeedCtrlOutput(ptrCurrWeldSeg->weldSpeed * speedAdjust);
+				if(weldDir != MOTOR_DIR_CW)
+				{
+					duty = -duty;
+				}
+				SetSpeedOutVolt(duty);
+				tickOut = MOTOR_SPEED_UPDATE_TIME;
 				break;
 			default:
 				tskState = ST_WELD_IDLE;
@@ -331,63 +346,63 @@ void StartMotorTsk(void const * argument)
 
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				tskState = GetStateRequest(tskState);
+				tskState = locMsg.val.value;
 				SendTskMsgLOC(MOTOR_CTRL, &locMsg);
-
-				targetJogDuty = GetSpeedDuty(motorSpeedSet.jogSpeed);
-				targetJogDutyAcc = GetSpeedDuty(motorSpeedSet.accSpeedPerSeond);
 			}
 			else if ( mainTskState == TSK_SUBSTEP)
 			{
 				//run step by step;
-/*
-				ST_MOTOR_IDLE,
-					ST_MOTOR_JOG,
-					ST_MOTOR_JOG_FINISH,
-					ST_MOTOR_WELD,
-					ST_MOTOR_WELD_CYC,
-					ST_MOTOR_HOME,
-					ST_MOTOR_HOME_PID,
-					ST_MOTOR_HOME_FINISH,
-					ST_MOTOR_FINISH,
-*/
 				switch (tskState)
 				{
 				case ST_MOTOR_IDLE:
+					break;
+				case ST_MOTOR_JOGP:
+					jogDir = MOTOR_DIR_CW;
+					tskState = ST_MOTOR_JOG_INIT;
+					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
+					break;
+				case ST_MOTOR_JOGN:
+					jogDir = MOTOR_DIR_CCW;
+					tskState = ST_MOTOR_JOG_INIT;
+					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
+					break;
+				case ST_MOTOR_JOG_INIT:
+					targetJogDuty = GetSpeedCtrlOutput(motorSpeedSet.jogSpeed);
+					targetJogDutyAcc = GetSpeedCtrlOutput(motorSpeedSet.accSpeedPerSeond);
+					tickOut = 0;
+					tskState = ST_MOTOR_JOG_DELAY;
+					jogStartTick = HAL_GetTick();
+					break;
+				case ST_MOTOR_JOG_FINISH:
+					SetSpeedOutVolt(duty);
+					tskState = ST_WELD_IDLE;
 					break;
 				case ST_MOTOR_HOME:
 					tickOut = 0;
 					tskState = ST_MOTOR_HOME_PID;
 					break;
-				case ST_MOTOR_WELD_MOTION:
-					//
-					weldDir = MOTOR_DIR_CW;
-					UpdateWeldFInishPos();
-					motorPos_WeldStart = motorPos_Read;
-					duty = GetSpeedOutput(GetWeldSegSpeed(0));
-					if(weldDir == MOTOR_DIR_CW)
+				case ST_MOTOR_WELD_MOTION_START:
+					duty = GetSpeedCtrlOutput(ptrCurrWeldSeg->weldSpeed);
+					if(weldDir != MOTOR_DIR_CW)
 					{
-						motorPos_WeldStart = motorPos_Read;
-						motorPos_WeldFinish = GetWeldFinishPos(0xFFFF) + motorPos_WeldStart;
-					}
-					else
-					{
-						motorPos_WeldStart = motorPos_Read;
-						motorPos_WeldFinish = motorPos_WeldStart-GetWeldFinishPos(0xFFFF);
 						duty = -duty;
 					}
-					SetMotorSpeed(duty, 0);
+					SetSpeedOutVolt(duty);
+					tskState = ST_MOTOR_WELD_MOTION_CYC;
+					tickOut = MOTOR_SPEED_UPDATE_TIME;
+					break;
+				case ST_MOTOR_WELD_MOTION_CYC:
 					tickOut = 0;
-					tskState = ST_MOTOR_WELD_CYC;
 					break;
-				case ST_MOTOR_WELD_END:
-					//
-					//sendfinish task
+				case ST_MOTOR_WELD_MOTION_FINISH:
+					TSK_FINISH_ACT(&locMsg,taskID,OK,OK);
+					tskState = ST_WELD_IDLE;
+					//finish
 					break;
-					default:
-						tskState = ST_WELD_IDLE;
-						SendTskMsgLOC(MOTOR_CTRL, &locMsg);
-						break;
+				default:
+					tskState = ST_WELD_IDLE;
+					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
+					break;
 				}
 				//when finish->call back;
 			}
