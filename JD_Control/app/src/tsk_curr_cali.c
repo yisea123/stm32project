@@ -9,6 +9,7 @@
 #include "tsk_head.h"
 #include "shell_io.h"
 #include "dev_encoder.h"
+
 static TSK_MSG locMsg;
 
 
@@ -28,18 +29,22 @@ static const char* taskStateDsp[] =
 
 
 
-#define SCH_DELAY_TIME		50
+
 void StartCurrCaliTask(void const * argument)
 {
 	(void)argument; // pc lint
 	uint32_t tickOut = osWaitForever;
 	osEvent event;
 	CURR_CALI_STATE tskState = CURR_CALI_IDLE;
-
+	uint32_t caliCurrCnt = 0;
+	double currReadBack = 0;
+	double currReadBackCnt = 0;
 	const uint8_t taskID = TSK_ID_CURR_CALI;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"task started  \n");
 	uint32_t tickStartArc;
+	float caliOutputValue = 0;
+
 	while (TASK_LOOP_ST)
 	{
 		freeRtosTskTick[taskID]++;
@@ -56,6 +61,7 @@ void StartCurrCaliTask(void const * argument)
 				break;
 			case CURR_CALI_PREGAS_DELAY:
 				tskState = CURR_CALI_ARC;
+
 				SendTskMsgLOC(CURR_CALI, &locMsg);
 				break;
 			case CURR_CALI_ARC_DELAY:
@@ -78,6 +84,48 @@ void StartCurrCaliTask(void const * argument)
 
 			}
 				break;
+			case CURR_CALI_CURRENT_DELAY:
+				caliCurrCnt++;
+				tskState = CURR_CALI_CURRENT_DELAY;
+				if(caliCurrCnt % 20 == 1)
+				{
+					if(currReadBack < 9.99f)
+					{
+						caliOutputValue += currCaliSetDiff;
+						if(caliOutputValue > 9.99f)
+						{
+							caliOutputValue = 10.0f;
+						}
+						SetCurrOutVolt(caliOutputValue);
+						currReadBack = 0.0f;
+					}
+					else
+					{
+						//finish the calibration;
+						currCaliReq = 0xFFFF;
+						tskState = CURR_CALI_POSTGAS;
+						SendTskMsgLOC(CURR_CALI, &locMsg);
+					}
+				}
+				else if(caliCurrCnt % 20 >= 4)
+				{
+					currReadBack += weldCurr_Read;
+					currReadBackCnt +=1.0f;
+				}
+				else if(caliCurrCnt % 20 == 0)
+				{
+					CaliCurrent curr = {caliOutputValue,(float)(currReadBack/currReadBackCnt), 0x33};
+					WeldPut(OBJ_IDX_CURR_CALI_NEW,0, &curr.outValue);
+					WeldPut(OBJ_IDX_CURR_CALI_NEW,1, &curr.actCurrent);
+					WeldPut(OBJ_IDX_CURR_CALI_NEW,2, &curr.caliFlag);
+				}
+
+				tickOut = 50;
+				break;
+			case CURR_CALI_POSTGAS_DELAY:
+				tskState = CURR_CALI_FINISH;
+				SendTskMsgLOC(CURR_CALI, &locMsg);
+				break;
 			default:
 				tskState = CURR_CALI_IDLE;
 
@@ -98,6 +146,9 @@ void StartCurrCaliTask(void const * argument)
 				locMsg.tskState = TSK_SUBSTEP;
 				tskState = CURR_CALI_START;
 				SendTskMsgLOC(CURR_CALI, &locMsg);
+				caliCurrCnt = 0;
+				currReadBack = 0;
+				currReadBackCnt = 0;
 			}
 			else if ( mainTskState == TSK_SUBSTEP)
 			{
@@ -118,6 +169,7 @@ void StartCurrCaliTask(void const * argument)
 					tickOut = weldProcess.preGasTime*TIME_UNIT;
 					break;
 				case CURR_CALI_ARC:
+					OutPutPins_Call(CHN_OUT_GAS, 1);
 					OutPutPins_Call(CHN_OUT_AD_CUT,0);
 					OutPutPins_Call(CHN_OUT_ARC_ON, 1);
 					SetSpeedOutVolt(0);
@@ -126,11 +178,26 @@ void StartCurrCaliTask(void const * argument)
 					tskState = CURR_CALI_ARC_DELAY;
 					break;
 				case CURR_CALI_CURRENT:
-					SetCurrOutVolt(currCaliSet);
-
+					{
+						uint16_t val = 1;
+						tskState = CURR_CALI_CURRENT_DELAY;
+						WeldPut(OBJ_IDX_CURR_CALI_CLR,0, &val);
+						caliCurrCnt = 0;
+						currReadBack = 0;
+						currReadBackCnt = 0;
+						tickOut = 0;
+					}
 					break;
-
+				case CURR_CALI_POSTGAS:
+					SetCurrOutVolt(0);
+					OutPutPins_Call(CHN_OUT_AD_CUT,	0);
+					tskState = CURR_CALI_POSTGAS_DELAY;
+					tickOut = weldProcess.postGasTime*TIME_UNIT;
+					break;
 				case CURR_CALI_FINISH:
+					SetCurrOutVolt(0);
+					OutPutPins_Call(CHN_OUT_GAS, 0);
+					OutPutPins_Call(CHN_OUT_AD_CUT,	0);
 					tskState = CURR_CALI_IDLE;
 					TSK_FINISH_ACT(&locMsg,taskID,OK,OK);
 

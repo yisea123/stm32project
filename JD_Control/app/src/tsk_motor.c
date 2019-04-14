@@ -73,8 +73,7 @@ static const char* taskStateDsp[] =
 
 void PID_ParamInit(void) ;
 float LocPIDCalc(int32_t NextPoint);
-#define MOTOR_CTRL_TIME 50
-#define MOTOR_WELD_CYC_TIME 10
+
 
 
 /******************** PID øÿ÷∆…Ëº∆ ***************************/
@@ -137,17 +136,6 @@ float LocPIDCalc(int32_t NextPoint)
 	return OutVal/100.0f;
 }
 
-static void SetDAOutputValue(uint16_t chn, float val)
-{
-	assert(chn < CHN_DA_MAX);
-	if(val < 0)
-		val = -val;
-	val = (val*6553.6f);
-	if(val >= 65536)
-			val = 65535;
-	daOutputSet[chn] = (uint16_t)(val);
-	SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH), NULL, NULL);
-}
 
 void SetSpeedOutVolt(float duty)
 {
@@ -184,7 +172,9 @@ void UpdateWeldSetting(void)
 		if(cnt - last_cnt >= 200)
 		{
 			int32_t cntLoc = motorPos_Read - last_motorPos_Read;
-			motorSpeed_Read = (cntLoc*0.8333333333333333f)/ang2CntRation;//5*cntLoc*60/(ang2CntRation*360.0)
+			if(cntLoc < 0)
+				cntLoc = -cntLoc;
+			motorSpeed_Read = (float)((cntLoc*0.8333333333333333)/ang2CntRation);//5*cntLoc*60/(ang2CntRation*360.0)
 			last_cnt = cnt;
 		}
 	}
@@ -196,8 +186,7 @@ void UpdateWeldSetting(void)
 
 }
 
-#define MOTOR_SPEED_UPDATE_TIME		25
-#define JOG_TIME					200
+
 void StartMotorTsk(void const * argument)
 {
 	(void) argument;

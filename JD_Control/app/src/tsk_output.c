@@ -63,6 +63,20 @@ static void OutputPins(uint32_t _digitOutput, uint16_t chnNum)
 	}
 }
 
+
+void SetDAOutputValue(uint16_t chn, float val)
+{
+	assert(chn < CHN_DA_MAX);
+	if(val < 0)
+		val = -val;
+	val = (val*6553.6f);
+	if(val >= 65536)
+			val = 65535;
+	daOutputRawDA[chn] = (uint16_t)(val);
+	SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH));
+}
+
+
 uint32_t GetInputPins(void)
 {
 #define MAX_SAMPLE_NUM			3
@@ -85,23 +99,13 @@ uint32_t GetInputPins(void)
 	}
 	return resultPins;
 }
-static const char* taskStateDsp[] =
-{
-	TO_STR(ST_WELD_IDLE),
-	TO_STR(ST_WELD_INITPARA),
-};
 
 void StartOutputTsk(void const * argument)
 {
 	(void)argument; // pc lint
-	uint32_t tickOut = osWaitForever;
-	osEvent event;
-	uint32_t pwmCnt = 0;
-	TSK_MSG localMsg;
+	osEvent evt;
 	const uint8_t taskID = TSK_ID_OUTPUT;
-	ST_WELD_STATE tskState = ST_WELD_IDLE;
 	uint32_t valMsg = 0;
-	InitTaskMsg(&localMsg);
 	TracePrint(taskID,"started  \n");
 	OutputPins(digitOutput, CHN_OUT_MAX);
 #if USE_EXT_DEV
@@ -113,45 +117,26 @@ void StartOutputTsk(void const * argument)
 //	TraceUser("data:%d\n",data);
 	while (TASK_LOOP_ST)
 	{
-		event = osMessageGet(OUTPUT_QID, tickOut);
-		if (event.status == osEventMessage)
+
+		evt = osSignalWait(OUTPUT_REFRESH, osWaitForever);
+
+		if(evt.status==osEventSignal)
 		{
-			const TSK_STATE mainTskState = TSK_MSG_CONVERT(event.value.p)->tskState;
-			valMsg = TSK_MSG_CONVERT(event.value.p)->val.value;
-			TSK_MSG_RELASE;
-			localMsg = *(TSK_MSG_CONVERT(event.value.p));
+			valMsg = evt.value.signals;
 			if(((valMsg & DA_OUT_REFRESH_CURR) != 0) || ((valMsg & DA_OUT_REFRESH_SPEED) != 0))
 			{
 #if USE_EXT_DEV
-				AD5689_WriteUpdate_DACREG(DAC_A,daOutputSet[CHN_DA_CURR_OUT]);
-				AD5689_WriteUpdate_DACREG(DAC_B,daOutputSet[CHN_DA_SPEED_OUT]);
+				AD5689_WriteUpdate_DACREG(DAC_A,daOutputRawDA[CHN_DA_CURR_OUT]);
+				AD5689_WriteUpdate_DACREG(DAC_B,daOutputRawDA[CHN_DA_SPEED_OUT]);
 #endif
-				TraceUser("DA out:%x,%x\n",daOutputSet[CHN_DA_CURR_OUT], daOutputSet[CHN_DA_SPEED_OUT]);
+				TraceUser("DA out:%x,%x\n",daOutputRawDA[CHN_DA_CURR_OUT], daOutputRawDA[CHN_DA_SPEED_OUT]);
 			}
 			if((valMsg & DO_OUT_REFRESH) != 0)
 			{
 				OutputPins(digitOutput, CHN_OUT_MAX);
 				TraceUser("DO out:%x\n",digitOutput);
 			}
-			pwmCnt = 0;
-			tickOut = 5;
-		}
-		else if((weldState > ST_WELD_ARC_ON_DELAY ) && (weldState < ST_WELD_STOP))
-		{
-			tickOut = daOutputPwmTime[pwmCnt%2];
-#if USE_EXT_DEV
-			OutputPins(digitOutput, CHN_OUT_MAX);
-			AD5689_WriteUpdate_DACREG(DAC_A,daOutputPwm[pwmCnt%2]);
-			AD5689_WriteUpdate_DACREG(DAC_B,daOutputSet[CHN_DA_SPEED_OUT]);
-
-#endif
-			pwmCnt++;
-		}
-		else
-		{
-			tickOut = 5;
-		}
-		//uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
+		}	//uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
 		//TraceUser("zero:%d\n",weight_Zero_Data);
 	}
 

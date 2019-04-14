@@ -11,9 +11,8 @@ enum
 	DA_OUT_REFRESH_CURR = 0x10,
 	DA_OUT_REFRESH_SPEED = 0x20,
 	DO_OUT_REFRESH = 0x40,
-	OUTPUT_REFRESH = 0x70,
 };
-
+#define OUTPUT_REFRESH ( DO_OUT_REFRESH | DA_OUT_REFRESH_SPEED |DA_OUT_REFRESH_CURR)
 typedef enum
 {
 	ST_WELD_IDLE,
@@ -66,14 +65,19 @@ typedef enum
 	ST_MOTOR_HOME_FINISH,
 	ST_MOTOR_FINISH,
 }MOTOR_STATE;
+void OutPutPins_Call(uint16_t pinChn, uint16_t val);
 
 void SetCurrOutVolt(float curr);
 void SetSpeedOutVolt(float duty);
 void UpdateWeldSetting(void);
 uint32_t GetInputPins(void);
+void SetDAOutputValue(uint16_t chn, float val);
+
 void StartADCMonitor(void const * argument);
 void StartMotorTsk(void const * argument);
 void StartOutputTsk(void const * argument);
 void StartWeldTask(void const * argument);
 void StartLBTask(void const * argument);
 void StartEthernet(void const * argument);
+void StartCurrCaliTask(void const * argument);
+void StartSchTask(void const * argument);

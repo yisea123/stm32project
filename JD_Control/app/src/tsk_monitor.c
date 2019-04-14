@@ -14,7 +14,7 @@
 // 放大倍数=R2/R1=2000/6800倍
 #define OPA_RES_R1              6800  // 6.8k 运放输入端电阻
 #define OPA_RES_R2              2000  // 2k 运放反馈电阻
-#define REFERENCE_VOLTAGE       3297  // 参考电压（放大1000倍）
+#define REFERENCE_VOLTAGE       3.297f  //
 #define BIAS_VOLTAGE_IN1        0xFAB3E  // 输入1偏置电压，即把IN1和GND短接时AD7190转换结果
 #define BIAS_VOLTAGE_IN2        0xF9DCA  // 输入2偏置电压，即把IN2和GND短接时AD7190转换结果
 #define BIAS_VOLTAGE_IN3        0xFA8A4  // 输入3偏置电压，即把IN3和GND短接时AD7190转换结果
@@ -23,10 +23,9 @@
 /* 私有变量 ------------------------------------------------------------------*/
 __IO int32_t ad7190_data[4]; // AD7190原始转换结果
 __IO int32_t bias_data[4];   // 零点电压的AD转换结果
-__IO float voltage_data[4]; // 电压值（单位：mV）
 uint16_t cntFlag[4] = {0,0,0,0,};
 
-void GetAdData(void)
+static void GetAdData(void)
 {
   uint8_t sample[4];
   int8_t temp,number;
@@ -45,13 +44,13 @@ void GetAdData(void)
         ad7190_data[temp]=((sample[0]<<16) | (sample[1]<<8) | sample[2])-bias_data[temp];
 #endif
         number=temp;
-        valTmp=ad7190_data[number]>>4;
-        voltage_data[number]=(float)(valTmp*REFERENCE_VOLTAGE*OPA_RES_R1/OPA_RES_R2/0xFFFFF);
+        valTmp=(double)(ad7190_data[number]>>4);
+        adcValue[number]=(float)(valTmp*REFERENCE_VOLTAGE*OPA_RES_R1/OPA_RES_R2/0xFFFFF);
         cntFlag[number] = cntFlag[number]+1;
       }
       else
       {
-        printf("error:0x%X\n",sample[3]);
+        TraceUser("error:0x%X\n",sample[3]);
       }
     }
   }
@@ -93,26 +92,26 @@ void StartADCMonitor(void const * argument)
 		digitInput = GetInputPins();
 		if(digitInput & (1<<CHN_IN_STARTSTOP))
 		{
-			if(((digitInputWeld&BTN_UNKNOWN) == BTN_UNKNOWN) || \
-					((digitInputWeld&BTN_RELEASE) == BTN_RELEASE))
-				digitInputWeld = BTN_PUSHDOWN;
+			if(((digitInputWeldBtn&BTN_UNKNOWN) == BTN_UNKNOWN) || \
+					((digitInputWeldBtn&BTN_RELEASE) == BTN_RELEASE))
+				digitInputWeldBtn = BTN_PUSHDOWN;
 		}
 		else
 		{
-			if((digitInputWeld&BTN_PUSHDOWN) == BTN_PUSHDOWN)
-				digitInputWeld = BTN_RELEASE;
+			if((digitInputWeldBtn&BTN_PUSHDOWN) == BTN_PUSHDOWN)
+				digitInputWeldBtn = BTN_RELEASE;
 		}
-		weldCurr_Read = GetCurrRead(voltage_data[CHN_CURR_READ]);
-		weldVolt_Read = GetVoltRead(voltage_data[CHN_VOLT_READ]);
+		weldCurr_Read = GetCurrRead(adcValue[CHN_CURR_READ]);
+		weldVolt_Read = GetVoltRead(adcValue[CHN_VOLT_READ]);
 		cnt++;
 		if(cnt % 1000 == 0)
 		{
 			TraceUser("Pos, %d, Out,0x%x,input,0x%x,IN_0. 0x%05X->%0.3fV,%d,IN_1. 0x%05X->%0.3fV,%d,IN_2. 0x%05X->%0.3fV,%d,IN_3. 0x%05X->%0.3fV,%d,\n",
 					motorPos_Read,digitOutput,digitInput,
-					ad7190_data[0],voltage_data[0]/1000,cntFlag[0],\
-					ad7190_data[1],voltage_data[1]/1000,cntFlag[1],\
-					ad7190_data[2],voltage_data[2]/1000,cntFlag[2],\
-					ad7190_data[3],voltage_data[3]/1000,cntFlag[3]);
+					ad7190_data[0],adcValue[0],cntFlag[0],\
+					ad7190_data[1],adcValue[1],cntFlag[1],\
+					ad7190_data[2],adcValue[2],cntFlag[2],\
+					ad7190_data[3],adcValue[3],cntFlag[3]);
 		}
 
 	}

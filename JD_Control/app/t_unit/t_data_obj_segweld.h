@@ -12,14 +12,14 @@
 
 typedef struct
 {
-	float weldSpeed;
-	float currHigh;
-	float currLow;
-	uint16_t currHighMs;
-	uint16_t currLowMs;
-	uint16_t startAng;
-	uint16_t endAng;
-	uint16_t state;
+	float 		weldSpeed;
+	float 		currHigh;
+	float 		currLow;
+	uint16_t 	currHighMs;
+	uint16_t 	currLowMs;
+	float 		startAng;
+	float 		endAng;
+	uint32_t 	state;
 }SegWeld;
 
 typedef struct
@@ -48,8 +48,8 @@ typedef struct
 
 //----------------------------------------------------------------------------------------------------------
 extern const T_DATA_CLASS cgClassInitializer_SegWeldData;
-extern SegWeld* ptrCurrWeldSeg;
-#define CONSTRUCT_STRUCT_SEGWELD(w,y) {#w, (void *)(w),7,sizeof(SegWeld),y,STRUCT, NULL, &cgClassInitializer_SegWeldData }
+
+#define CONSTRUCT_STRUCT_SEGWELD(w,y) {#w, (void *)(w),8,sizeof(SegWeld),y,STRUCT, NULL, &cgClassInitializer_SegWeldData }
 
 extern const T_DATA_CLASS cgClassInitializer_CaliPoint;
 #define CONSTRUCT_STRUCT_CALIPOINT(w,y) {#w, (void *)(w),3,sizeof(CaliVolt),y,STRUCT, NULL, &cgClassInitializer_CaliPoint }

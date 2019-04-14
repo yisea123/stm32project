@@ -11,7 +11,7 @@
 #include "shell_io.h"
 #include "dev_encoder.h"
 
-#define HOME_DELAY_TIME		60000
+
 
 static const char* taskStateDsp[] =
 {
@@ -36,10 +36,10 @@ static const char* taskStateDsp[] =
 static void Break_RO()
 {
 	digitOutput = 0x0;
-	SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
+	SigPush(outputTaskHandle, DO_OUT_REFRESH);
 }
 static TSK_MSG locMsg;
-void HomeFinish(uint16_t ret, uint16_t val)
+static void HomeFinish(uint16_t ret, uint16_t val)
 {
 	SendTskMsgLOC(WELD_CTRL, &locMsg);
 }
@@ -54,10 +54,10 @@ void OutPutPins_Call(uint16_t pinChn, uint16_t val)
 	{
 		digitOutput &= ~(1<<pinChn);
 	}
-	SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
+	SigPush(outputTaskHandle, DO_OUT_REFRESH);
 }
 
-void VoltMonitorChk(void)
+static void VoltMonitorChk(void)
 {
 
 	if(weldState <= ST_WELD_PRE_GAS_DELAY)
@@ -73,7 +73,7 @@ void VoltMonitorChk(void)
 		OutPutPins_Call(CHN_OUT_AD_CUT,1);
 	}
 }
-ST_WELD_STATE GetStateRequest(ST_WELD_STATE tskState)
+static ST_WELD_STATE GetStateRequest(ST_WELD_STATE tskState)
 {
 
 	if(weldState > ST_WELD_INITPARA)
@@ -102,7 +102,7 @@ ST_WELD_STATE GetStateRequest(ST_WELD_STATE tskState)
 	return tskState;
 }
 
-#define WELD_DELAY_TIME		10
+
 void StartWeldTask(void const * argument)
 {
 	(void)argument; // pc lint
@@ -113,7 +113,6 @@ void StartWeldTask(void const * argument)
 	const uint8_t taskID = TSK_ID_WELD;
 	uint32_t tickStartArc = 0;
 	uint32_t tickPostGas = 0;
-	weldState = tskState;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"task started  \n");
 	while (TASK_LOOP_ST)
@@ -237,10 +236,9 @@ void StartWeldTask(void const * argument)
 						break;
 					case ST_WELD_PRE_GAS:
 						digitOutput |= (1<<CHN_OUT_GAS);
-						daOutputSet[CHN_DA_CURR_OUT] = 0;
-						daOutputSet[CHN_DA_SPEED_OUT] = 0;
-						SendTskMsg(OUTPUT_QID, TSK_INIT, OUTPUT_REFRESH, NULL, NULL);
-
+						daOutputRawDA[CHN_DA_CURR_OUT] = 0;
+						daOutputRawDA[CHN_DA_SPEED_OUT] = 0;
+						SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
 						tickOut = weldProcess.preGasTime*TIME_UNIT;
 						tskState = ST_WELD_PRE_GAS_DELAY;
 						break;

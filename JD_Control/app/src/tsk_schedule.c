@@ -48,9 +48,9 @@ ST_SCH_STATE CheckWeldInput()
 		uiBtn_Weld = 0;
 		state = ST_SCH_WELD;
 	}
-	else if(digitInputWeld == BTN_PUSHDOWN)
+	else if(digitInputWeldBtn == BTN_PUSHDOWN)
 	{
-		digitInputWeld |= BTN_CHKED;
+		digitInputWeldBtn |= BTN_CHKED;
 		state = ST_SCH_WELD;
 	}
 
@@ -60,6 +60,8 @@ ST_SCH_STATE CheckWeldInput()
 
 ST_SCH_STATE CheckAllInput()
 {
+	static float speedCaliCnt = 0.0f;
+	static float speedCaliTotal = 0.0f;
 	ST_SCH_STATE state = 0;
 	if(devLock == 0)
 	{
@@ -73,14 +75,16 @@ ST_SCH_STATE CheckAllInput()
 					currCaliReq = 2;
 					SendTskMsg(CURR_CALI,TSK_INIT, 0, NULL, NULL);
 				}
-				else if(currCaliReq == 0)
+				else if(currCaliReq == 5)
 				{
 					//todo
+					currCaliReq = 6;
 					SendTskMsg(CURR_CALI,TSK_FORCE_STOP, 0, NULL, NULL);
 				}
 
 				if(voltCaliReq == 1)
 				{
+					voltCaliReq = 2;
 					OutPutPins_Call(CHN_OUT_AD_CUT, 1);
 				}
 				else
@@ -88,9 +92,41 @@ ST_SCH_STATE CheckAllInput()
 					OutPutPins_Call(CHN_OUT_AD_CUT, 0);
 				}
 
-				if(speedCaliReq)
+				if((speedCaliReq>0) && (0x0FFF<speedCaliReq))
 				{
-					SetSpeedOutVolt(speedCaliOutput);
+					speedCaliReq++;
+					if(speedCaliReq == 3)
+					{
+						SetSpeedOutVolt(speedCaliPoint[0].outValue);
+						speedCaliCnt = 0.0f;
+						speedCaliTotal = 0.0f;
+					}
+					else if((speedCaliReq > 23) && (speedCaliReq < 123))
+					{
+						speedCaliCnt += 1.0f;
+						speedCaliTotal += motorSpeed_Read;
+					}
+					else if(speedCaliReq == 125)
+					{
+						speedCaliPoint[0].actSpeed = (float)(speedCaliTotal/speedCaliCnt);
+						SetSpeedOutVolt(speedCaliPoint[1].outValue);
+						speedCaliCnt = 0.0f;
+						speedCaliTotal = 0.0f;
+					}
+					else if((speedCaliReq > 140) && (speedCaliReq < 240))
+					{
+						speedCaliCnt += 1.0f;
+						speedCaliTotal += motorSpeed_Read;
+					}
+					else if(speedCaliReq >= 245)
+					{
+						speedCaliPoint[1].actSpeed = (float)(speedCaliTotal/speedCaliCnt);
+						SetSpeedOutVolt(0);
+						speedCaliPoint[0].caliFlag = speedCaliPoint[1].caliFlag = 0x33;
+						Trigger_EEPSave(&speedCaliPoint[0], sizeof(speedCaliPoint), SYNC_IM);
+						speedCaliReq = 0xFFFF;
+					}
+
 					//todo
 				}
 				else
@@ -139,13 +175,12 @@ ST_SCH_STATE CheckAllInput()
 
 static TSK_MSG locMsg;
 
-void TskFinish(uint16_t ret, uint16_t val)
+static void TskFinish(uint16_t ret, uint16_t val)
 {
 	SendTskMsgLOC(WELD_CTRL, &locMsg);
 }
 
 
-#define SCH_DELAY_TIME		50
 void StartSchTask(void const * argument)
 {
 	(void)argument; // pc lint
@@ -196,7 +231,7 @@ void StartSchTask(void const * argument)
 				tskState = ST_SCH_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				SendTskMsgLOC(SCH_CTRL, &locMsg);
+				tickOut = 0;
 				//force state change to be break;
 			}
 			else if (TSK_RESETIO == mainTskState)
@@ -204,7 +239,7 @@ void StartSchTask(void const * argument)
 				tskState = ST_SCH_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				SendTskMsgLOC(SCH_CTRL, &locMsg);
+				tickOut = 0;
 			}
 			else if ( mainTskState == TSK_INIT)
 			{
@@ -213,10 +248,8 @@ void StartSchTask(void const * argument)
 
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));
 				locMsg.tskState = TSK_SUBSTEP;
-				tskState = GetStateRequest(tskState);
 				weldDir = MOTOR_DIR_CW;
-				UpdateWeldFInishPos();
-				SendTskMsgLOC(SCH_CTRL, &locMsg);
+				tickOut = 0;
 			}
 			else if ( mainTskState == TSK_SUBSTEP)
 			{
@@ -246,10 +279,7 @@ void StartSchTask(void const * argument)
 					break;
 				}
 			}
-
 		}
-		//call when IO task is executed;
-		VoltMonitorChk();
 	}
 }
 

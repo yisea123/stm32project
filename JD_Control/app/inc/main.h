@@ -34,7 +34,6 @@ extern osMessageQId USART_RX_EVENT;
 extern osMessageQId PRINT_ID;
 extern osMessageQId SCH_LB_ID;
 extern osMessageQId ADC_MONITOR;
-extern osMessageQId OUTPUT_QID;
 extern osMessageQId WELD_CTRL;
 extern osMessageQId MOTOR_CTRL;
 extern osMessageQId PWM_CTRL;
@@ -162,7 +161,9 @@ extern uint8_t 	dbgMsgMap[MAX_TASK_ID];
 extern osThreadId taskThreadID[MAX_TASK_ID];
 extern const char*		TskName[MAX_TASK_ID];
 
-#define adDetTaskHandle			taskThreadID[TSK_ID_AD_DETECT]
+
+
+#define outputTaskHandle		taskThreadID[TSK_ID_OUTPUT]
 #define eepTaskHandle			taskThreadID[TSK_ID_EEP]
 #define errCanTaskHandle		taskThreadID[TSK_ID_CAN_ERR]
 

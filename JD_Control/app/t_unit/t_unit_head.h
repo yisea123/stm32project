@@ -16,6 +16,7 @@
 #include "t_dataclass.h"
 #include "t_data_obj_segweld.h"
 
+
 typedef enum
 {
 	READ_ACCESS = 0x01u,

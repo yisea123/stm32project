@@ -8,9 +8,11 @@
 #include "main.h"
 #include "t_unit_head.h"
 #include "unit_weld_cfg.h"
+#include "unit_rtc_cfg.h"
 #include "tsk_head.h"
 #include "shell_io.h"
 #include "dev_encoder.h"
+#include "string.h"
 //! unit global attributes
 
 static uint16_t _State;     // Subsystem state
@@ -31,27 +33,24 @@ uint32_t   	rev_loc[15]							__attribute__ ((section (".configbuf_static")));
 float		currConvertRation					__attribute__ ((section (".configbuf_static")));
 
 static uint8_t fileId1							__attribute__ ((section (".configbuf_measdata")));
-SegWeld segWeld[MAX_SEG_SIZE]					__attribute__ ((section (".configbuf_measdata")));
+static SegWeld segWeld[MAX_SEG_SIZE]			__attribute__ ((section (".configbuf_measdata")));
 MotorSpeed motorSpeedSet       					__attribute__ ((section (".configbuf_measdata")));
 WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata")));
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 
-float currCaliSet = 0.0;
+float currCaliSetDiff = 0.6f;
 uint16_t   devLock  = 10;
 uint16_t weldDir = MOTOR_DIR_CW;
 int32_t 	lastMotorPos_PowerDown = 0;
-uint32_t  adcValue[4];
-uint32_t  adcValueFinal[4];
-uint16_t  daOutputSet[2];
-uint16_t  daOutput[2];
+uint16_t    daOutputRawDA[2];
+float  		daOutputSet[2];
 uint32_t  digitOutput;
 uint32_t  digitInput;
-uint32_t  digitInputWeld;
+uint32_t  digitInputWeldBtn;
 uint16_t  daOutputPwm[2];
 uint16_t  daOutputPwmTime[2];
-int16_t  currMicroAdjust = 0;
-
+float 	adcValue[CHN_AD_MAX];
 static uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
 volatile  int32_t   motorPos_Read;
 float 	  motorSpeed_Read;
@@ -59,26 +58,23 @@ float     weldCurr_Read;
 float 	  weldVolt_Read;
 int32_t  motorPos_WeldStart;
 int32_t  motorPos_WeldFinish;
-uint16_t  weldStartStatus;
 uint16_t  weldStatus = 0;
 uint16_t  weldState = 0;
 
 uint16_t voltCaliReq = 0;
 uint16_t currCaliReq = 0;
 uint16_t speedCaliReq = 0;
-
-float speedCaliOutput = 0.0f;
-float currCaliOutput = 0.0f;
-float voltCaliInput = 0.0f;
-
-
 uint16_t caliAllReq = 0;
-SegWeld* ptrCurrWeldSeg = &segWeld[0];
-SegWeld tmp_SegWeld;
+
+
+
+
+const SegWeld* ptrCurrWeldSeg = &segWeld[0];
+
 CaliCurrent tmp_CaliPointCurr;
 uint16_t clearCurrCali = 0;
 float speedAdjust = 1.0f;
-
+float currMicroAdjust = 1.0f;
 
 uint16_t uiBtn_Weld = 0;
 uint16_t uiBtn_Cali = 0;
@@ -117,7 +113,7 @@ static const CaliSpeed speedCaliPoint_Default[2] =
 
 static const uint16_t currCaliPointNum_Default = 10;
 
-static const float ang2CntRation_Default = 78*2*32/360.0;
+static const float ang2CntRation_Default = 78.0f*2.0f*32.0f/360.0f;
 /*
  * 	float weldSpeed;
 	float currHigh;
@@ -128,14 +124,15 @@ static const float ang2CntRation_Default = 78*2*32/360.0;
 	uint16_t endAng;
  */
 static const SegWeld segWeld_Default[MAX_SEG_SIZE] = {
-		{0.2f, 80.0f, 5.0f, 100, 50, 0, 45,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 45, 90,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 90, 135,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 135, 180,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 180, 225,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 225, 270,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 270, 315,},
-		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360,},
+		{0.2f, 80.0f, 5.0f, 100, 50, 0, 45, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 45, 90, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 90, 135, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 135, 180, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 180, 225, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 225, 270, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 270, 315, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360, 1},
+		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360, 0},
 };
 static const uint16_t segWeldNum_Default = 8;
 static const int32_t motorPosHome_Default = 0;
@@ -191,64 +188,70 @@ static const  T_DATACLASS _ClassList[]=
 static const T_DATA_OBJ _ObjList[] =
 {
 
-	//test interfaces:
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputSet[0],sizeof(daOutputSet)/sizeof(uint16_t),	 RAM),
+	// 0 test interfaces:
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&daOutputSet[0],sizeof(daOutputSet)/sizeof(float),	 		RAM),
 		CONSTRUCT_SIMPLE_U32(&digitOutput,	 RAM),
-		CONSTRUCT_ARRAY_SIMPLE_U32(&adcValueFinal[0],sizeof(adcValueFinal)/sizeof(uint32_t),	 RAM),
+		NULL_T_DATA_OBJ,
 		CONSTRUCT_SIMPLE_U32(&digitInput,	 RAM),
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutput[0],sizeof(daOutput)/sizeof(uint16_t),	 RAM),
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputRawDA[0],sizeof(daOutputRawDA)/sizeof(uint16_t),	 READONLY_RAM),
 
-    //0
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+
+    //10
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[1], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&speedCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&speedCaliPoint[1], NON_VOLATILE),
-		CONSTRUCT_SIMPLE_U16(&ang2CntRation,	 NON_VOLATILE),
+		CONSTRUCT_SIMPLE_FLOAT(&ang2CntRation,	 NON_VOLATILE),
 
-    //5
+    //15
 		CONSTRUCT_SIMPLE_U32(&motorPosHome,	 NON_VOLATILE),
 		CONSTRUCT_SIMPLE_U16(&weldStatus,	 RAM),
 		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwm, sizeof(daOutputPwm)/sizeof(uint16_t),    RAM),
 		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwmTime, sizeof(daOutputPwmTime)/sizeof(uint16_t),    RAM),
 		NULL_T_DATA_OBJ,
-	//10
+	//20
 		CONSTRUCT_STRUCT_CALIPOINT(&tmp_CaliPointCurr,RAM),
 		CONSTRUCT_SIMPLE_U16(&currCaliPointNum, NON_VOLATILE),
 		CONSTRUCT_SIMPLE_U16(&clearCurrCali,	 RAM),
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
-	//15
+	//25
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[1], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[2], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[3], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[4], NON_VOLATILE),
-	//20
+	//30
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[5], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[6], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[7], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[8], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[9], NON_VOLATILE),
-	//25
+	//35
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[10], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[11], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[12], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[13], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[14], NON_VOLATILE),
-	//30
+	//40
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[15], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[16], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[17], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[18], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[19], NON_VOLATILE),
-	//35
+	//45
 		CONSTRUCT_SIMPLE_U16(&segWeldNum,	 NON_VOLATILE),
 
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&motorSpeedSet, sizeof(motorSpeedSet)/sizeof(float),    NON_VOLATILE),
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&weldProcess, sizeof(weldProcess)/sizeof(uint16_t),    NON_VOLATILE),
 		CONSTRUCT_SIMPLE_FLOAT(&currConvertRation,    NON_VOLATILE),
 		NULL_T_DATA_OBJ,
-	//40
+	//50
 		CONSTRUCT_STRUCT_CALIPOINT(&currCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&currCaliPoint[1], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&currCaliPoint[2], NON_VOLATILE),
@@ -308,13 +311,12 @@ const T_UNIT weldCfg =
 uint16_t GetInputState(uint16_t chn)
 {
 	assert(chn < CHN_IN_MAX);
-	return (digitInput & (1<<chn));
+	return (uint16_t)(digitInput & (uint32_t)(1<<chn));
 }
 
 static void SortCurrentCali(void)
 {
 	CaliCurrent tmp;
-	uint16_t idx = 0;
 	currCaliPointUsed[0].actCurrent = 0;
 	currCaliPointUsed[0].outValue = 0;
 	currCaliPointUsed[0].caliFlag = 0;
@@ -391,8 +393,8 @@ void UpdateWeldFInishPos(void)
 {
 	for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
 	{
-		if(segWeld[i].endAng != 0)
-			segWeldCnt[i] = (int32_t)(segWeld[i].endAng * ang2CntRation);
+		if(segWeld[i].endAng > 0.0f)
+			segWeldCnt[i] = (uint32_t)(segWeld[i].endAng * ang2CntRation);
 		else
 			segWeldCnt[i] = 0;
 	}
@@ -400,21 +402,21 @@ void UpdateWeldFInishPos(void)
 
 
 
-int32_t GetWeldFinishPos(uint16_t id)
+uint32_t GetWeldFinishPos(uint16_t id)
 {
-	int32_t pos = 0;
+	uint32_t pos = 0;
 	if(id < MAX_SEG_SIZE)
 	{
-		if(segWeld[id].endAng != 0)
-			pos = (int32_t)(segWeld[id].endAng * ang2CntRation);
+		if(segWeld[id].endAng > 0.0f)
+			pos = (uint32_t)(segWeld[id].endAng * ang2CntRation);
 
 	}
 	else
 	{
 		for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
 		{
-			if(segWeld[i].endAng != 0)
-				pos = (int32_t)(segWeld[i].endAng * ang2CntRation);
+			if(segWeld[i].endAng > 0.0f)
+				pos = (uint32_t)(segWeld[i].endAng * ang2CntRation);
 			else
 				break;
 		}
@@ -437,10 +439,22 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 		switch(objectIndex)
 		{
 		case OBJ_IDX_OUTPUTDA:
-			SendTskMsg(OUTPUT_QID, TSK_INIT, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR), NULL, NULL);
+			SetDAOutputValue(CHN_DA_CURR_OUT,daOutputSet[CHN_DA_CURR_OUT]);
+			SetDAOutputValue(CHN_DA_SPEED_OUT,daOutputSet[CHN_DA_SPEED_OUT]);
 		break;
 		case OBJ_IDX_OUTPUTDO:
-			SendTskMsg(OUTPUT_QID, TSK_INIT, DO_OUT_REFRESH, NULL, NULL);
+			SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
+			break;
+
+		case OBJ_IDX_VOLT0_CALI:
+			voltCaliPoint[0].adValue = adcValue[CHN_VOLT_READ];
+			voltCaliPoint[0].caliFlag = 0x33;
+			Trigger_EEPSave((void*)&voltCaliPoint[0],sizeof(voltCaliPoint[0]), SYNC_CYCLE);
+			break;
+		case OBJ_IDX_VOLT1_CALI:
+			voltCaliPoint[1].adValue = adcValue[CHN_VOLT_READ];
+			voltCaliPoint[1].caliFlag = 0x33;
+			Trigger_EEPSave((void*)&voltCaliPoint[1],sizeof(voltCaliPoint[1]), SYNC_IM);
 			break;
 		case OBJ_IDX_SPEED_RATION:
 			UpdateWeldFInishPos();
@@ -494,7 +508,7 @@ float GetWeldSegSpeed(uint16_t id)
 	float speed = 0;
 	if(id < MAX_SEG_SIZE)
 	{
-		if(segWeld[id].endAng != 0)
+		if(segWeld[id].state != 0)
 			speed = segWeld[id].weldSpeed;
 	}
 	return speed;
@@ -503,23 +517,18 @@ float GetWeldSegSpeed(uint16_t id)
 
 const SegWeld* GetWeldSeg(int32_t cnt)
 {
-	static const SegWeld segWeld_C = {0,0,0,0,0,0,0,};
+	static const SegWeld segWeld_C = {0,0,0,0,0,0,0,0};
 	int32_t pos = cnt;
 	if(cnt < 0)
 		pos = -cnt;
-	uint16_t ret = FATAL_ERROR;
 	const SegWeld* ptrSeg = &segWeld_C;
 	for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
 	{
-		if(segWeld[i].endAng != 0)
+		if(segWeld[i].endAng > 0.0f)
 		{
-			if(segWeldCnt[i] > pos)
+			if(segWeldCnt[i] > (uint32_t)pos)
 			{
 				ptrSeg = &segWeld[i];
-			}
-			else if(segWeldCnt[i] < pos)
-			{
-				ret = OK;
 			}
 		}
 		else

@@ -18,7 +18,7 @@
 */
 //----------------------------------------------------------------------------------------------------------
 static  const uint8_t cmAryAttributeDataTypes[] = { ST_FLOAT,ST_FLOAT,ST_FLOAT,
-		ST_U16,ST_U16,ST_U16,ST_U16,};
+		ST_U16,ST_U16,ST_FLOAT,ST_FLOAT,ST_U32};
 
 static  const uint8_t cmAryAttributeDataTypes2[] = { ST_FLOAT,ST_FLOAT,ST_U32};
 

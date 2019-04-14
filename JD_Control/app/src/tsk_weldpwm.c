@@ -62,8 +62,8 @@ void StartPWMTsk(void const * argument)
 					daOutputPwm[1] = GetCurrOutput(ptrCurrWeldSeg->currLow);
 
 					tickOut = daOutputPwmTime[pwmCnt%2];
-					daOutputSet[CHN_DA_CURR_OUT] = daOutputPwm[pwmCnt%2];
-					SendTskMsg(OUTPUT_QID, TSK_INIT, OUTPUT_REFRESH, NULL, NULL);
+					daOutputRawDA[CHN_DA_CURR_OUT] = daOutputPwm[pwmCnt%2];
+					SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
 					pwmCnt = pwmCnt + 1;
 
 				}
@@ -78,9 +78,9 @@ void StartPWMTsk(void const * argument)
 			if(( mainTskState == TSK_FORCE_BREAK) && (TSK_RESETIO == mainTskState))
 			{
 				pwmCnt = 0;
-				daOutputSet[CHN_DA_CURR_OUT] = 0;
+				daOutputRawDA[CHN_DA_CURR_OUT] = 0;
 				digitOutput &= ~(1<<CHN_OUT_ARC_ON);
-				SendTskMsg(OUTPUT_QID, TSK_INIT, OUTPUT_REFRESH, NULL, NULL);
+				SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
 
 				tskState = ST_PWM_FINISH;
 				locMsg = *(TSK_MSG_CONVERT(event.value.p));

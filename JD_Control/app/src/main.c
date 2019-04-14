@@ -43,7 +43,6 @@ osMessageQId USART_RX_EVENT			= NULL;
 osMessageQId PRINT_ID = NULL;
 osMessageQId SCH_LB_ID = NULL;
 osMessageQId ADC_MONITOR = NULL;
-osMessageQId OUTPUT_QID = NULL;
 osMessageQId WELD_CTRL = NULL;
 osMessageQId MOTOR_CTRL = NULL;
 osMessageQId PWM_CTRL = NULL;
@@ -73,7 +72,6 @@ static const QueIDInit QID[]=
 	{&PRINT_ID,				4},
 	{&SCH_LB_ID,			4},
 	{&ADC_MONITOR,			4},
-	{&OUTPUT_QID,			16},
 	{&WELD_CTRL,			4},
 	{&MOTOR_CTRL,			4},
 	{&PWM_CTRL,				4},
