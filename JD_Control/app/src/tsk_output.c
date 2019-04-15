@@ -88,7 +88,7 @@ uint32_t GetInputPins(void)
 	{
 		GPIO_PinState state = HAL_GPIO_ReadPin(digitInputPins[i].port, digitInputPins[i].pin);
 
-		if(state == GPIO_PIN_SET)
+		if(state == GPIO_PIN_RESET)
 			inputPins = (inputPins | (1<<i));
 	}
 	lastInputPins[cnt%MAX_SAMPLE_NUM] = inputPins;

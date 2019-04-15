@@ -87,6 +87,7 @@ uint32_t adler32(const uint8_t *data, uint32_t len);
 uint32_t adler32_N(const uint8_t *data, uint32_t len, uint32_t initVal);
 //EEP_STATUS EEP_WriteAdr(uint16_t adrRelative, uint8_t* data, uint16_t len);
 void StartEEPTask(void const * argument);
+uint16_t Init_EEPData(void);
 
 #ifdef __cplusplus
 }

@@ -50,7 +50,7 @@
 #include "main.h"
 #include "rtc.h"
 #include <string.h>
-
+#include "unit_weld_cfg.h"
 /* USER CODE BEGIN 0 */
 #define CFG_DEV_RTC_CLK_SOURCE_LSE 			0x00000100
 #define CFG_DEV_RTC_CLK_SOURCE_LSI   		0x00000200
@@ -207,6 +207,8 @@ void prvWriteBackupRegister(uint32_t RTC_BKP_DR, const uint32_t Data)
 	*(__IO uint32_t *) tmp = (uint32_t) Data;
 }
 
+
+#define ENCODER_CNT_REG		RTC_BKP_DR8
 uint16_t Init_RTC(void)
 {
 	uint16_t ret = FATAL_ERROR;
@@ -241,6 +243,7 @@ uint16_t Init_RTC(void)
 			ret = OK;
 			//iRtcIsOk = true;
 		}
+		prvWriteBackupRegister(ENCODER_CNT_REG, 0);
 		prvWriteBackupRegister(RTC_BKP_DR0, RTC_DEFAULT_VAL);
 	}
 	else
@@ -250,9 +253,14 @@ uint16_t Init_RTC(void)
 		//iRtcIsOk = true;
 		ret = OK;
 	}
+	lastMotorPos_PowerDown = prvReadBackupRegister(ENCODER_CNT_REG);
 	return ret;
 }
 
+void UpdateMotorPos(uint32_t cnt)
+{
+	prvWriteBackupRegister(ENCODER_CNT_REG, cnt);
+}
 
 
 uint8_t sprintf_rtc(uint8_t* buff, uint8_t len1)
