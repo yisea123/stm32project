@@ -21,16 +21,16 @@ static const uint8_t fileID_Default = 0x0F;
 
 
 static CaliCurrent	currCaliPoint[MAX_CALI_CURR]		__attribute__ ((section (".configbuf_static")));
-CaliVolt 	voltCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
-CaliSpeed 	speedCaliPoint[2]					__attribute__ ((section (".configbuf_static")));
+CaliVolt 	voltCaliPoint[2]							__attribute__ ((section (".configbuf_static")));
+CaliSpeed 	speedCaliPoint[2]							__attribute__ ((section (".configbuf_static")));
 //	cnter per 1/360
-float   	ang2CntRation						__attribute__ ((section (".configbuf_static")));
-uint32_t   	caliTime							__attribute__ ((section (".configbuf_static")));
-int32_t 	motorPosHome						__attribute__ ((section (".configbuf_static")));
+float   	ang2CntRation								__attribute__ ((section (".configbuf_static")));
+uint32_t   	caliTime									__attribute__ ((section (".configbuf_static")));
+int32_t 	motorPosHome								__attribute__ ((section (".configbuf_static")));
 
-uint16_t   	currCaliPointNum					__attribute__ ((section (".configbuf_static")));
-uint32_t   	rev_loc[15]							__attribute__ ((section (".configbuf_static")));
-float		currConvertRation					__attribute__ ((section (".configbuf_static")));
+uint16_t   	currCaliPointNum							__attribute__ ((section (".configbuf_static")));
+uint32_t   	rev_loc[15]									__attribute__ ((section (".configbuf_static")));
+float		currConvertRation							__attribute__ ((section (".configbuf_static")));
 
 static uint8_t fileId1							__attribute__ ((section (".configbuf_measdata")));
 static SegWeld segWeld[MAX_SEG_SIZE]			__attribute__ ((section (".configbuf_measdata")));
@@ -39,9 +39,12 @@ WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 
-float currCaliSetDiff = 0.6f;
-uint16_t   devLock  = 10;
-uint16_t weldDir = MOTOR_DIR_CW;
+
+
+
+
+uint16_t   	devLock  = 10;
+uint16_t 	weldDir = MOTOR_DIR_CW;
 int32_t 	lastMotorPos_PowerDown = 0;
 uint16_t    daOutputRawDA[2];
 float  		daOutputSet[2];
@@ -56,23 +59,18 @@ volatile  int32_t   motorPos_Read;
 float 	  motorSpeed_Read;
 float     weldCurr_Read;
 float 	  weldVolt_Read;
-int32_t  motorPos_WeldStart;
-int32_t  motorPos_WeldFinish;
+int32_t   motorPos_WeldStart;
+int32_t   motorPos_WeldFinish;
+
 uint16_t  weldStatus = 0;
 uint16_t  weldState = 0;
 
-uint16_t voltCaliReq = 0;
-uint16_t currCaliReq = 0;
-uint16_t speedCaliReq = 0;
-uint16_t caliAllReq = 0;
+static CaliCurrent tmp_CaliPointCurr;
+static uint16_t clearCurrCali = 0;
 
-
-
-
-const SegWeld* ptrCurrWeldSeg = &segWeld[0];
-
-CaliCurrent tmp_CaliPointCurr;
-uint16_t clearCurrCali = 0;
+/*
+ * UI
+ */
 float speedAdjust = 1.0f;
 float currMicroAdjust = 1.0f;
 
@@ -80,6 +78,19 @@ uint16_t uiBtn_Weld = 0;
 uint16_t uiBtn_Cali = 0;
 uint16_t uiBtn_JogP = 0;
 uint16_t uiBtn_JogN = 0;
+uint16_t voltCaliReq = 0;
+uint16_t currCaliReq = 0;
+uint16_t speedCaliReq = 0;
+uint16_t caliAllReq = 0;
+
+
+float currCaliSetDiff = 0.6f;
+/*
+ *
+ *
+ * Global variable
+ */
+const SegWeld* ptrCurrWeldSeg = &segWeld[0];
 
 static const float currConvertRation_Default = 20.0f;
 
@@ -143,7 +154,7 @@ float accSpeedPerSeond;
 */
 MotorSpeed motorSpeedSet_Default =
 {
-		4.0f,2.0f,0.01f,
+	4.0f,2.0f,0.01f,
 };
 /*
 uint16_t preGasTime;

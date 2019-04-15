@@ -38,7 +38,6 @@ uint32_t	freeRtosTskTick[MAX_TASK_ID];
 uint8_t freeRtosTskState[MAX_TASK_ID];
 osMessageQId SHELL_TX_ID			= NULL;
 osMessageQId SHELL_RX_ID			= NULL;
-osMessageQId FILE_TSK_ID			= NULL;
 osMessageQId USART_RX_EVENT			= NULL;
 osMessageQId PRINT_ID = NULL;
 osMessageQId SCH_LB_ID = NULL;
@@ -48,6 +47,7 @@ osMessageQId MOTOR_CTRL = NULL;
 osMessageQId PWM_CTRL = NULL;
 osMessageQId SCH_CTRL = NULL;
 osMessageQId CURR_CALI = NULL;
+osMessageQId usbQueue = NULL;
 uint16_t dummyRam = 0;
 uint16_t printCtrlCfg[MSG_TYPE_MAX] = {0,1,1,1};
 
@@ -67,7 +67,6 @@ static const QueIDInit QID[]=
 {
 	{&SHELL_TX_ID, 			32},
 	{&SHELL_RX_ID, 			8},
-	{&FILE_TSK_ID,			16},
 	{&USART_RX_EVENT,		2},
 	{&PRINT_ID,				4},
 	{&SCH_LB_ID,			4},
@@ -76,6 +75,8 @@ static const QueIDInit QID[]=
 	{&MOTOR_CTRL,			4},
 	{&PWM_CTRL,				4},
 	{&SCH_CTRL,				8},
+	{&CURR_CALI,			4},
+	{&usbQueue,				10},
 };
 
 const T_UNIT*  subSystem[] =
@@ -92,24 +93,25 @@ uint8_t 	dbgMsgMap[MAX_TASK_ID];
 
 const char* TskName[MAX_TASK_ID] =
 {
-	TO_STR(TSK_ID_AD_MONITOR),
-	TO_STR(TSK_ID_EEP),
-	TO_STR(TSK_ID_CAN_RX1),
-	TO_STR(TSK_ID_CAN_TX1),
-	TO_STR(TSK_ID_CAN_ERR),
-	TO_STR(TSK_ID_FILE),
-	TO_STR(TSK_ID_GUI),//6
+	TO_STR(ADC_MONITOR),
+	TO_STR(TSKID_PRINT),
+	TO_STR(TSK__ID_EEP),
+	TO_STR(ID_SHELL_RX),
+	TO_STR(ID_SHELL_TX),
+	TO_STR(IDLOCAL_BUS),
+	TO_STR(ID_A_OUTPUT),//6
 
-	TO_STR(TSK_ID_SHELL_RX),
-	TO_STR(TSK_ID_SHELL_TX),
-	TO_STR(TSK_ID_GPIO),
-	TO_STR(TSK_ID_TST),
+	TO_STR(TSK_ID_MOTOR),
+	TO_STR(TSK__ID_WELD),
+	TO_STR(ID__ETHERNET),
+	TO_STR(TSK_ID_PWM_O),
 
-	TO_STR(TSK_ID_CAN1_TSK),
-	TO_STR(TSK_ID_LOCAL_BUS),
-	TO_STR(TSK_ID_ADC_MONITOR),
+	TO_STR(TSK_ID_SCH__),
+	TO_STR(ID_CURR_CALI),
 
 };
+
+
 void AssertReset(void)
 {
 	if(autoReset)
@@ -327,18 +329,12 @@ uint16_t LoadDefaultCfg(uint16_t id)
 
 
 __IO uint32_t kernelStarted = 0;
-uint16_t tt = 120;
-uint8_t* ptrVal = &tt;
-osMessageQId usbQueue;
+
 int main(int argc, char* argv[])
 {
   	bsp_init();
 	// Send a greeting to the trace device (skipped on Release).
 	trace_puts("Hello ARM World!\n");
-	osMessageQDef(USBH_Queue, 10, uint16_t);
-	usbQueue = osMessageCreate (osMessageQ(USBH_Queue), NULL);
-	ptrVal[1] = 0x30;
-  //	Init_RTC();
 	CreateAllQid();
 	// At this stage the system clock should have already been configured
 	// at high speed.
@@ -355,11 +351,6 @@ int main(int argc, char* argv[])
 	}
 
 
-	/* init code for USB_HOST */
-//	MX_USB_HOST_Init();
-
-	/* init code for FATFS */
-//	MX_FATFS_Init();
 
 	/* Call init function for freertos objects (in freertos.c) */
 	MX_FREERTOS_Init();

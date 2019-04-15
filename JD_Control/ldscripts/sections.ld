@@ -75,6 +75,18 @@ SECTIONS
         *(.after_vectors .after_vectors.*)	/* Startup code and ISR */
 
     } >FLASH1
+	  .mainVersion :ALIGN(4)
+	  {
+	  	FILL(0xFF)
+	  	KEEP(*(.mainVersion))
+	  	}> FLASH_VER
+	  	
+	  	
+	    .checksum :ALIGN(4)
+	  {
+	  	FILL(0xFF)
+	   KEEP( *(.chesumpart))
+	  }> FLASH_CHECK 
 
     .inits : ALIGN(4)
     {
@@ -97,7 +109,7 @@ SECTIONS
          * WARNING: It is mandatory that the regions are word aligned, 
          * since the initialisation code works only on words.
          */
-         
+         FILL(0xFF)
         __data_regions_array_start = .;
         
         LONG(LOADADDR(.data));
@@ -185,6 +197,7 @@ SECTIONS
      */
     .flashtext : ALIGN(4)
     {
+    	FILL(0xFF)
         *(.flashtext .flashtext.*)	/* Startup code */
     } >FLASH1
  
@@ -195,6 +208,7 @@ SECTIONS
      */
     .text : ALIGN(4)
     {
+    	FILL(0xFF)
         *(.text .text.*)			/* all remaining code */
  
  		/* read-only data (constants) */
@@ -219,6 +233,7 @@ SECTIONS
 	/* ARM magic sections */
 	.ARM.extab : ALIGN(4)
    	{
+   		FILL(0xFF)
        *(.ARM.extab* .gnu.linkonce.armextab.*)
    	} > FLASH
    	
@@ -226,6 +241,7 @@ SECTIONS
    	__exidx_start = .;   	
    	.ARM.exidx : ALIGN(4)
    	{
+   		FILL(0xFF)
        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
    	} > FLASH
    	__exidx_end = .;
@@ -377,12 +393,20 @@ SECTIONS
     
       .ram_eep_text (NOLOAD) : ALIGN(4)
 	  {
-	    *(.configbuf_can)
+	    *(.configbuf_static)
+	    *(.configsys_info)
+	    *(.configbuf_measdata)
 	  } >RAM_EEP
 	  .ram_backup(NOLOAD) : ALIGN(4)
 	  {
 	  	 *(.ram_backup)
 	  }>RAM_BP
+	  .ram_test(NOLOAD) : ALIGN(4)
+	  {
+	  	 *(.ram_test)
+	  }>RAM_T
+	  
+	  
     /*
      * The FLASH Bank1.
      * The C or assembly source must explicitly place the code 

@@ -58,8 +58,8 @@ void StartPWMTsk(void const * argument)
 				{
 					daOutputPwmTime[0] =ptrCurrWeldSeg->currHighMs;
 					daOutputPwmTime[1] =ptrCurrWeldSeg->currLowMs;
-					daOutputPwm[0] = GetCurrOutput(ptrCurrWeldSeg->currHigh);
-					daOutputPwm[1] = GetCurrOutput(ptrCurrWeldSeg->currLow);
+					daOutputPwm[0] = GetCurrCtrlOutput(ptrCurrWeldSeg->currHigh);
+					daOutputPwm[1] = GetCurrCtrlOutput(ptrCurrWeldSeg->currLow);
 
 					tickOut = daOutputPwmTime[pwmCnt%2];
 					daOutputRawDA[CHN_DA_CURR_OUT] = daOutputPwm[pwmCnt%2];

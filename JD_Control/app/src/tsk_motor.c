@@ -12,6 +12,7 @@
 #include "tsk_head.h"
 #include "shell_io.h"
 #include "dev_encoder.h"
+#include "rtc.h"
 /* 私有类型定义 --------------------------------------------------------------*/
 typedef struct
 {
@@ -166,6 +167,7 @@ void UpdateWeldSetting(void)
 	static uint32_t  cnt = 0;
 	static uint32_t  last_cnt = 0;
 	motorPos_Read = (OverflowCount*CNT_MAX) + (int32_t)__HAL_TIM_GET_COUNTER(&htimx_Encoder) + (int32_t)lastMotorPos_PowerDown;
+	UpdateMotorPos(motorPos_Read);
 	cnt++;
 	if(cnt > last_cnt)
 	{
@@ -202,10 +204,7 @@ void StartMotorTsk(void const * argument)
 	uint16_t jogDir = MOTOR_DIR_CW;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"started  \n");
-	/* 编码器初始化及使能编码器模式 */
 	ENCODER_TIMx_Init();
-	/* 设定占空比 */
-
 	SetSpeedOutVolt(0);
 	/* PID 参数初始化 */
 	PID_ParamInit();

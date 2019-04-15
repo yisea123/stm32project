@@ -92,24 +92,25 @@ void StartArcLinkTask(void const * argument)
 
 static const TaskConfiguration_t TaskConfiguration[] =
 {
+		//0
 		{{"eep ctrl",		StartEEPTask,		osPriorityNormal, 	0,		256},		TSK_ID_EEP, NULL},
-	//	{{"gui task",		StartGuiTask,		osPriorityNormal, 	0,		768},		TSK_ID_GUI, NULL},
-	//	{{"file task",		StartFileTask,		osPriorityHigh, 	0,		768},		TSK_ID_FILE, NULL},
-
-	//	{{"can rx1",		StartCanRXTask,		osPriorityHigh, 	0,		384},		TSK_ID_CAN_RX1, NULL},
-		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		384},		TSK_ID_LOCAL_BUS, NULL},
-		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		384},		TSK_ID_MOTOR, NULL},
-
+		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		256},		TSK_ID_LOCAL_BUS, NULL},
+		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		256},		TSK_ID_MOTOR, NULL},
 		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		256},		TSK_ID_WELD, NULL},
-//		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
-		{{"Ethernet Tsk",		StartEthernet,		osPriorityNormal, 	0,		384},		TSK_ID_ETHERNET, NULL},
-
-//		{{"ADC Monitor",	StartADCMonitor,		osPriorityAboveNormal, 	0,		256},			TSK_ID_ADC_MONITOR, NULL},
+		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
+		//5
+		{{"Ethernet Tsk",	StartEthernet,		osPriorityNormal, 	0,		384},		TSK_ID_ETHERNET, NULL},
+		{{"ADC Monitor",	StartADCMonitor,		osPriorityAboveNormal, 	0,	256},		TSK_ID_ADC_MONITOR, NULL},
 		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_TX, NULL},
-		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			384},			TSK_ID_SHELL_RX, NULL},
-//		{{"arcLink",		StartArcLinkTask,		osPriorityLow, 	0,			384},			TSK_ID_TST, NULL},
+		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_RX, NULL},
+		{{"weldtask",		StartWeldTask,			osPriorityLow, 	0,			256},			TSK_ID_WELD, NULL},
+		//10
+		{{"currcali",		StartCurrCaliTask,		osPriorityLow, 	0,			256},			TSK_ID_CURR_CALI, NULL},
+		{{"schedule",		StartSchTask,			osPriorityLow, 	0,			256},			TSK_ID_CURR_CALI, NULL},
+		{{"pwmoutput",		StartPWMTsk,			osPriorityLow, 	0,			256},			TSK_ID_PWM, NULL},
 
 };
+
 /* USER CODE END Variables */
 
 

@@ -100,12 +100,14 @@ enum
 extern const SegWeld* 	ptrCurrWeldSeg;
 extern float 			currConvertRation;
 extern float 			speedAdjust;
-extern float  		currMicroAdjust;
+extern float  			currMicroAdjust;
 
 
 extern WeldProcessCfg 	weldProcess;
 extern MotorSpeed 		motorSpeedSet  ;
 extern uint16_t 		weldDir;
+
+
 extern volatile int32_t  motorPos_Read;
 extern float 	 	motorSpeed_Read;
 extern float     	weldCurr_Read;

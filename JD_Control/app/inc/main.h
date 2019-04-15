@@ -123,23 +123,12 @@ typedef enum
 #define FORCE_STOP		0xFFFFFF
 typedef enum
 {
-	TSK_ID_AD_MONITOR=0,
+	TSK_ID_ADC_MONITOR=0,
 	TSK_ID_PRINT,
 	TSK_ID_EEP,
-	TSK_ID_CAN_RX1,
-	TSK_ID_CAN_TX1,
-	TSK_ID_CAN_ERR,
-	TSK_ID_FILE,
-	TSK_ID_GUI,
-
-
 	TSK_ID_SHELL_RX,
 	TSK_ID_SHELL_TX,
-	TSK_ID_GPIO,
-	TSK_ID_TST,
-	TSK_ID_CAN1_TSK,
 	TSK_ID_LOCAL_BUS,
-	TSK_ID_ADC_MONITOR,
 	TSK_ID_OUTPUT,
 	TSK_ID_MOTOR,
 	TSK_ID_WELD,
@@ -165,12 +154,7 @@ extern const char*		TskName[MAX_TASK_ID];
 
 #define outputTaskHandle		taskThreadID[TSK_ID_OUTPUT]
 #define eepTaskHandle			taskThreadID[TSK_ID_EEP]
-#define errCanTaskHandle		taskThreadID[TSK_ID_CAN_ERR]
-
-#define rxCan					taskThreadID[TSK_ID_CAN_RX1]
-#define txCan					taskThreadID[TSK_ID_CAN_TX1]
-#define rxShell					taskThreadID[TSK_ID_SHELL_RX]
-#define monitorAdTaskHandle		taskThreadID[TSK_ID_AD_MONITOR]
+#define monitorAdTaskHandle		taskThreadID[TSK_ID_ADC_MONITOR]
 
 extern uint32_t	freeRtosTskTick[MAX_TASK_ID];
 extern uint8_t freeRtosTskState[MAX_TASK_ID];

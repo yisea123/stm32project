@@ -81,3 +81,4 @@ void StartLBTask(void const * argument);
 void StartEthernet(void const * argument);
 void StartCurrCaliTask(void const * argument);
 void StartSchTask(void const * argument);
+void StartPWMTsk(void const * argument);
