@@ -120,7 +120,7 @@ extern uint16_t  	weldState;
 extern int32_t 		motorPosHome;
 
 
-extern float 	adcValue[CHN_AD_MAX];
+extern float 	adcValue_Read[CHN_AD_MAX];
 extern float 	daOutputSet[CHN_DA_MAX];
 extern uint16_t daOutputRawDA[CHN_DA_MAX];
 
@@ -178,6 +178,7 @@ enum
 	OBJ_IDX_OUTPUTDO,
 	OBJ_IDX_OUTPUTAD,
 	OBJ_IDX_INPUT_DI,
+	OBJ_IDX_DEV_LOCK,
 	OBJ_IDX_VOLT0_CALI = 10,
 	OBJ_IDX_VOLT1_CALI = 11,
 	OBJ_IDX_SPEED_RATION = 14,

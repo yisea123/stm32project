@@ -27,7 +27,6 @@ CaliSpeed 	speedCaliPoint[2]							__attribute__ ((section (".configbuf_static")
 float   	ang2CntRation								__attribute__ ((section (".configbuf_static")));
 uint32_t   	caliTime									__attribute__ ((section (".configbuf_static")));
 int32_t 	motorPosHome								__attribute__ ((section (".configbuf_static")));
-
 uint16_t   	currCaliPointNum							__attribute__ ((section (".configbuf_static")));
 uint32_t   	rev_loc[15]									__attribute__ ((section (".configbuf_static")));
 float		currConvertRation							__attribute__ ((section (".configbuf_static")));
@@ -38,9 +37,7 @@ MotorSpeed motorSpeedSet       					__attribute__ ((section (".configbuf_measdat
 WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata")));
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
-
-
-
+uint32_t    weldUsedCnt	= 1;
 
 
 uint16_t   	devLock  = 10;
@@ -53,20 +50,19 @@ uint32_t  digitInput;
 uint32_t  digitInputWeldBtn;
 uint16_t  daOutputPwm[2];
 uint16_t  daOutputPwmTime[2];
-float 	adcValue[CHN_AD_MAX];
-static uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
+
 volatile  int32_t   motorPos_Read;
 float 	  motorSpeed_Read;
 float     weldCurr_Read;
 float 	  weldVolt_Read;
+float 	  adcValue_Read[CHN_AD_MAX];
 int32_t   motorPos_WeldStart;
 int32_t   motorPos_WeldFinish;
 
-uint16_t  weldStatus = 0;
-uint16_t  weldState = 0;
 
-static CaliCurrent tmp_CaliPointCurr;
-static uint16_t clearCurrCali = 0;
+uint16_t  weldState = 0;
+uint16_t 	password;
+extern uint16_t 	EEP_INIT_CRC;
 
 /*
  * UI
@@ -82,7 +78,10 @@ uint16_t voltCaliReq = 0;
 uint16_t currCaliReq = 0;
 uint16_t speedCaliReq = 0;
 uint16_t caliAllReq = 0;
+/*
 
+
+*/
 
 float currCaliSetDiff = 0.6f;
 /*
@@ -90,10 +89,12 @@ float currCaliSetDiff = 0.6f;
  *
  * Global variable
  */
+static CaliCurrent tmp_CaliPointCurr;
+static uint16_t clearCurrCali = 0;
 const SegWeld* ptrCurrWeldSeg = &segWeld[0];
-
+static uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
 static const float currConvertRation_Default = 20.0f;
-
+static const uint32_t weldUsedCnt_Default = 20;
 static const CaliCurrent currCaliPoint_Default[MAX_CALI_CURR] = {
                                                     {1.0f, 	20.0f, 0},
 													{2.0f, 	40.0f, 0},
@@ -202,15 +203,15 @@ static const T_DATA_OBJ _ObjList[] =
 	// 0 test interfaces:
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&daOutputSet[0],sizeof(daOutputSet)/sizeof(float),	 		RAM),
 		CONSTRUCT_SIMPLE_U32(&digitOutput,	 RAM),
-		NULL_T_DATA_OBJ,
-		CONSTRUCT_SIMPLE_U32(&digitInput,	 RAM),
+		CONSTRUCT_SIMPLE_U32(&digitInputWeldBtn,	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_U32(&digitInput,	 READONLY_RAM),
 		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputRawDA[0],sizeof(daOutputRawDA)/sizeof(uint16_t),	 READONLY_RAM),
-
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		//5
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwm[0],sizeof(daOutputPwm)/sizeof(uint16_t),	 READONLY_RAM),
+		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwmTime[0],sizeof(daOutputPwmTime)/sizeof(uint16_t),	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_U16(&password,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&EEP_INIT_CRC,	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_U16(&devLock,	 RAM),
 
     //10
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[0], NON_VOLATILE),
@@ -221,9 +222,9 @@ static const T_DATA_OBJ _ObjList[] =
 
     //15
 		CONSTRUCT_SIMPLE_U32(&motorPosHome,	 NON_VOLATILE),
-		CONSTRUCT_SIMPLE_U16(&weldStatus,	 RAM),
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwm, sizeof(daOutputPwm)/sizeof(uint16_t),    RAM),
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwmTime, sizeof(daOutputPwmTime)/sizeof(uint16_t),    RAM),
+		CONSTRUCT_SIMPLE_U16(&weldState,	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_U16(&weldUsedCnt,	 READONLY_RAM),
+		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
 	//20
 		CONSTRUCT_STRUCT_CALIPOINT(&tmp_CaliPointCurr,RAM),
@@ -231,6 +232,47 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_U16(&clearCurrCali,	 RAM),
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
+	//25
+		CONSTRUCT_SIMPLE_FLOAT(&speedAdjust,	 RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&currMicroAdjust,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&uiBtn_Weld,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&uiBtn_Cali,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&uiBtn_JogP,	 RAM),
+
+	//30
+		CONSTRUCT_SIMPLE_U16(&uiBtn_JogN,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&voltCaliReq,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&currCaliReq,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&speedCaliReq,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&speedCaliReq,	 RAM),
+	//35
+		CONSTRUCT_SIMPLE_U16(&caliAllReq,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&lastMotorPos_PowerDown,	 READONLY_RAM),
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+
+		//40
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+
+		//45
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&adcValue_Read[0],sizeof(adcValue_Read)/sizeof(float),	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_U32(&motorPos_Read,	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&motorSpeed_Read, READONLY_RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&weldCurr_Read,	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&weldVolt_Read,	 READONLY_RAM),
+
+		//50
+		CONSTRUCT_SIMPLE_I32(&motorPos_WeldStart,	 READONLY_RAM),
+		CONSTRUCT_SIMPLE_I32(&motorPos_WeldFinish,	 READONLY_RAM),
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+		NULL_T_DATA_OBJ,
+
 	//25
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[1], NON_VOLATILE),
@@ -395,6 +437,11 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 
     }
     SortCurrentCali();
+
+    if(eepStatus != OK)
+    {
+    	devLock = 100;
+    }
     return result;
 }
 
@@ -456,14 +503,23 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 		case OBJ_IDX_OUTPUTDO:
 			SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
 			break;
-
+		case OBJ_IDX_DEV_LOCK:
+			if(password == 6000)
+			{
+				if(devLock == (3+ (~EEP_INIT_CRC)))
+				{
+					ResetNVData();
+					devLock = 0;
+				}
+			}
+			break;
 		case OBJ_IDX_VOLT0_CALI:
-			voltCaliPoint[0].adValue = adcValue[CHN_VOLT_READ];
+			voltCaliPoint[0].adValue = adcValue_Read[CHN_VOLT_READ];
 			voltCaliPoint[0].caliFlag = 0x33;
 			Trigger_EEPSave((void*)&voltCaliPoint[0],sizeof(voltCaliPoint[0]), SYNC_CYCLE);
 			break;
 		case OBJ_IDX_VOLT1_CALI:
-			voltCaliPoint[1].adValue = adcValue[CHN_VOLT_READ];
+			voltCaliPoint[1].adValue = adcValue_Read[CHN_VOLT_READ];
 			voltCaliPoint[1].caliFlag = 0x33;
 			Trigger_EEPSave((void*)&voltCaliPoint[1],sizeof(voltCaliPoint[1]), SYNC_IM);
 			break;

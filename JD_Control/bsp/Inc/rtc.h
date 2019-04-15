@@ -14,7 +14,7 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#define ENCODER_CNT_REG		RTC_BKP_DR8
 /* USER CODE END Includes */
 
 extern RTC_HandleTypeDef sRtcHandle;
@@ -31,7 +31,7 @@ extern void xprintf_tick(void);
 uint8_t sprintf_rtc(uint8_t* buff, uint8_t len);
 uint16_t RTC_SetCalibration(uint16_t val);
 uint16_t RTC_GetCalibration(uint16_t* val);
-void UpdateMotorPos(uint32_t cnt);
+void RTC_WriteMotorPos(uint32_t cnt);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

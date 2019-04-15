@@ -208,7 +208,7 @@ void prvWriteBackupRegister(uint32_t RTC_BKP_DR, const uint32_t Data)
 }
 
 
-#define ENCODER_CNT_REG		RTC_BKP_DR8
+
 uint16_t Init_RTC(void)
 {
 	uint16_t ret = FATAL_ERROR;
@@ -253,11 +253,11 @@ uint16_t Init_RTC(void)
 		//iRtcIsOk = true;
 		ret = OK;
 	}
-	lastMotorPos_PowerDown = prvReadBackupRegister(ENCODER_CNT_REG);
+	lastMotorPos_PowerDown = (int32_t)prvReadBackupRegister(ENCODER_CNT_REG);
 	return ret;
 }
 
-void UpdateMotorPos(uint32_t cnt)
+void RTC_WriteMotorPos(uint32_t cnt)
 {
 	prvWriteBackupRegister(ENCODER_CNT_REG, cnt);
 }

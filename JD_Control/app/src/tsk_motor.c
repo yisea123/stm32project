@@ -167,7 +167,7 @@ void UpdateWeldSetting(void)
 	static uint32_t  cnt = 0;
 	static uint32_t  last_cnt = 0;
 	motorPos_Read = (OverflowCount*CNT_MAX) + (int32_t)__HAL_TIM_GET_COUNTER(&htimx_Encoder) + (int32_t)lastMotorPos_PowerDown;
-	UpdateMotorPos(motorPos_Read);
+	RTC_WriteMotorPos(motorPos_Read);
 	cnt++;
 	if(cnt > last_cnt)
 	{

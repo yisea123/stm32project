@@ -769,7 +769,7 @@ static uint8_t eepBuff[eepSize];
 static SemaphoreHandle_t lock = NULL;
 __IO uint16_t eepStatus = ERROR_NV_STORAGE;
 static __IO uint8_t triggerSaveCnt = 0;
-static uint16_t 	EEP_INIT_CRC = 0x22FF;
+uint16_t 	EEP_INIT_CRC = 0x22FF;
 
 
 static uint16_t WriteAllData(uint8_t* data)
@@ -783,7 +783,7 @@ static uint16_t WriteAllData(uint8_t* data)
 	EEP_WriteAdr(0,eepBuff,eepSize);
 	return OK;
 }
-uint16_t ResetNVData()
+uint16_t ResetNVData(void)
 {
 	uint8_t* adr = (uint8_t*) EEP_RAM_START_ORIG;
 	//todo the data is not restored when iic is error;
@@ -818,7 +818,7 @@ uint16_t Init_EEPData(void)
 	uint16_t len = EEP_DATA_SIZE;
 	lock = OS_CreateSemaphore();
 	EEP_STATUS ret = EEP_Init();
-	EEP_INIT_CRC = InitCRC16_IIC( GetLockCode() );
+	devLock = EEP_INIT_CRC = InitCRC16_IIC( GetLockCode() );
 
 	if(ret != EEP_OK)
 	{

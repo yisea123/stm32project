@@ -19,19 +19,19 @@
 #include "can.h"
 #include "shell_io.h"
 #include "LB_Layer1_Uart.h"
-#define FILE_ID		0x18101610u
+#define FILE_ID		0x19041610u
 //-------------------------------------------------------------------------------------------------
 //! unit global attributes
 static uint16_t _State;     // Subsystem state
 static OS_RSEMA _Semaphore;
 
 #define MAJOR_VERSION			0
-#define SUB_VERSION				8
-#define MINOR_VERSION			16
+#define SUB_VERSION				1
+#define MINOR_VERSION			1
 #define CSV_VERSION				0x87
 
 
-#define SW_GIT_VERSION			180309000
+#define SW_GIT_VERSION			19041610
 
 
 
@@ -93,6 +93,8 @@ static uint8_t 		SerialNumber[INFO_LEN] 		__attribute__ ((section (".configsys_i
 static uint32_t		usedSWVersion				__attribute__ ((section (".configsys_info")));
 static uint8_t		deviceName[INFO_LEN] 		__attribute__ ((section (".configsys_info")));
 uint8_t		deviceName_Short[SHORT_LEN] 		__attribute__ ((section (".configsys_info")));
+static uint32_t		registerId					__attribute__ ((section (".configsys_info")));
+static uint32_t		registerRev					__attribute__ ((section (".configsys_info")));
 static uint32_t 	fileID2						__attribute__ ((section (".configsys_info")));
 
 uint16_t			instrumentType = STANDARD_VERSION;
@@ -314,6 +316,11 @@ static const uint8_t* sendData[] =
 		(uint8_t*)"CAN 2 MeasureBoart Test\n",
 };
 
+uint16_t CheckRegStatus()
+{
+	return OK;
+}
+
 uint16_t Put_SysInfo(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
 					void * ptrValue)
 {
@@ -345,12 +352,12 @@ uint16_t Put_SysInfo(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 
 				 case FVT_SEND_UART3:
 					 len = (uint16_t)strlen((char*)sendData[2]);
-					 LB_Layer1_Uart_Tx(sendData[2],len);
+					// LB_Layer1_Uart_Tx(sendData[2],len);
 					 break;
 
 				 case FVT_SEND_CAN1:
 					 len = (uint16_t)strlen((char*)sendData[3]);
-					 Can1_TxRaw(&sendData[3][0],len);
+					// Can1_TxRaw(&sendData[3][0],len);
 					 break;
 
 				 case FVT_SEND_CAN2:

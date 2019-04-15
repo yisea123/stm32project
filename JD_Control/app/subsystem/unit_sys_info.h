@@ -141,6 +141,8 @@ enum
 	FVT_SEND_CAN2,
 };
 
+uint16_t CheckRegStatus();
+
 uint16_t Initialize_SysInfo(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Get_SysInfo(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
 					void * ptrValue);

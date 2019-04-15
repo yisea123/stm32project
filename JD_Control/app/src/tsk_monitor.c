@@ -47,7 +47,7 @@ static void GetAdData(void)
 #endif
         number=temp;
         valTmp=(double)(ad7190_data[number]>>4);
-        adcValue[number]=(float)(valTmp*REFERENCE_VOLTAGE*OPA_RES_R1/OPA_RES_R2/0xFFFFF);
+        adcValue_Read[number]=(float)(valTmp*REFERENCE_VOLTAGE*OPA_RES_R1/OPA_RES_R2/0xFFFFF);
         cntFlag[number] = cntFlag[number]+1;
       }
       else
@@ -103,18 +103,18 @@ void StartADCMonitor(void const * argument)
 			if((digitInputWeldBtn&BTN_PUSHDOWN) == BTN_PUSHDOWN)
 				digitInputWeldBtn = BTN_RELEASE;
 		}
-		weldCurr_Read = GetCurrRead(adcValue[CHN_CURR_READ]);
-		weldVolt_Read = GetVoltRead(adcValue[CHN_VOLT_READ]);
+		weldCurr_Read = GetCurrRead(adcValue_Read[CHN_CURR_READ]);
+		weldVolt_Read = GetVoltRead(adcValue_Read[CHN_VOLT_READ]);
 		cnt++;
 		if(cnt % 1000 == 0)
 		{
 
 			TraceUser("Pos, %d, Out,0x%x,input,0x%x,IN_0. %0.3fV,%d,IN_1. %0.3fV,%d,IN_2.%0.3fV,%d,IN_3. %0.3fV,%d,\n",
 					motorPos_Read,digitOutput,digitInput,
-					adcValue[0],cntFlag[0],\
-					adcValue[1],cntFlag[1],\
-					adcValue[2],cntFlag[2],\
-					adcValue[3],cntFlag[3]);
+					adcValue_Read[0],cntFlag[0],\
+					adcValue_Read[1],cntFlag[1],\
+					adcValue_Read[2],cntFlag[2],\
+					adcValue_Read[3],cntFlag[3]);
 		}
 
 	}
