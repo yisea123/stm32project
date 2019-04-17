@@ -39,12 +39,12 @@ typedef struct
 {
 	uint16_t preGasTime;
 	uint16_t postGasTime;
-	uint16_t preCurr;
+	uint16_t preCurr;//todo
 	uint16_t preDelay;
 	uint16_t upSlopeAcc;
 	uint16_t upSlopeAccTime;
 	uint16_t downSploeAcc;
-	uint16_t downSlopeAcc;
+	uint16_t downSploeAccTime;
 }WeldProcessCfg;
 
 enum
@@ -162,6 +162,8 @@ float GetWeldSegSpeed(uint16_t id);
 uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
                      void * ptrValue);
+uint16_t Get_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
+                     void * ptrValue);
 uint16_t GetInputState(uint16_t chn);
 
 #define WeldPut(a,b,c)	Put_WeldCfg(&weldCfg, a, b,c);
@@ -182,6 +184,8 @@ enum
 	OBJ_IDX_VOLT0_CALI = 10,
 	OBJ_IDX_VOLT1_CALI = 11,
 	OBJ_IDX_SPEED_RATION = 14,
+	OBJ_IDX_MOTOR_HOMESET = 18,
+	OBJ_IDX_MOTOR_HOMEREAD = 19,
 	OBJ_IDX_CURR_CALI_NEW = 20,
 	OBJ_IDX_CURR_CALI_CLR = 22,
 

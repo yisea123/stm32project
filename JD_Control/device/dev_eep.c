@@ -20,6 +20,7 @@
 #include "main.h"
 #include "t_unit_cfg.h"
 #include "shell_io.h"
+#include "unit_weld_cfg.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -864,6 +865,10 @@ uint16_t Init_EEPData(void)
 
 uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync, uint32_t _line)
 {
+	if(eepStatus != OK)
+	{
+		devLock = 100;
+	}
 	if(eepStatus != OK)
 		return OK;
 	if (len != 0)

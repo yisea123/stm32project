@@ -39,7 +39,7 @@ uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 uint32_t    weldUsedCnt	= 1;
 
-
+uint16_t    motorHomeSet = 0;
 uint16_t   	devLock  = 10;
 uint16_t 	weldDir = MOTOR_DIR_CW;
 int32_t 	lastMotorPos_PowerDown = 0;
@@ -52,6 +52,7 @@ uint16_t  daOutputPwm[2];
 uint16_t  daOutputPwmTime[2];
 
 volatile  int32_t   motorPos_Read;
+float     motorAng_Read;
 float 	  motorSpeed_Read;
 float     weldCurr_Read;
 float 	  weldVolt_Read;
@@ -224,8 +225,8 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_U32(&motorPosHome,	 NON_VOLATILE),
 		CONSTRUCT_SIMPLE_U16(&weldState,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&weldUsedCnt,	 READONLY_RAM),
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_U16(&motorHomeSet,	 RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&motorAng_Read,	 READONLY_RAM),
 	//20
 		CONSTRUCT_STRUCT_CALIPOINT(&tmp_CaliPointCurr,RAM),
 		CONSTRUCT_SIMPLE_U16(&currCaliPointNum, NON_VOLATILE),
@@ -244,7 +245,7 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_U16(&voltCaliReq,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&currCaliReq,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&speedCaliReq,	 RAM),
-		CONSTRUCT_SIMPLE_U16(&speedCaliReq,	 RAM),
+		NULL_T_DATA_OBJ,
 	//35
 		CONSTRUCT_SIMPLE_U16(&caliAllReq,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&lastMotorPos_PowerDown,	 READONLY_RAM),
@@ -272,7 +273,13 @@ static const T_DATA_OBJ _ObjList[] =
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
+		//55
+		CONSTRUCT_SIMPLE_U16(&segWeldNum,	 NON_VOLATILE),
 
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&motorSpeedSet, sizeof(motorSpeedSet)/sizeof(float),    NON_VOLATILE),
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&weldProcess, sizeof(weldProcess)/sizeof(uint16_t),    NON_VOLATILE),
+		CONSTRUCT_SIMPLE_FLOAT(&currConvertRation,    NON_VOLATILE),
+		NULL_T_DATA_OBJ,
 	//25
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[1], NON_VOLATILE),
@@ -297,13 +304,7 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[17], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[18], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[19], NON_VOLATILE),
-	//45
-		CONSTRUCT_SIMPLE_U16(&segWeldNum,	 NON_VOLATILE),
 
-		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&motorSpeedSet, sizeof(motorSpeedSet)/sizeof(float),    NON_VOLATILE),
-		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&weldProcess, sizeof(weldProcess)/sizeof(uint16_t),    NON_VOLATILE),
-		CONSTRUCT_SIMPLE_FLOAT(&currConvertRation,    NON_VOLATILE),
-		NULL_T_DATA_OBJ,
 	//50
 		CONSTRUCT_STRUCT_CALIPOINT(&currCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&currCaliPoint[1], NON_VOLATILE),
@@ -353,7 +354,7 @@ const T_UNIT weldCfg =
 
     Initialize_WeldCfg, // will be overloaded
     LoadRomDefaults_T_UNIT,
-    Get_T_UNIT,
+	Get_WeldCfg,
     Put_WeldCfg,
     Check_T_UNIT,
     GetAttributeDescription_T_UNIT,
@@ -438,10 +439,7 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
     }
     SortCurrentCali();
 
-    if(eepStatus != OK)
-    {
-    	devLock = 100;
-    }
+
     return result;
 }
 
@@ -482,6 +480,23 @@ uint32_t GetWeldFinishPos(uint16_t id)
 	return pos;
 }
 
+uint16_t Get_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
+                     void * ptrValue)
+{
+	uint16_t result = OK;
+	VIP_ASSERT(me == &weldCfg);
+	VIP_ASSERT(ptrValue);
+	VIP_ASSERT(*(me->ptrState)>=INITIALIZED); // exception if not initialized
+	assert(me->ptrObjectList);
+
+	switch(objectIndex)
+	{
+	case OBJ_IDX_MOTOR_HOMEREAD:
+		motorAng_Read = (motorPos_Read - motorPosHome) / ang2CntRation;
+		break;
+	}
+	return Get_T_UNIT(me,objectIndex,attributeIndex,ptrValue);
+}
 
 uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
                      void * ptrValue)
@@ -522,6 +537,10 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 			voltCaliPoint[1].adValue = adcValue_Read[CHN_VOLT_READ];
 			voltCaliPoint[1].caliFlag = 0x33;
 			Trigger_EEPSave((void*)&voltCaliPoint[1],sizeof(voltCaliPoint[1]), SYNC_IM);
+			break;
+		case OBJ_IDX_MOTOR_HOMESET:
+			motorPosHome = motorPos_Read;
+			Trigger_EEPSave((void*)&motorPosHome,sizeof(motorPosHome),SYNC_IM);
 			break;
 		case OBJ_IDX_SPEED_RATION:
 			UpdateWeldFInishPos();
