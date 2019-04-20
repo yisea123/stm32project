@@ -140,7 +140,7 @@ typedef enum
 
 } TaskId_e;
 
-#define TIME_UNIT						100u
+#define TIME_UNIT						1000u
 
 extern uint8_t		printChnMap[MAX_TASK_ID];
 extern uint8_t		printMsgMap[MAX_TASK_ID];

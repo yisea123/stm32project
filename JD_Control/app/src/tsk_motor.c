@@ -151,14 +151,19 @@ void SetSpeedOutVolt(float duty)
 		digitOutput &= ~(1<<CHN_OUT_MOTOR_DIR);
 	}
 	lastDuty = duty;
-	SetDAOutputValue(CHN_DA_SPEED_OUT, duty);
+	SetDAOutputFloat(CHN_DA_SPEED_OUT, duty);
 }
-
 
 void SetCurrOutVolt(float curr)
 {
-	SetDAOutputValue(CHN_DA_CURR_OUT, curr);
+	SetDAOutputFloat(CHN_DA_CURR_OUT, curr);
 }
+
+void OutputCurrent(float currValue)
+{
+	SetCurrOutVolt(GetCurrCtrlOutput(currValue));
+}
+
 
 
 void UpdateWeldSetting(void)
@@ -290,7 +295,8 @@ void StartMotorTsk(void const * argument)
 			}
 			break;
 			case ST_MOTOR_WELD_MOTION_CYC:
-				duty = GetSpeedCtrlOutput(ptrCurrWeldSeg->weldSpeed * speedAdjust);
+				actWelSpeedUsed = ptrCurrWeldSeg->weldSpeed * speedAdjust;
+				duty = GetSpeedCtrlOutput(actWelSpeedUsed);
 				if(weldDir != MOTOR_DIR_CW)
 				{
 					duty = -duty;
@@ -355,7 +361,8 @@ void StartMotorTsk(void const * argument)
 					SendTskMsgLOC(MOTOR_CTRL, &locMsg);
 					break;
 				case ST_MOTOR_JOG_INIT:
-					targetJogDuty = GetSpeedCtrlOutput(motorSpeedSet.jogSpeed);
+					actWelSpeedUsed = motorSpeedSet.jogSpeed * speedAdjust;
+					targetJogDuty = GetSpeedCtrlOutput(actWelSpeedUsed);
 					targetJogDutyAcc = GetSpeedCtrlOutput(motorSpeedSet.accSpeedPerSeond);
 					tickOut = 0;
 					tskState = ST_MOTOR_JOG_DELAY;
@@ -370,7 +377,8 @@ void StartMotorTsk(void const * argument)
 					tskState = ST_MOTOR_HOME_PID;
 					break;
 				case ST_MOTOR_WELD_MOTION_START:
-					duty = GetSpeedCtrlOutput(ptrCurrWeldSeg->weldSpeed);
+					actWelSpeedUsed = ptrCurrWeldSeg->weldSpeed * speedAdjust;
+					duty = GetSpeedCtrlOutput(actWelSpeedUsed);
 					if(weldDir != MOTOR_DIR_CW)
 					{
 						duty = -duty;

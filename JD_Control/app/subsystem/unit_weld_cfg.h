@@ -112,7 +112,7 @@ extern volatile int32_t  motorPos_Read;
 extern float 	 	motorSpeed_Read;
 extern float     	weldCurr_Read;
 extern float 	  	weldVolt_Read;
-
+extern uint16_t    gasRemainTime;
 extern float   		ang2CntRation;
 extern int32_t  	motorPos_WeldStart;
 extern int32_t  	motorPos_WeldFinish;
@@ -140,12 +140,15 @@ extern uint16_t caliAllReq;
 
 
 extern float currCaliSetDiff;
+extern uint16_t currCaliPreGas;
 
 
-
+extern uint16_t 	uiWeldSeg;
 extern uint16_t   	devLock;
-extern uint16_t  	daOutputPwm[2];
-extern uint16_t  	daOutputPwmTime[2];
+extern float	  	currOutputPwmFloat[2];
+extern float        actWelSpeedUsed;
+extern float		actWelCurrUsed[2];
+extern uint16_t  	currOutputPwmTime[2];
 
 extern CaliSpeed 	speedCaliPoint[2];
 
@@ -158,6 +161,7 @@ uint32_t GetWeldFinishPos(uint16_t id);
 void UpdateWeldFInishPos(void);
 const SegWeld* GetWeldSeg(int32_t cnt);
 float GetWeldSegSpeed(uint16_t id);
+uint32_t GetTickDuring(uint32_t start);
 
 uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp);
 uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIndex,
@@ -188,6 +192,10 @@ enum
 	OBJ_IDX_MOTOR_HOMEREAD = 19,
 	OBJ_IDX_CURR_CALI_NEW = 20,
 	OBJ_IDX_CURR_CALI_CLR = 22,
+
+	OBJ_IDX_SPEED_GEAR = 23,
+	OBJ_IDX_SPEED_PULSE_LAP = 24,
+	OBJ_IDX_MOTOR_HOME = 40,
 
 };
 #endif /* SUBSYSTEM_UNIT_WELD_CFG_H_ */

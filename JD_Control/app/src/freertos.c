@@ -94,12 +94,12 @@ static const TaskConfiguration_t TaskConfiguration[] =
 {
 		//0
 		{{"eep ctrl",		StartEEPTask,		osPriorityNormal, 	0,		256},		TSK_ID_EEP, NULL},
-		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		256},		TSK_ID_LOCAL_BUS, NULL},
+		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		512},		TSK_ID_LOCAL_BUS, NULL},
 		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		256},		TSK_ID_MOTOR, NULL},
 		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		256},		TSK_ID_WELD, NULL},
 		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
 		//5
-		{{"Ethernet Tsk",	StartEthernet,		osPriorityNormal, 	0,		384},		TSK_ID_ETHERNET, NULL},
+		{{"Ethernet Tsk",	StartEthernet,		osPriorityHigh, 	0,		1524},		TSK_ID_ETHERNET, NULL},
 		{{"ADC Monitor",	StartADCMonitor,		osPriorityAboveNormal, 	0,	256},		TSK_ID_ADC_MONITOR, NULL},
 		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_TX, NULL},
 		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_RX, NULL},

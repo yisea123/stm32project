@@ -17,28 +17,32 @@
 
 static uint16_t _State;     // Subsystem state
 static OS_RSEMA _Semaphore;
-static const uint8_t fileID_Default = 0x0F;
+#define FILEID			0x19041819
+static const uint32_t fileId1_Default = FILEID;
+static const uint32_t fileId2_Default = ~FILEID;
 
 
 static CaliCurrent	currCaliPoint[MAX_CALI_CURR]		__attribute__ ((section (".configbuf_static")));
 CaliVolt 	voltCaliPoint[2]							__attribute__ ((section (".configbuf_static")));
 CaliSpeed 	speedCaliPoint[2]							__attribute__ ((section (".configbuf_static")));
 //	cnter per 1/360
-float   	ang2CntRation								__attribute__ ((section (".configbuf_static")));
 uint32_t   	caliTime									__attribute__ ((section (".configbuf_static")));
 int32_t 	motorPosHome								__attribute__ ((section (".configbuf_static")));
 uint16_t   	currCaliPointNum							__attribute__ ((section (".configbuf_static")));
 uint32_t   	rev_loc[15]									__attribute__ ((section (".configbuf_static")));
 float		currConvertRation							__attribute__ ((section (".configbuf_static")));
 
-static uint8_t fileId1							__attribute__ ((section (".configbuf_measdata")));
+static uint32_t fileId1							__attribute__ ((section (".configbuf_measdata")));
 static SegWeld segWeld[MAX_SEG_SIZE]			__attribute__ ((section (".configbuf_measdata")));
 MotorSpeed motorSpeedSet       					__attribute__ ((section (".configbuf_measdata")));
 WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata")));
 uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
-static uint8_t fileId2							__attribute__ ((section (".configbuf_measdata")));
+static uint32_t fileId2							__attribute__ ((section (".configbuf_measdata")));
+float gearRation					 			__attribute__ ((section (".configbuf_measdata")));
+uint16_t pulsePerLap				 			__attribute__ ((section (".configbuf_measdata")));
 uint32_t    weldUsedCnt	= 1;
-
+float   	ang2CntRation = 1;
+uint16_t    gasRemainTime = 0;
 uint16_t    motorHomeSet = 0;
 uint16_t   	devLock  = 10;
 uint16_t 	weldDir = MOTOR_DIR_CW;
@@ -48,8 +52,13 @@ float  		daOutputSet[2];
 uint32_t  digitOutput;
 uint32_t  digitInput;
 uint32_t  digitInputWeldBtn;
-uint16_t  daOutputPwm[2];
-uint16_t  daOutputPwmTime[2];
+float	  currOutputPwmFloat[2];
+float     actWelCurrUsed[2];
+float     actWelSpeedUsed;
+uint16_t  currOutputPwmTime[2];
+
+float 	  actReqSpeed = 0.0f;
+float     actReqCurr = 0.0f;
 
 volatile  int32_t   motorPos_Read;
 float     motorAng_Read;
@@ -70,7 +79,9 @@ extern uint16_t 	EEP_INIT_CRC;
  */
 float speedAdjust = 1.0f;
 float currMicroAdjust = 1.0f;
+uint16_t uiWeldSeg = 0;
 
+uint16_t uiBtn_Home = 0;
 uint16_t uiBtn_Weld = 0;
 uint16_t uiBtn_Cali = 0;
 uint16_t uiBtn_JogP = 0;
@@ -85,6 +96,7 @@ uint16_t caliAllReq = 0;
 */
 
 float currCaliSetDiff = 0.6f;
+uint16_t currCaliPreGas = 10;
 /*
  *
  *
@@ -108,7 +120,8 @@ static const CaliCurrent currCaliPoint_Default[MAX_CALI_CURR] = {
 													{9.0f, 	180.0f, 0},
 													{10.0f, 200.0f, 0},
 												};
-
+static const float gearRation_Default = 172.0f;
+static const uint16_t pulsePerLap_Default = 32;
 static CaliCurrent	currCaliPointUsed[MAX_CALI_CURR+2];
 static const CaliVolt voltCaliPoint_Default[2] =
 {
@@ -126,7 +139,6 @@ static const CaliSpeed speedCaliPoint_Default[2] =
 
 static const uint16_t currCaliPointNum_Default = 10;
 
-static const float ang2CntRation_Default = 78.0f*2.0f*32.0f/360.0f;
 /*
  * 	float weldSpeed;
 	float currHigh;
@@ -178,12 +190,14 @@ static const  T_DATACLASS _ClassList[]=
 {
     //lint -e545  -e651
  	//lint -e545
-    CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId1,fileID_Default),
+    CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId1,fileId1_Default),
 	//lint -e545
-	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId2,fileID_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId2,fileId2_Default),
 
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(segWeld,segWeld_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(currConvertRation,currConvertRation_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(gearRation,gearRation_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(pulsePerLap,pulsePerLap_Default),
 
 
 //	CONSTRUCTOR_DC_STATIC_CONSTDEF(caliFactor,caliFactor_Default),
@@ -191,6 +205,7 @@ static const  T_DATACLASS _ClassList[]=
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(weldProcess,weldProcess_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(segWeldNum,segWeldNum_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(currCaliPoint,currCaliPoint_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(voltCaliPoint,voltCaliPoint_Default),
 
 
 };
@@ -208,8 +223,8 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_U32(&digitInput,	 READONLY_RAM),
 		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputRawDA[0],sizeof(daOutputRawDA)/sizeof(uint16_t),	 READONLY_RAM),
 		//5
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwm[0],sizeof(daOutputPwm)/sizeof(uint16_t),	 READONLY_RAM),
-		CONSTRUCT_ARRAY_SIMPLE_U16(&daOutputPwmTime[0],sizeof(daOutputPwmTime)/sizeof(uint16_t),	 READONLY_RAM),
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&currOutputPwmFloat[0],sizeof(currOutputPwmFloat)/sizeof(float),	 READONLY_RAM),
+		CONSTRUCT_ARRAY_SIMPLE_U16(&currOutputPwmTime[0],sizeof(currOutputPwmTime)/sizeof(uint16_t),	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&password,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&EEP_INIT_CRC,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&devLock,	 RAM),
@@ -219,7 +234,7 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_STRUCT_CALIPOINT(&voltCaliPoint[1], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&speedCaliPoint[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_CALIPOINT(&speedCaliPoint[1], NON_VOLATILE),
-		CONSTRUCT_SIMPLE_FLOAT(&ang2CntRation,	 NON_VOLATILE),
+		CONSTRUCT_SIMPLE_FLOAT(&ang2CntRation,	 READONLY_RAM),
 
     //15
 		CONSTRUCT_SIMPLE_U32(&motorPosHome,	 NON_VOLATILE),
@@ -231,8 +246,8 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_STRUCT_CALIPOINT(&tmp_CaliPointCurr,RAM),
 		CONSTRUCT_SIMPLE_U16(&currCaliPointNum, NON_VOLATILE),
 		CONSTRUCT_SIMPLE_U16(&clearCurrCali,	 RAM),
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_U16(&pulsePerLap,	 NON_VOLATILE),
+		CONSTRUCT_SIMPLE_FLOAT(&gearRation,	 NON_VOLATILE),
 	//25
 		CONSTRUCT_SIMPLE_FLOAT(&speedAdjust,	 RAM),
 		CONSTRUCT_SIMPLE_FLOAT(&currMicroAdjust,	 RAM),
@@ -245,17 +260,16 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_U16(&voltCaliReq,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&currCaliReq,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&speedCaliReq,	 RAM),
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&actWelCurrUsed,sizeof(actWelCurrUsed)/sizeof(float),	 READONLY_RAM),
 	//35
 		CONSTRUCT_SIMPLE_U16(&caliAllReq,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&lastMotorPos_PowerDown,	 READONLY_RAM),
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
-
+		CONSTRUCT_SIMPLE_FLOAT(&currCaliSetDiff,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&currCaliPreGas,	 RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&actWelSpeedUsed,	 READONLY_RAM),
 		//40
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_U16(&uiBtn_Home,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&uiWeldSeg,	 RAM),
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
@@ -270,7 +284,7 @@ static const T_DATA_OBJ _ObjList[] =
 		//50
 		CONSTRUCT_SIMPLE_I32(&motorPos_WeldStart,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_I32(&motorPos_WeldFinish,	 READONLY_RAM),
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_U16(&gasRemainTime,	 READONLY_RAM),
 		NULL_T_DATA_OBJ,
 		NULL_T_DATA_OBJ,
 		//55
@@ -404,7 +418,7 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
         if((typeOfStartUp & INIT_DATA) != 0)
         {
         	//todo?
-            if((fileId1 != fileID_Default) || (fileID_Default != fileId2))
+            if((fileId1 != fileId1_Default) || (fileId2_Default != fileId2))
             {
                 (void)me->LoadRomDefaults(me,ALL_DATACLASSES);
                 TraceMsg(TSK_ID_EEP,"%s LoadRomDefaults is called\n",me->t_unit_name);
@@ -421,14 +435,14 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 
     	memcpy((void*)&motorPosHome, (void*)&motorPosHome_Default, sizeof(motorPosHome));
     	memcpy((void*)&segWeld, (void*)&segWeld_Default, sizeof(segWeld));
-    	memcpy((void*)&ang2CntRation, (void*)&ang2CntRation_Default, sizeof(ang2CntRation));
+
     	memcpy((void*)&currCaliPointNum, (void*)&currCaliPointNum_Default, sizeof(currCaliPointNum));
     	memcpy((void*)&speedCaliPoint[0], (void*)&speedCaliPoint_Default[0], sizeof(speedCaliPoint));
     	memcpy((void*)&voltCaliPoint[0], (void*)&voltCaliPoint_Default[0], sizeof(voltCaliPoint));
     	memcpy((void*)&currCaliPoint[0], (void*)&currCaliPoint_Default[0], sizeof(currCaliPoint));
+    	ang2CntRation = gearRation * pulsePerLap /360.0f;
     	Trigger_EEPSave((void*)motorPosHome, sizeof(motorPosHome),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&segWeld[0], sizeof(segWeld),SYNC_CYCLE);
-    	Trigger_EEPSave((void*)&ang2CntRation, sizeof(ang2CntRation),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&currCaliPointNum, sizeof(currCaliPointNum),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&speedCaliPoint[0], sizeof(speedCaliPoint),SYNC_CYCLE);
        	Trigger_EEPSave((void*)&voltCaliPoint[0], sizeof(voltCaliPoint),SYNC_CYCLE);
@@ -511,9 +525,24 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 	{
 		switch(objectIndex)
 		{
+		case OBJ_IDX_SPEED_GEAR:
+		case OBJ_IDX_SPEED_PULSE_LAP:
+
+			ang2CntRation = gearRation * pulsePerLap /360.0f;
+			break;
+		case OBJ_IDX_MOTOR_HOME:
+			if(weldState == ST_WELD_IDLE)
+			{
+				if(uiBtn_Home != 0)
+				{
+					uiBtn_Home = 0;
+					SendTskMsg(MOTOR_CTRL,TSK_INIT, ST_MOTOR_HOME, NULL, NULL);
+				}
+			}
+			break;
 		case OBJ_IDX_OUTPUTDA:
-			SetDAOutputValue(CHN_DA_CURR_OUT,daOutputSet[CHN_DA_CURR_OUT]);
-			SetDAOutputValue(CHN_DA_SPEED_OUT,daOutputSet[CHN_DA_SPEED_OUT]);
+			SetCurrOutVolt(daOutputSet[CHN_DA_CURR_OUT]);
+			SetSpeedOutVolt(daOutputSet[CHN_DA_SPEED_OUT]);
 		break;
 		case OBJ_IDX_OUTPUTDO:
 			SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
@@ -600,7 +629,20 @@ float GetWeldSegSpeed(uint16_t id)
 	return speed;
 }
 
+uint32_t GetTickDuring(uint32_t start)
+{
+	uint32_t curr = HAL_GetTick();
+	if(curr > start)
+	{
+		curr = curr - start;
+	}
+	else
+	{
+		curr += ((0xFFFFFFFF-start)+1);
 
+	}
+	return curr;
+}
 const SegWeld* GetWeldSeg(int32_t cnt)
 {
 	static const SegWeld segWeld_C = {0,0,0,0,0,0,0,0};
@@ -608,6 +650,7 @@ const SegWeld* GetWeldSeg(int32_t cnt)
 	if(cnt < 0)
 		pos = -cnt;
 	const SegWeld* ptrSeg = &segWeld_C;
+	uint16_t uiWeldSegLoc = 0;
 	for(uint16_t i= 0;i<MAX_SEG_SIZE;i++)
 	{
 		if(segWeld[i].endAng > 0.0f)
@@ -615,11 +658,13 @@ const SegWeld* GetWeldSeg(int32_t cnt)
 			if(segWeldCnt[i] > (uint32_t)pos)
 			{
 				ptrSeg = &segWeld[i];
+				uiWeldSegLoc = i;
 			}
 		}
 		else
 			break;
 	}
+	uiWeldSeg = uiWeldSegLoc;
 	return ptrSeg;
 }
 

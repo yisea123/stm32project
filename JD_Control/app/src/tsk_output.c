@@ -64,14 +64,14 @@ static void OutputPins(uint32_t _digitOutput, uint16_t chnNum)
 }
 
 
-void SetDAOutputValue(uint16_t chn, float val)
+void SetDAOutputFloat(uint16_t chn, float val)
 {
 	assert(chn < CHN_DA_MAX);
 	if(val < 0)
 		val = -val;
 	val = (val*6553.6f);
 	if(val >= 65536)
-			val = 65535;
+		val = 65535;
 	daOutputRawDA[chn] = (uint16_t)(val);
 	SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DO_OUT_REFRESH));
 }

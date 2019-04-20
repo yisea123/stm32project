@@ -88,14 +88,14 @@ uint16_t 			deviceStatus = 0x0;
 
 
 
-static uint32_t 	fileID1						__attribute__ ((section (".configsys_info")));
+static uint32_t 	fileId1						__attribute__ ((section (".configsys_info")));
 static uint8_t 		SerialNumber[INFO_LEN] 		__attribute__ ((section (".configsys_info")));
 static uint32_t		usedSWVersion				__attribute__ ((section (".configsys_info")));
 static uint8_t		deviceName[INFO_LEN] 		__attribute__ ((section (".configsys_info")));
 uint8_t		deviceName_Short[SHORT_LEN] 		__attribute__ ((section (".configsys_info")));
 static uint32_t		registerId					__attribute__ ((section (".configsys_info")));
 static uint32_t		registerRev					__attribute__ ((section (".configsys_info")));
-static uint32_t 	fileID2						__attribute__ ((section (".configsys_info")));
+static uint32_t 	fileId2						__attribute__ ((section (".configsys_info")));
 
 uint16_t			instrumentType = STANDARD_VERSION;
 static uint32_t 	bootVersion = 0;
@@ -114,7 +114,8 @@ typedef struct
 	  uint16_t Value;
 }CPU_GPIO;
 
-static const uint32_t 	fileID_Default = FILE_ID;
+static const uint32_t 	fileId1_Default = FILE_ID;
+static const uint32_t 	fileId2_Default = ~FILE_ID;
 static const uint8_t 	SerialNumber_Default[INFO_LEN] = "0000000000000000";
 static const uint8_t 	deviceName_Default[INFO_LEN] = "0000000000000000";
 static const uint32_t 	swDefaultVersion	= 0;
@@ -150,9 +151,9 @@ static const  T_DATACLASS _ClassList[]=
 	//lint -e545
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(SerialNumber,SerialNumber_Default),
 	//lint -e545
-	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileID1,fileID_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId1,fileId1_Default),
 	//lint -e545
-	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileID2,fileID_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(fileId2,fileId2_Default),
 	//lint -e545
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(usedSWVersion,swDefaultVersion),
 	//lint -e545
@@ -437,7 +438,7 @@ uint16_t Initialize_SysInfo(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 		*/
 		if((typeOfStartUp & INIT_DATA) != 0)
 		{
-			if((fileID1 != fileID_Default) || (fileID2 != fileID_Default))
+			if((fileId1 != fileId1_Default) || (fileId2 != fileId2_Default))
 			{
 				(void)me->LoadRomDefaults(me,ALL_DATACLASSES);
 				TraceMsg(TSK_ID_EEP,"%s LoadRomDefaults is called\n",me->t_unit_name);

@@ -56,13 +56,15 @@ void StartPWMTsk(void const * argument)
 					break;
 				case ST_PWM_CYC:
 				{
-					daOutputPwmTime[0] =ptrCurrWeldSeg->currHighMs;
-					daOutputPwmTime[1] =ptrCurrWeldSeg->currLowMs;
-					daOutputPwm[0] = GetCurrCtrlOutput(ptrCurrWeldSeg->currHigh);
-					daOutputPwm[1] = GetCurrCtrlOutput(ptrCurrWeldSeg->currLow);
+					currOutputPwmTime[0] =ptrCurrWeldSeg->currHighMs;
+					currOutputPwmTime[1] =ptrCurrWeldSeg->currLowMs;
+					actWelCurrUsed[0] = ptrCurrWeldSeg->currHigh * currMicroAdjust;
+					actWelCurrUsed[1] = ptrCurrWeldSeg->currLow * currMicroAdjust;
+					currOutputPwmFloat[0] = GetCurrCtrlOutput(actWelCurrUsed[0]);
+					currOutputPwmFloat[1] = GetCurrCtrlOutput(actWelCurrUsed[1]);
 
-					tickOut = daOutputPwmTime[pwmCnt%2];
-					daOutputRawDA[CHN_DA_CURR_OUT] = daOutputPwm[pwmCnt%2];
+					tickOut = currOutputPwmTime[pwmCnt%2];
+					SetDAOutputFloat(CHN_DA_CURR_OUT,currOutputPwmFloat[pwmCnt%2]);
 					SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
 					pwmCnt = pwmCnt + 1;
 

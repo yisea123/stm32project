@@ -66,12 +66,12 @@ typedef enum
 	ST_MOTOR_FINISH,
 }MOTOR_STATE;
 void OutPutPins_Call(uint16_t pinChn, uint16_t val);
-
-void SetCurrOutVolt(float curr);
+void OutputCurrent(float currValue);
+void SetCurrOutVolt(float volt);
 void SetSpeedOutVolt(float duty);
 void UpdateWeldSetting(void);
 uint32_t GetInputPins(void);
-void SetDAOutputValue(uint16_t chn, float val);
+void SetDAOutputFloat(uint16_t chn, float val);
 
 void StartADCMonitor(void const * argument);
 void StartMotorTsk(void const * argument);

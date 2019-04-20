@@ -116,11 +116,7 @@ void HardFault_Handler(void)
   /* USER CODE BEGIN HardFault_IRQn 0 */
 
   /* USER CODE END HardFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_HardFault_IRQn 0 */
-    /* USER CODE END W1_HardFault_IRQn 0 */
-  }
+	UpdateCurrentTaskInfo("HardFault_Handler");
 }
 
 /**
@@ -131,11 +127,7 @@ void MemManage_Handler(void)
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
   /* USER CODE END MemoryManagement_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
-    /* USER CODE END W1_MemoryManagement_IRQn 0 */
-  }
+	UpdateCurrentTaskInfo("MemManage_Handler");
 }
 
 /**
@@ -146,11 +138,7 @@ void BusFault_Handler(void)
   /* USER CODE BEGIN BusFault_IRQn 0 */
 
   /* USER CODE END BusFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_BusFault_IRQn 0 */
-    /* USER CODE END W1_BusFault_IRQn 0 */
-  }
+	UpdateCurrentTaskInfo("BusFault_Handler");
 }
 
 /**
@@ -161,11 +149,7 @@ void UsageFault_Handler(void)
   /* USER CODE BEGIN UsageFault_IRQn 0 */
 
   /* USER CODE END UsageFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
-    /* USER CODE END W1_UsageFault_IRQn 0 */
-  }
+	UpdateCurrentTaskInfo("UsageFault_Handler");
 }
 
 /**
@@ -177,7 +161,7 @@ void DebugMon_Handler(void)
 
   /* USER CODE END DebugMonitor_IRQn 0 */
   /* USER CODE BEGIN DebugMonitor_IRQn 1 */
-
+	UpdateCurrentTaskInfo("DebugMon_Handler");
   /* USER CODE END DebugMonitor_IRQn 1 */
 }
 
@@ -214,7 +198,7 @@ void RCC_IRQHandler(void)
 
   /* USER CODE END RCC_IRQn 0 */
   /* USER CODE BEGIN RCC_IRQn 1 */
-
+	UpdateCurrentTaskInfo("RCC_IRQHandler");
   /* USER CODE END RCC_IRQn 1 */
 }
 

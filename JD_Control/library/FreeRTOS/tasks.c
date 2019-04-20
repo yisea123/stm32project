@@ -455,6 +455,16 @@ PRIVILEGED_INITIALIZED_DATA static volatile UBaseType_t uxSchedulerSuspended	= (
  */
 PRIVILEGED_FUNCTION static void prvInitialiseTaskLists( void );
 
+
+extern int dbg_printf(const char* format, ...);
+void UpdateCurrentTaskInfo(char* str)
+{
+	dbg_printf("\n\nTask [%s,%x] current task.. %s\n", pxCurrentTCB->pcTaskName, pxCurrentTCB->pxStack,str);
+//	extern void HardFault_Handler(void);
+//	HardFault_Handler();
+	abort();
+}
+
 /*
  * The idle task, which as all tasks is implemented as a never ending loop.
  * The idle task is automatically created and added to the ready lists upon

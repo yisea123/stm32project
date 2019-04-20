@@ -106,7 +106,7 @@ void StartADCMonitor(void const * argument)
 		weldCurr_Read = GetCurrRead(adcValue_Read[CHN_CURR_READ]);
 		weldVolt_Read = GetVoltRead(adcValue_Read[CHN_VOLT_READ]);
 		cnt++;
-		if(cnt % 1000 == 0)
+		if(cnt % 5000 == 0)
 		{
 
 			TraceUser("Pos, %d, Out,0x%x,input,0x%x,IN_0. %0.3fV,%d,IN_1. %0.3fV,%d,IN_2.%0.3fV,%d,IN_3. %0.3fV,%d,\n",

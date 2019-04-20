@@ -66,7 +66,7 @@ void StartCurrCaliTask(void const * argument)
 				break;
 			case CURR_CALI_ARC_DELAY:
 			{
-				uint32_t delay = HAL_GetTick() - tickStartArc;
+				uint32_t delay = GetTickDuring(tickStartArc);
 				if(weldCurr_Read > CURR_DETECT_LIMIT)
 				{
 					tskState = CURR_CALI_CURRENT;
@@ -89,7 +89,7 @@ void StartCurrCaliTask(void const * argument)
 				tskState = CURR_CALI_CURRENT_DELAY;
 				if(caliCurrCnt % 20 == 1)
 				{
-					if(currReadBack < 9.99f)
+					if(caliOutputValue < 9.99f)
 					{
 						caliOutputValue += currCaliSetDiff;
 						if(caliOutputValue > 9.99f)
@@ -173,7 +173,8 @@ void StartCurrCaliTask(void const * argument)
 					OutPutPins_Call(CHN_OUT_AD_CUT,0);
 					OutPutPins_Call(CHN_OUT_ARC_ON, 1);
 					SetSpeedOutVolt(0);
-					SetCurrOutVolt(GetCurrCtrlOutput(weldProcess.preCurr));
+					OutputCurrent(weldProcess.preCurr);
+
 					tickStartArc = HAL_GetTick();
 					tskState = CURR_CALI_ARC_DELAY;
 					break;
@@ -192,7 +193,7 @@ void StartCurrCaliTask(void const * argument)
 					SetCurrOutVolt(0);
 					OutPutPins_Call(CHN_OUT_AD_CUT,	0);
 					tskState = CURR_CALI_POSTGAS_DELAY;
-					tickOut = weldProcess.postGasTime*TIME_UNIT;
+					tickOut = currCaliPreGas*TIME_UNIT;
 					break;
 				case CURR_CALI_FINISH:
 					SetCurrOutVolt(0);
