@@ -12,7 +12,7 @@
 #include "dev_ad7190.h"
 #include "dev_ad5689.h"
 
-#define USE_EXT_DEV			1
+
 // 放大倍数=R2/R1=2000/6800倍
 #define OPA_RES_R1              6800  // 6.8k 运放输入端电阻
 #define OPA_RES_R2              2000  // 2k 运放反馈电阻
@@ -109,8 +109,9 @@ void StartADCMonitor(void const * argument)
 		if(cnt % 5000 == 0)
 		{
 
-			TraceUser("Pos, %d, Out,0x%x,input,0x%x,IN_0. %0.3fV,%d,IN_1. %0.3fV,%d,IN_2.%0.3fV,%d,IN_3. %0.3fV,%d,\n",
-					motorPos_Read,digitOutput,digitInput,
+			TraceUser("Pos, %d, DAOut,0x%x,0x%x,Out,0x%x,input,0x%x,IN_0. %0.3fV,%d,IN_1. %0.3fV,%d,IN_2.%0.3fV,%d,IN_3. %0.3fV,%d,\n",
+					motorPos_Read,daOutputRawDA[0],daOutputRawDA[1],
+					digitOutput,digitInput,
 					adcValue_Read[0],cntFlag[0],\
 					adcValue_Read[1],cntFlag[1],\
 					adcValue_Read[2],cntFlag[2],\

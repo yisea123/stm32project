@@ -130,7 +130,7 @@ float LocPIDCalc(int32_t NextPoint)
 	{
 		OutVal = sPID.MaxOutput;
 	}
-	else if (OutVal < sPID.MaxOutput)
+	else if (OutVal < -sPID.MaxOutput)
 	{
 		OutVal = -sPID.MaxOutput;
 	}
@@ -140,14 +140,14 @@ float LocPIDCalc(int32_t NextPoint)
 
 void SetSpeedOutVolt(float duty)
 {
-	if(duty >= 0)
+	if(duty <= 0)
 	{
-		Motor_Dir = MOTOR_DIR_CW;
+		Motor_Dir = MOTOR_DIR_CCW;
 		digitOutput |= (1<<CHN_OUT_MOTOR_DIR);
 	}
 	else
 	{
-		Motor_Dir = MOTOR_DIR_CCW;
+		Motor_Dir = MOTOR_DIR_CW;
 		digitOutput &= ~(1<<CHN_OUT_MOTOR_DIR);
 	}
 	lastDuty = duty;
@@ -179,6 +179,7 @@ void UpdateWeldSetting(void)
 		if(cnt - last_cnt >= 200)
 		{
 			int32_t cntLoc = motorPos_Read - last_motorPos_Read;
+			last_motorPos_Read = motorPos_Read;
 			if(cntLoc < 0)
 				cntLoc = -cntLoc;
 			motorSpeed_Read = (float)((cntLoc*0.8333333333333333)/ang2CntRation);//5*cntLoc*60/(ang2CntRation*360.0)
@@ -233,22 +234,22 @@ void StartMotorTsk(void const * argument)
 				uint32_t tickDiff;
 				if(jogDir != MOTOR_DIR_CW)
 				{
-					targetJogDuty = -targetJogDuty1;
+					targetJogDuty1 = -targetJogDuty1;
 					targetJogDutyAcc1 = -targetJogDutyAcc1;
 				}
 				duty = lastDuty + targetJogDutyAcc1;
 				if(jogDir != MOTOR_DIR_CW)
 				{
-					if(duty <= targetJogDuty)
+					if(duty <= targetJogDuty1)
 					{
-						duty = targetJogDuty;
+						duty = targetJogDuty1;
 					}
 				}
 				else
 				{
-					if(duty >= targetJogDuty)
+					if(duty >= targetJogDuty1)
 					{
-						duty = targetJogDuty;
+						duty = targetJogDuty1;
 					}
 				}
 				SetSpeedOutVolt(duty);
@@ -369,7 +370,7 @@ void StartMotorTsk(void const * argument)
 					jogStartTick = HAL_GetTick();
 					break;
 				case ST_MOTOR_JOG_FINISH:
-					SetSpeedOutVolt(duty);
+					SetSpeedOutVolt(0);
 					tskState = ST_WELD_IDLE;
 					break;
 				case ST_MOTOR_HOME:

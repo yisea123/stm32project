@@ -47,7 +47,7 @@ uint16_t    motorHomeSet = 0;
 uint16_t   	devLock  = 10;
 uint16_t 	weldDir = MOTOR_DIR_CW;
 int32_t 	lastMotorPos_PowerDown = 0;
-uint16_t    daOutputRawDA[2];
+uint16_t    daOutputRawDA[CHN_DA_MAX];
 float  		daOutputSet[2];
 uint32_t  digitOutput;
 uint32_t  digitInput;
@@ -120,7 +120,7 @@ static const CaliCurrent currCaliPoint_Default[MAX_CALI_CURR] = {
 													{9.0f, 	180.0f, 0},
 													{10.0f, 200.0f, 0},
 												};
-static const float gearRation_Default = 172.0f;
+static const float gearRation_Default = 344.0f;
 static const uint16_t pulsePerLap_Default = 32;
 static CaliCurrent	currCaliPointUsed[MAX_CALI_CURR+2];
 static const CaliVolt voltCaliPoint_Default[2] =
@@ -440,7 +440,7 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
     	memcpy((void*)&speedCaliPoint[0], (void*)&speedCaliPoint_Default[0], sizeof(speedCaliPoint));
     	memcpy((void*)&voltCaliPoint[0], (void*)&voltCaliPoint_Default[0], sizeof(voltCaliPoint));
     	memcpy((void*)&currCaliPoint[0], (void*)&currCaliPoint_Default[0], sizeof(currCaliPoint));
-    	ang2CntRation = gearRation * pulsePerLap /360.0f;
+
     	Trigger_EEPSave((void*)motorPosHome, sizeof(motorPosHome),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&segWeld[0], sizeof(segWeld),SYNC_CYCLE);
     	Trigger_EEPSave((void*)&currCaliPointNum, sizeof(currCaliPointNum),SYNC_CYCLE);
@@ -452,7 +452,7 @@ uint16_t Initialize_WeldCfg(const struct _T_UNIT *me, uint8_t typeOfStartUp)
 
     }
     SortCurrentCali();
-
+    ang2CntRation = gearRation * pulsePerLap /360.0f;
 
     return result;
 }
@@ -672,7 +672,7 @@ float GetSpeedCtrlOutput(float speed)
 {
 	//todo
 	float outVal = (speed - speedCaliPoint[0].actSpeed)/(speedCaliPoint[1].actSpeed - speedCaliPoint[0].actSpeed)*\
-			(float)(speedCaliPoint[1].outValue - speedCaliPoint[0].outValue);
+			(float)(speedCaliPoint[1].outValue - speedCaliPoint[0].outValue) + speedCaliPoint[0].outValue ;
 
 	if(outVal < 0)
 		outVal = 0;

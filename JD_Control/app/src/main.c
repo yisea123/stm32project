@@ -328,6 +328,14 @@ uint16_t LoadDefaultCfg(uint16_t id)
 }
 
 
+void DeviceResetHandle(uint16_t id, uint16_t ret)
+{
+	(void)id;
+	(void)ret;
+	//send msg to shell to let it reset
+	NVIC_SystemReset();
+}
+
 __IO uint32_t kernelStarted = 0;
 
 int main(int argc, char* argv[])

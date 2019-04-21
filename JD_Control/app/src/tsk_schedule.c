@@ -141,17 +141,20 @@ ST_SCH_STATE CheckAllInput()
 				if((uiBtn_JogP) || \
 						((digitInput&(1<<CHN_IN_JOG_DIR))&&(digitInput & (1<<CHN_IN_JOG_ACT))))
 				{
-					uiBtn_JogP = 0;
+					//uiBtn_JogP = 0;
 					SendTskMsg(MOTOR_CTRL,TSK_INIT, ST_MOTOR_JOGP, NULL, NULL);
 					//
 				}
 				else if((uiBtn_JogN) || \
 						((0 == digitInput&(1<<CHN_IN_JOG_DIR))&&(digitInput & (1<<CHN_IN_JOG_ACT))))
 				{
-					uiBtn_JogN = 0;
+					//uiBtn_JogN = 0;
 					SendTskMsg(MOTOR_CTRL,TSK_INIT, ST_MOTOR_JOGN, NULL, NULL);
 					//
 				}
+
+
+
 				if(digitInput&(1<<CHN_IN_GAS_ON))
 				{
 					OutPutPins_Call(CHN_OUT_GAS, 1);
@@ -184,7 +187,7 @@ static void TskFinish(uint16_t ret, uint16_t val)
 void StartSchTask(void const * argument)
 {
 	(void)argument; // pc lint
-	uint32_t tickOut = osWaitForever;
+	uint32_t tickOut = SCH_DELAY_TIME;
 	osEvent event;
 	ST_SCH_STATE tskState = ST_SCH_IDLE;
 

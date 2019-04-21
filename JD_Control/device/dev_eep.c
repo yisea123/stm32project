@@ -16,10 +16,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "dev_eep.h"
-//#include "flash_if.h"
+
 #include "main.h"
-#include "t_unit_cfg.h"
+#include "t_unit_head.h"
 #include "shell_io.h"
+#include "string.h"
 #include "unit_weld_cfg.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -28,62 +29,36 @@
 
 /* Global variable used to store variable value in read sequence */
 #define PAGE_DATA_START			16
-#define ONE_SEG_SIZE			(512-16)//512 one seg; total 4 segs; //1 k
-#define VALID_DATA_IN_ONE_SEG	(ONE_SEG_SIZE-4)
-#define PAGE_NUM_USED			0x02				
-#define RETRY_TIMES				0x03
+#define PAGE_NUM_USED			0x02
 
 #define EEP_VERSION			0x0006u
 
 static osMutexId eep_mutex = NULL;
-#define EEP_PRINT
-
+uint16_t 	EEP_INIT_CRC = 0x22FF;
 static osMutexDef(eep_mutex);
-typedef struct _segInfo
-{
-	uint16_t pageStatus;
-	uint16_t eepVersion;
-	uint32_t storeVersion;
-	uint16_t validDataLen;
-	uint16_t reserved;
-	uint32_t checkSum;
-}SegInfo;
-typedef struct
-{
-	SegInfo* 	ptrSeginfo;
-	uint8_t* 	dataAdr;
-	uint32_t*	checkSum;
-}oneSeg;
 
-#define WHOLE_SEG_NUM		4
-#define VALID_PAGE_STATUS		(0x5AA5)
-#define SIZE_SEG_INFO			(sizeof(SegInfo))
+static uint8_t eepBuff[EEP_DATA_RESERV_LEN];
+#define 	EEP_RAM_START_BUFF		(&eepBuff[0])
+
+static SemaphoreHandle_t lock = NULL;
+__IO uint16_t 	eepStatus[2];
+static __IO uint8_t triggerSaveCnt = 0;
+uint32_t adrIdx = 0;
+static const uint32_t adler32Init = 0x00000001;
 
 
-
-
-static const oneSeg eepSegTable[WHOLE_SEG_NUM] =
+static const oneSeg eepSegTable[EEP_PAGE_MAX] =
 {
 		{
 				(SegInfo*)PAGE0_BASE_ADDRESS,
 				(uint8_t*)(PAGE0_BASE_ADDRESS+sizeof(SegInfo)),
-				(uint32_t*)(PAGE0_BASE_ADDRESS+PAGE_SIZE/2 - 4),
-		},
-		{
-				(SegInfo*)(PAGE0_BASE_ADDRESS+PAGE_SIZE/2),
-				(uint8_t*)(PAGE0_BASE_ADDRESS+sizeof(SegInfo)+PAGE_SIZE/2),
-				(uint32_t*)(PAGE0_BASE_ADDRESS + PAGE_SIZE - 4),
+				(uint32_t*)(PAGE0_BASE_ADDRESS+PAGE_SIZE - 4),
 		},
 		{
 				(SegInfo*)PAGE1_BASE_ADDRESS,
 				(uint8_t*)(PAGE1_BASE_ADDRESS+sizeof(SegInfo)),
-				(uint32_t*)(PAGE1_BASE_ADDRESS+PAGE_SIZE/2 - 4),
+				(uint32_t*)(PAGE1_BASE_ADDRESS+PAGE_SIZE - 4),
 		},
-		{
-				(SegInfo*)(PAGE1_BASE_ADDRESS+PAGE_SIZE/2),
-				(uint8_t*)(PAGE1_BASE_ADDRESS+sizeof(SegInfo)+PAGE_SIZE/2),
-				(uint32_t*)(PAGE1_BASE_ADDRESS + PAGE_SIZE - 4),
-		}
 };
 
 
@@ -152,7 +127,7 @@ static uint32_t GetSector(uint32_t Address)
   * @retval 0: Erase sectors done with success
   *         1: Erase error
   */
-uint16_t FLASH_If_EraseSector(uint32_t Address)
+static uint16_t FLASH_If_EraseSector(uint32_t Address)
 {
 	uint16_t ret = 0;
 	uint32_t SectorError = 0;
@@ -177,67 +152,60 @@ uint16_t FLASH_If_EraseSector(uint32_t Address)
 
 
 
-static EEP_STATUS EE_Format(uint16_t adr)
+static EEP_STATUS EE_Format(uint16_t pageId)
 {
 	EEP_STATUS ret = EEP_OK;
-	uint32_t FlashStatus = 0;
-	if((adr == 0x0) || (adr > PAGE_NUM_USED ))
+	uint32_t flashStatus = 0;
+	uint16_t startId = pageId;
+	uint16_t endId = (uint16_t)(pageId+1);
+	if(EEP_PAGE_MAX <= pageId)
 	{
-		/* Erase Page0 */
-		FlashStatus = FLASH_If_EraseSector(PAGE0_BASE_ADDRESS);
-		EEP_PRINT("\nEEP Format 0x0");
+		startId = 0;
+		endId = EEP_PAGE_MAX;
+	}
+	for(uint16_t id = startId; id < endId; id++)
+	{
+		flashStatus = FLASH_If_EraseSector((uint32_t)(eepSegTable[id].ptrSeginfo));
+	//	TracePrint(TSK_ID_EEP,"EEP Format %d\n",id);
 		/* If erase operation was failed, a Flash error code is returned */
-		if (FlashStatus != 0)
+		if (flashStatus != 0)
 		{
+		//	TraceDBG(TSK_ID_EEP,"EEP Format error, %d", pageId);
 			ret =  EEP_ERASE_ERR;
 		}
 	}
-	if(adr >= 0x01)
-	{
-		/* Erase Page1 */
-		FlashStatus = FLASH_If_EraseSector(PAGE1_BASE_ADDRESS);
-		EEP_PRINT("\nEEP Format 0x1");
-		/* If erase operation was failed, a Flash error code is returned */
-		if (FlashStatus != 0)
-		{
-			ret =  EEP_ERASE_ERR;
-		}
-	}
-  /* Return Page1 erase operation status */
-  return ret;
+	return ret;
 }
 
-uint32_t adrIdx = 0;
-static const uint32_t adler32Init = 0x00000001;
+
 //checksum calculation
-uint32_t adler32(const uint8_t *data, uint32_t len)
+static uint32_t adler32(const uint8_t *data, uint32_t len)
 /* where data is the location of the data in physical memory and
                                                       len is the length of the data in bytes */
 {
     uint32_t a = 1, b = 0;
     uint32_t index;
-	const int MOD_ADLER = 65521;
+	const uint32_t MOD_ADLER = 65521;
 	adrIdx = (uint32_t)data;
     
     /* Process each byte of the data in order */
     for (index = 0; index < len; ++index)
     {
-
-        a = (a + data[index]) % MOD_ADLER;
-        b = (b + a) % MOD_ADLER;
+        a = (uint32_t)((uint32_t)(a + data[index]) % MOD_ADLER);
+        b = (uint32_t)((uint32_t)(b + a) % MOD_ADLER);
         adrIdx++;
     }
     
     return (b << 16) | a;
 }
 
-uint32_t adler32_N(const uint8_t *data, uint32_t len, uint32_t initVal)
+static uint32_t adler32_N(const uint8_t *data, uint32_t len, uint32_t initVal)
 /* where data is the location of the data in physical memory and
                                                       len is the length of the data in bytes */
 {
     uint32_t a = 1, b = 0;
     uint32_t index;
-	const int MOD_ADLER = 65521;
+	const uint32_t MOD_ADLER = 65521;
 
 	a = (initVal & 0xFFFF);
 	b = (initVal & 0xFFFF0000)>>16;
@@ -246,56 +214,13 @@ uint32_t adler32_N(const uint8_t *data, uint32_t len, uint32_t initVal)
     /* Process each byte of the data in order */
     for (index = 0; index < len; ++index)
     {
-        a = (a + data[index]) % MOD_ADLER;
-        b = (b + a) % MOD_ADLER;
+        a = (uint32_t)((a + data[index]) % MOD_ADLER);
+        b = (uint32_t)((b + a) % MOD_ADLER);
     }
 
     return (b << 16) | a;
 }
 
-//find blank page
-static EEP_STATUS FindBlankSeg(uint16_t pageNum, uint16_t* ptrSegIndex)
-{
-	uint16_t index =0;
-	uint16_t end = 1;
-	EEP_STATUS ret = EEP_SEG_ERROR;
-	EEP_STATUS status;
-	uint16_t i;	
-	uint8_t* ptrData;
-	if(pageNum == 0)
-	{
-		index = 0;
-		end = 1;
-	}
-	else
-	{
-		index = 2;
-		end = 3;
-	}
-	for(;index<=end; index++)
-	{
-		status = EEP_OK;
-		if(eepSegTable[index].ptrSeginfo->pageStatus != VALID_PAGE_STATUS)
-		{
-			ptrData = (uint8_t*)eepSegTable[index].ptrSeginfo;
-			for(i=0;i<SIZE_SEG_INFO;i++)
-			{
-				if(ptrData[i] != 0xFF)
-				{
-					status = EEP_SEG_ERROR;
-					break;
-				}
-			}
-			if(status == EEP_OK )
-			{
-				ret = EEP_OK;
-				*ptrSegIndex = index;
-				break;
-			}
-		}
-	}
-	return ret;
-}
 
 static EEP_STATUS FindLastValidSeg(uint16_t* ptrSegIndex)
 {
@@ -303,10 +228,10 @@ static EEP_STATUS FindLastValidSeg(uint16_t* ptrSegIndex)
 	EEP_STATUS ret = EEP_SEG_ERROR;
 	uint8_t* ptrData;
 	uint32_t checkSum;
-	uint16_t validSeg[WHOLE_SEG_NUM] = {0xFFFF,0xFFFF,0xFFFF,0xFFFF,};
+	uint16_t validSeg[EEP_PAGE_MAX] = {0xFFFF,0xFFFF,};
 	uint16_t segIndex=0;
 	
-	for(index=0;index<WHOLE_SEG_NUM; index++)
+	for(index=0;index<EEP_PAGE_MAX; index++)
 	{
 		if(eepSegTable[index].ptrSeginfo->pageStatus == VALID_PAGE_STATUS)
 		{
@@ -314,23 +239,13 @@ static EEP_STATUS FindLastValidSeg(uint16_t* ptrSegIndex)
 			checkSum = adler32(ptrData, SIZE_SEG_INFO-4);
 			if(eepSegTable[index].ptrSeginfo->checkSum == checkSum)
 			{
-#if 0
-				if(eepSegTable[index].ptrSeginfo->eepVersion != EEP_VERSION)
+				ptrData = (uint8_t*)eepSegTable[index].dataAdr;
+				checkSum = adler32(ptrData, eepSegTable[index].ptrSeginfo->validDataLen);
+				if(*(eepSegTable[index].checkSum) == checkSum)
 				{
-					
+					validSeg[segIndex++] = index;
+					ret = EEP_OK;
 				}
-				else//not valid data in eeprom
-#endif
-				{
-					ptrData = (uint8_t*)eepSegTable[index].dataAdr;
-					checkSum = adler32(ptrData, eepSegTable[index].ptrSeginfo->validDataLen);
-					if(*(eepSegTable[index].checkSum) == checkSum)
-					{
-						validSeg[segIndex++] = index;
-						ret = EEP_OK;
-					}
-				}
-
 			}
 		}
 	}
@@ -354,146 +269,62 @@ static EEP_STATUS FindLastValidSeg(uint16_t* ptrSegIndex)
 
 
 
-static EEP_STATUS Flash2Rom(uint32_t adr, const uint8_t* data, uint16_t len)
+static EEP_STATUS Flash2Rom(uint32_t adr, const uint8_t* data, uint32_t len)
 {
-	uint16_t index = 0;
+	uint32_t index = 0;
 	EEP_STATUS ret = EEP_OK;
-	uint32_t adr1;
 	if(len %4 != 0)
 		return EEP_WRITE_ERROR;
 	HAL_FLASH_Unlock();
 
-	for(index= 0; index < len; )
+	for(index= 0; index < len; index+=4)
 	{
-		adr1 = adr + index;
-
-		ret |= HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, adr1, *(const uint32_t*)(data+index));
-		index += 4;
+		ret |= HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, adr + index, *(const uint32_t*)(data+index));
 	}
 	HAL_FLASH_Lock();
 	return ret;
 	
 }	
-static EEP_STATUS Flash2Seg(uint16_t segIndex, const SegInfo* ptrSegInfo, uint8_t* data)	
-{
-	uint32_t checkSum = adler32((uint8_t*)data, ptrSegInfo->validDataLen);
-	EEP_STATUS ret = Flash2Rom( (uint32_t)eepSegTable[segIndex].ptrSeginfo, (uint8_t*)ptrSegInfo, SIZE_SEG_INFO);
-	ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].dataAdr, (uint8_t*)data, ptrSegInfo->validDataLen);
-	ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].checkSum, (uint8_t*)&checkSum, 4);
-	
-	return ret;
-	
-}
 
-static EEP_STATUS Flash2Seg_Relative(uint16_t segIndex, const SegInfo* ptrSegInfo, uint8_t* data, uint16_t validSegIndex, uint16_t adr, uint16_t len)
+
+static EEP_STATUS Flash2Seg(uint16_t segIndex, const SegInfo* ptrSegInfo, uint8_t* data, uint32_t len)
 {
 
 	EEP_STATUS ret = Flash2Rom( (uint32_t)eepSegTable[segIndex].ptrSeginfo, (uint8_t*)ptrSegInfo, SIZE_SEG_INFO);
-
 
 	if( ret == EEP_OK)
 	{
 		uint32_t checkSum;
-		if(validSegIndex < WHOLE_SEG_NUM)
+		if(segIndex < EEP_PAGE_MAX)
 		{
-			ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].dataAdr, eepSegTable[validSegIndex].dataAdr, adr);
-			ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].dataAdr+adr, data, len);
-			ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].dataAdr+adr+len, eepSegTable[validSegIndex].dataAdr+adr+len, (ptrSegInfo->validDataLen-len-adr));
-
-			checkSum = adler32_N(eepSegTable[validSegIndex].dataAdr, adr, adler32Init);
-			checkSum = adler32_N(data, len, checkSum);
-			checkSum = adler32_N(eepSegTable[validSegIndex].dataAdr+adr+len, (ptrSegInfo->validDataLen-len-adr), checkSum);
+			ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].dataAdr, data, len);
+			checkSum = adler32_N(eepSegTable[segIndex].dataAdr, len, adler32Init);
 		}
-		else
-		{
-			ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].dataAdr+adr, data, len);
-			checkSum = adler32((uint8_t*)eepSegTable[segIndex].dataAdr, ptrSegInfo->validDataLen);
-		}
-
 		ret |= Flash2Rom( (uint32_t)eepSegTable[segIndex].checkSum, (uint8_t*)&checkSum, 4);
 	}
-	else
-	{
-	}
 	return ret;
 }
-static EEP_STATUS WriteToPage(uint16_t pageNum,uint32_t storeVersion,uint8_t* data, uint16_t len)	
+
+
+static EEP_STATUS WriteToPage(uint16_t segIndex,uint32_t storeVersion, uint8_t* data, uint32_t len)
 {
-	uint16_t segIndex = 0;
 	EEP_STATUS ret = EEP_WRITE_ERROR;
 	SegInfo  info;
 	info.eepVersion = EEP_VERSION;
 	info.pageStatus = VALID_PAGE_STATUS;
-	info.reserved = 0x0101;
 	info.storeVersion = storeVersion+1;
-//	info.validDataLen = len;
-	info.validDataLen = VALID_DATA_IN_ONE_SEG;
+	info.validDataLen = len;
 	info.checkSum = adler32((uint8_t*)&info.pageStatus, SIZE_SEG_INFO-4);
-
-	ret = FindBlankSeg(pageNum, &segIndex);
+	ret = EE_Format(segIndex);
 	if(ret == EEP_OK)
 	{
-		ret = Flash2Seg(segIndex, &info, data);
-	}
-	else
-	{
-		ret = EE_Format(pageNum);
-		if(ret == EEP_OK)
-		{							
-			segIndex = pageNum*2;
-			ret = Flash2Seg(segIndex, &info, data);
-			if(ret != EEP_OK)
-			{
-				segIndex = pageNum*2 +1;
-				ret = Flash2Seg(segIndex, &info, data);
-			}
-		}
-		else
-		{
-		}
+		ret = Flash2Seg(segIndex, &info, data, len);
 	}
 	return ret;
 }
-static EEP_STATUS WriteToPageAdr(uint16_t pageNum,uint32_t validSegIndex,uint8_t* data, uint16_t adr, uint16_t len)
-{
-	uint16_t segIndex = 0;
 
-	EEP_STATUS ret = EEP_WRITE_ERROR;
-	SegInfo  info;
-	info.eepVersion = EEP_VERSION;
-	info.pageStatus = VALID_PAGE_STATUS;
-	info.reserved = 0x0101;
-	info.storeVersion = eepSegTable[validSegIndex].ptrSeginfo->storeVersion+1;
-//	info.validDataLen = len;
-	info.validDataLen = VALID_DATA_IN_ONE_SEG;
-	info.checkSum = adler32((uint8_t*)&info.pageStatus, SIZE_SEG_INFO-4);
 
-	ret = FindBlankSeg(pageNum, &segIndex);
-
-	if(ret == EEP_OK)
-	{
-		ret = Flash2Seg_Relative(segIndex, &info, data,validSegIndex, adr,len);
-	}
-	else
-	{
-		ret = EE_Format(pageNum);
-		if(ret == EEP_OK)
-		{
-			segIndex = pageNum*2;
-			ret = Flash2Seg_Relative(segIndex, &info, data, validSegIndex, adr,len);
-			if(ret != EEP_OK)
-			{
-				segIndex = pageNum*2 +1;
-				ret = Flash2Seg_Relative(segIndex, &info, data,validSegIndex, adr,len);
-			}
-		}
-		else
-		{
-		}
-	}
-	return ret;
-}
-EEP_STATUS EEP_Init(void)		
+static EEP_STATUS EEP_Init(void)
 {
 	uint16_t validSegIndex = 0xFFFF;
 	EEP_STATUS ret = FindLastValidSeg(&validSegIndex);
@@ -506,7 +337,7 @@ EEP_STATUS EEP_Init(void)
 	{
 		if(eep_mutex)
 			osMutexWait(eep_mutex, osWaitForever);
-		ret = EE_Format(0x03);//format all	
+		ret = EE_Format(EEP_PAGE_MAX);//format all
 		if(ret == EEP_OK)
 		{
 			ret = EEP_ERASED;
@@ -517,84 +348,7 @@ EEP_STATUS EEP_Init(void)
 	return ret;
 }
 
-#if 0
-static EEP_STATUS EEP_Read(uint8_t* data, uint16_t len)
-{
-	uint16_t validSegIndex = 0xFFFF;
-
-	EEP_STATUS ret;
-	if(eep_mutex)
-		osMutexWait(eep_mutex, osWaitForever);
-
-	ret = FindLastValidSeg(&validSegIndex);
-	if(ret == EEP_OK)
-	{
-		if( len > eepSegTable[validSegIndex].ptrSeginfo->validDataLen )
-		{
-			ret = EEP_DATA_CONSISTANT_ERR;
-		}
-		else
-		{
-			memcpy(data, eepSegTable[validSegIndex].dataAdr, len);
-		}
-	}
-	else
-	{
-		ret = EE_Format(0x03);//format all
-		if(ret == EEP_OK)
-		{
-			//not retrn EEP_OK, as there is no valid data in EEP;
-			ret = EEP_NO_VALID_DATA;
-		}		
-	}
-	if(eep_mutex)
-		osMutexRelease(eep_mutex);
-	return ret;
-}
-
-
-
-static EEP_STATUS EEP_Write(uint8_t* data, uint16_t len)
-{
-	uint16_t validSegIndex = 0;
-	uint16_t retry = 0;
-	uint16_t pageWr = 0;
-	EEP_STATUS ret ;
-	
-	if(VALID_DATA_IN_ONE_SEG < len)
-		return EEP_ERROR_PARA;
-	if(eep_mutex)
-		osMutexWait(eep_mutex, osWaitForever);
-	ret = FindLastValidSeg(&validSegIndex);
-	if(ret != EEP_OK)
-	{		
-		ret = EE_Format(0x03);//format all
-	}
-	if(ret == EEP_OK)
-	{
-		if(validSegIndex >= 2)//write to page 0
-		{
-			pageWr = 0;
-		}
-		else
-		{
-			pageWr = 1;
-		}
-		do
-		{
-			ret = WriteToPage(pageWr, eepSegTable[validSegIndex].ptrSeginfo->storeVersion, data, len);
-			retry++;
-		}
-		while((ret != EEP_OK) && (retry < RETRY_TIMES));
-	}
-	if(eep_mutex)
-		osMutexRelease(eep_mutex);
-	return ret;
-}
-
-
-#endif
-EEP_STATUS EEP_ReadAdr(uint16_t adrRelative,uint8_t* data, uint16_t len)
+static EEP_STATUS EEP_ReadAdr(uint16_t adrRelative,uint8_t* data, uint16_t len)
 {
 	uint16_t validSegIndex = 0xFFFF;
 	EEP_STATUS ret;
@@ -609,12 +363,12 @@ EEP_STATUS EEP_ReadAdr(uint16_t adrRelative,uint8_t* data, uint16_t len)
 		}
 		else
 		{
-			memcpy(data, eepSegTable[validSegIndex].dataAdr+adrRelative , len);
+			memcpy((void*)data, eepSegTable[validSegIndex].dataAdr+adrRelative , len);
 		}
 	}
 	else
 	{
-		ret = EE_Format(0x03);//format all
+		ret = EE_Format(EEP_PAGE_MAX);//format all
 		if(ret == EEP_OK)
 		{
 			//not retrn EEP_OK, as there is no valid data in EEP;
@@ -627,25 +381,34 @@ EEP_STATUS EEP_ReadAdr(uint16_t adrRelative,uint8_t* data, uint16_t len)
 }
 
 
-EEP_STATUS EEP_WriteAdr(uint16_t adrRelative, uint8_t* data, uint16_t len)
+static EEP_STATUS EEP_Write(uint8_t* data, uint32_t len)
 {
-	uint16_t validSegIndex = 0;
-	uint16_t retry = 0;
+	uint16_t validPageIndex = 0;
 	uint16_t pageWr = 0;
 	EEP_STATUS ret ;
+	uint32_t storeVersion = 0;
 
-	if(VALID_DATA_IN_ONE_SEG < len)
+	if(EEP_DATA_RESERV_LEN < len)
 		return EEP_ERROR_PARA;
 	if(eep_mutex)
 		osMutexWait(eep_mutex, osWaitForever);
-	ret = FindLastValidSeg(&validSegIndex);
+	ret = FindLastValidSeg(&validPageIndex);
+
 	if(ret != EEP_OK)
 	{
-		ret = EE_Format(0x03);//format all
+		validPageIndex = 0;
+		storeVersion = 0;
+		ret = EE_Format(EEP_PAGE_MAX);//format all
 	}
+	else
+	{
+		storeVersion = eepSegTable[validPageIndex].ptrSeginfo->storeVersion;
+	}
+
 	if(ret == EEP_OK)
 	{
-		if(validSegIndex >= 2)//write to page 0
+
+		if(validPageIndex >= 1)//write to page 0
 		{
 			pageWr = 0;
 		}
@@ -653,57 +416,14 @@ EEP_STATUS EEP_WriteAdr(uint16_t adrRelative, uint8_t* data, uint16_t len)
 		{
 			pageWr = 1;
 		}
-		do
-		{
-			ret = WriteToPageAdr(pageWr, validSegIndex, data, adrRelative, len);
-			EEP_PRINT("\nEEP Write Adr: %d, Len: %d ",adrRelative, len);
-			retry++;
-		}
-		while((ret != EEP_OK) && (retry < RETRY_TIMES));
+		ret = WriteToPage(pageWr, storeVersion, data, len);
+		TracePrint(TSK_ID_EEP,"\nEEP Write v,%d, Len, %d ",storeVersion, len);
 	}
 	if(eep_mutex)
 		osMutexRelease(eep_mutex);
 	return ret;
 }
 
-#if 0 
-
-EEP_STATUS EEP_WriteAdr(uint16_t adrRelative, uint8_t* data, uint16_t len)		
-{
-	uint16_t validSegIndex = 0;
-	uint16_t retry = 0;
-	uint16_t pageWr = 0;
-	EEP_STATUS ret ;
-	
-	if(VALID_DATA_IN_ONE_SEG < (adrRelative+len))
-		return EEP_ERROR_PARA;
-	ret = FindLastValidSeg(&validSegIndex);
-	if(ret != EEP_OK)
-	{		
-		ret = EE_Format(0x03);//format all
-	}
-	if(ret == EEP_OK)
-	{
-		if(validSegIndex >= 2)//write to page 0
-		{
-			pageWr = 0;
-		}
-		else
-		{
-			pageWr = 1;
-		}
-		do
-		{
-			ret = WriteToPageRelative(pageWr, validSegIndex, adrRelative, data, len);
-			retry++;
-		}
-		while((ret != EEP_OK) && (retry < RETRY_TIMES));
-	}
-	return ret;
-}
-
-
-#endif
 
 #ifdef TEST_EEP_ROM
 
@@ -758,41 +478,30 @@ void TestCase()
 
 
 
-#define 	eepSize			400u
-static uint8_t eepBuff[eepSize];
 
-#define 	EEP_DATA_SIZE	(eepSize-2)
-
-#define 	EEP_RAM_START_ORIG		0x20000000
-
-#define 	EEP_RAM_START_BUFF		(&eepBuff[0])
-
-static SemaphoreHandle_t lock = NULL;
-__IO uint16_t eepStatus = ERROR_NV_STORAGE;
-static __IO uint8_t triggerSaveCnt = 0;
-uint16_t 	EEP_INIT_CRC = 0x22FF;
 
 
 static uint16_t WriteAllData(uint8_t* data)
 {
-	uint16_t i = 0;
-	memcpy(eepBuff, data, eepSize - 2);
-	uint16_t crccheck = CalcCrc16Mem_COMMON((uint8_t*) &(eepBuff[0]),
+	uint16_t crccheck = 0;
+	memcpy(eepBuff, data, EEP_DATA_SIZE);
+	crccheck = CalcCrc16Mem_COMMON((uint8_t*) &(eepBuff[0]),
 			EEP_INIT_CRC, EEP_DATA_SIZE);
-	eepBuff[eepSize - 2] = crccheck / 256;
-	eepBuff[eepSize - 1] = crccheck % 256;
-	EEP_WriteAdr(0,eepBuff,eepSize);
-	return OK;
+	eepBuff[EEP_DATA_RESERV_LEN - 2] = (uint8_t)(crccheck / 256);
+	eepBuff[EEP_DATA_RESERV_LEN - 1] = (uint8_t)(crccheck % 256);
+	return EEP_Write(eepBuff,EEP_DATA_RESERV_LEN);
 }
+
+
 uint16_t ResetNVData(void)
 {
 	uint8_t* adr = (uint8_t*) EEP_RAM_START_ORIG;
 	//todo the data is not restored when iic is error;
 	uint16_t ret = LoadDefaultCfg(0xFFFF);
 	//todo
-	EE_Format(0x03);
+	EE_Format(EEP_PAGE_MAX);
 	WriteAllData(adr);
-	eepStatus = ret;
+	eepStatus[0] = ret;
 	//new cmd shall be implemented to restore the NV data;
 	return ret;
 }
@@ -810,79 +519,81 @@ static uint16_t GetLockCode(void)
 }
 
 
+
 uint8_t NVRestore = 0;
 
 uint16_t Init_EEPData(void)
 {
 	uint8_t* adr = (uint8_t*) EEP_RAM_START_ORIG;
-
-	uint16_t len = EEP_DATA_SIZE;
 	lock = OS_CreateSemaphore();
 	EEP_STATUS ret = EEP_Init();
-	devLock = EEP_INIT_CRC = InitCRC16_IIC( GetLockCode() );
-
+    devLock = EEP_INIT_CRC = InitCRC16_IIC( GetLockCode() );
+	eepStatus[1] = OK;
 	if(ret != EEP_OK)
 	{
-		eepStatus = ERROR_NV_STORAGE;
+		eepStatus[0] = ERROR_NV_STORAGE;
 	}
 	else
 	{
-		EEP_ReadAdr(0, (void*)&eepBuff[0],eepSize);
+		EEP_ReadAdr(0, (void*)&eepBuff[0],EEP_DATA_RESERV_LEN);
 		uint16_t crccheck = CalcCrc16Mem_COMMON((uint8_t*) &(eepBuff[0]),
-					EEP_INIT_CRC, eepSize - 2);
-		if ((eepBuff[eepSize - 2] == crccheck / 256)
-				&& (eepBuff[eepSize - 1] == crccheck % 256))
+					EEP_INIT_CRC, EEP_DATA_RESERV_LEN - 2);
+		if ((eepBuff[EEP_DATA_RESERV_LEN - 2] == crccheck / 256)
+				&& (eepBuff[EEP_DATA_RESERV_LEN - 1] == crccheck % 256))
 		{
 			memcpy(adr, eepBuff, EEP_DATA_SIZE);
-			ret = OK;
+			eepStatus[0] = ret = OK;
 		}
 		else
 		{
-			ret = FATAL_ERROR;
+			eepStatus[0] = ret = FATAL_ERROR;
 		}
 	}
-	if (ret != OK)
+
+	if (ret != EEP_OK)
 	{
-		eepStatus = ERROR_NV_STORAGE;
+		eepStatus[0] = ERROR_NV_STORAGE;
 		LoadDefaultCfg(0xFFFF);
 		TraceMsg(TSK_ID_EEP,"EEP storage is wrong \n");
 	//	NVRestore = 1;
 	}
 	else
 	{
-		eepStatus = OK;
+		eepStatus[0] = OK;
 		TraceMsg(TSK_ID_EEP,"EEP init OK! \n");
 	}
 	if(NVRestore)
 	{
 		ResetNVData();
-		eepStatus = OK;
+		eepStatus[0] = OK;
 	}
 	return ret;
 }
 
 
-
 uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync, uint32_t _line)
 {
-	if(eepStatus != OK)
+	if(eepStatus[1] != OK)
 	{
 		devLock = 100;
-	}
-	if(eepStatus != OK)
 		return OK;
+	}
 	if (len != 0)
 	{
+		uint32_t adrSegIdx = ((uint32_t)adr - EEP_RAM_START_ORIG);
+
+		if(adrSegIdx > EEP_DATA_SIZE)
+		{
+			TraceDBG(TSK_ID_EEP,"EEP storage Overrun: 0x%x- \n",adrSegIdx, _line);
+		}
+		
+		
 		OS_Use(lock);
 		uint32_t adrDiff = ((uint32_t) adr - EEP_RAM_START_ORIG);
-		if(adrDiff > EEP_DATA_SIZE)
-		{
-			TraceDBG(TSK_ID_EEP,"EEP storage Overrun: 0x%x- \n",adrDiff, _line);
-		}
 		if (adrDiff <= EEP_DATA_SIZE)
 		{
 			void* dst = (void*) (EEP_RAM_START_BUFF + adrDiff);
-			if (0 != memcmp(dst, adr, len))
+			if (0 != memcmp(dst, (void*)adr, len))
 			{
 				memcpy(dst, adr, len);
 				triggerSaveCnt++;
@@ -896,29 +607,34 @@ uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync, uint32_t 
 	return OK;
 }
 
+#define EEP_STORAGE_TIME	(60000)//1 minutes
+
 void StartEEPTask(void const * argument)
 {
-	uint32_t tickOut = 60 * 1000;
-
-	TraceMsg(TSK_ID_EEP,"EEP task started  \n");
+	(void)argument;
 	void* dst = (void*) EEP_RAM_START_ORIG;
+	osEvent evt;
+	TraceMsg(TSK_ID_EEP,"EEP task started  \n");
 	while (1)
 	{
 		//first save when load rom defaults is called!
-		if( (triggerSaveCnt) && (eepStatus == OK))
+		if( (triggerSaveCnt) && (eepStatus[1] == OK))
 		{
 			TraceMsg(TSK_ID_EEP,"EEP task saved once  \n");
 			OS_Use(lock);
 			triggerSaveCnt = 0;
 			OS_Unuse(lock);
-			WriteAllData(dst);
+			eepStatus[1] = WriteAllData(dst);
 		}
-		osSignalWait(EEP_SIGNAL_SAVE, tickOut);
+		if (evt.status == osEventSignal)
+		{
+			//save flash data
+			if (evt.value.v & EEP_SIGNAL_RESET_SAVE)
+				DeviceResetHandle(0,0);
+				//Trigger_Save2FF(DeviceResetHandle);
+		}
+		evt = osSignalWait(EEP_SIGNAL, EEP_STORAGE_TIME);
 
 	}
 }
-/**
-  * @}
-  */ 
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

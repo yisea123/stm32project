@@ -54,10 +54,31 @@
 #define PAGE1                 ((uint16_t)0x0001)
 
 
+typedef struct _segInfo
+{
+	uint16_t pageStatus;
+	uint16_t eepVersion;
+	uint32_t storeVersion;
+	uint32_t validDataLen;
+	uint32_t checkSum;
+}SegInfo;
+typedef struct
+{
+	SegInfo* 	ptrSeginfo;
+	uint8_t* 	dataAdr;
+	uint32_t*	checkSum;
+}oneSeg;
+
+#define VALID_PAGE_STATUS		(0x5AA5)
+#define SIZE_SEG_INFO			(sizeof(SegInfo))
+#define EEP_DATA_RESERV_LEN 	0x1000
+#define EEP_RAM_WORKING			0x20000000
+#define EEP_DATA_SIZE			(EEP_DATA_RESERV_LEN-2)
+#define EEP_RAM_START_ORIG		0x20000000
 
 #define EEP_SIGNAL_SAVE		0x01
 
-extern __IO uint16_t eepStatus;
+extern __IO uint16_t eepStatus[2];
 /* Exported types ------------------------------------------------------------*/
 
 typedef enum
@@ -73,22 +94,27 @@ typedef enum
 }EEP_STATUS;
 
 
+
+//local data
+#define EEP_SIGNAL_RESET_SAVE		0x02
+#define EEP_SIGNAL_SAVE				0x01
+
+#define EEP_SIGNAL			(EEP_SIGNAL_SAVE | EEP_SIGNAL_RESET_SAVE)
+
+enum
+{
+	EEP_PAGE_0,
+	EEP_PAGE_1,
+	EEP_PAGE_MAX,
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-EEP_STATUS EEP_Init(void);
-//EEP_STATUS EEP_Read(uint8_t* data, uint16_t len);
-//EEP_STATUS EEP_Write(uint8_t* data, uint16_t len);
-EEP_STATUS EEP_ReadAdr(uint16_t adrRelative, uint8_t* data, uint16_t len);
-EEP_STATUS EEP_WriteAdr(uint16_t adrRelative, uint8_t* data, uint16_t len);
-uint32_t adler32(const uint8_t *data, uint32_t len);
-uint32_t adler32_N(const uint8_t *data, uint32_t len, uint32_t initVal);
-//EEP_STATUS EEP_WriteAdr(uint16_t adrRelative, uint8_t* data, uint16_t len);
 void StartEEPTask(void const * argument);
 uint16_t Init_EEPData(void);
-
 #ifdef __cplusplus
 }
 #endif
