@@ -543,6 +543,7 @@ uint16_t Init_EEPData(void)
 		{
 			memcpy(adr, eepBuff, EEP_DATA_SIZE);
 			eepStatus[0] = ret = OK;
+			devLock = 0;
 		}
 		else
 		{

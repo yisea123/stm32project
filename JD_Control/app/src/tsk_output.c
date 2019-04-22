@@ -129,12 +129,12 @@ void StartOutputTsk(void const * argument)
 				AD5689_WriteUpdate_DACREG(DAC_A,daOutputRawDA[CHN_DA_CURR_OUT]);
 				AD5689_WriteUpdate_DACREG(DAC_B,daOutputRawDA[CHN_DA_SPEED_OUT]);
 #endif
-				TraceUser("DA out:%x,%x\n",daOutputRawDA[CHN_DA_CURR_OUT], daOutputRawDA[CHN_DA_SPEED_OUT]);
+			//	TraceUser("DA out:%x,%x\n",daOutputRawDA[CHN_DA_CURR_OUT], daOutputRawDA[CHN_DA_SPEED_OUT]);
 			}
 			if((valMsg & DO_OUT_REFRESH) != 0)
 			{
 				OutputPins(digitOutput, CHN_OUT_MAX);
-				TraceUser("DO out:%x\n",digitOutput);
+			//	TraceUser("DO out:%x\n",digitOutput);
 			}
 		}	//uint32_t weight_Zero_Data = weight_ad7190_ReadAvg(6);
 		//TraceUser("zero:%d\n",weight_Zero_Data);

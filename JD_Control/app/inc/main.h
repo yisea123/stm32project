@@ -52,7 +52,7 @@ extern uint16_t dummyRam;
 enum
 {
 	IDX_SUB_RTC,
-	//IDX_SUB_PARAMETER,
+	IDX_SUB_WELDCFG,
 	IDX_SYS_INFO,
 	IDX_SUB_MAX,
 };
@@ -174,6 +174,8 @@ osStatus MessagePurge(uint32_t line, char* file, osMessageQId queue_id, uint32_t
 		uint32_t millisec);
 
 
+void ResetDevice(uint16_t type);
+void Trigger_DeviceReset(void);
 #define SendTskMsg(x,y,z,w,u) SendTskMsg_INST(x,y,z,w,u,__LINE__)
 #define SendTskMsgLOC(x,y) SendTskMsg_LOC(x,y,__LINE__)
 

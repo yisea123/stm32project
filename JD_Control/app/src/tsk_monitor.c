@@ -29,33 +29,48 @@ uint16_t cntFlag[4] = {0,0,0,0,};
 
 static void GetAdData(void)
 {
-  uint8_t sample[4];
-  int8_t temp,number;
-  double valTmp = 0;
-  if(AD7190_RDY_STATE==0)
-  {
-    HAL_SPI_Receive(&hspi_AD7190,sample,4,0xFF);
-    if((sample[3]&0x80)==0)
-    {
-      temp=(sample[3]&0x07)-4;
-      if(temp>=0)
-      {
+	static uint32_t errCnt = 0;
+	uint16_t ret = OK;
+	uint8_t sample[4];
+	int8_t temp, number;
+	double valTmp = 0;
+	if (AD7190_RDY_STATE == 0)
+	{
+		HAL_SPI_Receive(&hspi_AD7190, sample, 4, 0xFF);
+		if ((sample[3] & 0x80) == 0)
+		{
+			temp = (sample[3] & 0x07) - 4;
+			if (temp >= 0)
+			{
 #if ZERO_MODE==1
         bias_data[temp]=((sample[0]<<16)|(sample[1]<<8)|sample[2]);
 #else
-        ad7190_data[temp]=((sample[0]<<16) | (sample[1]<<8) | sample[2])-bias_data[temp];
+				ad7190_data[temp] = ((sample[0] << 16) | (sample[1] << 8)
+						| sample[2]) - bias_data[temp];
 #endif
-        number=temp;
-        valTmp=(double)(ad7190_data[number]>>4);
-        adcValue_Read[number]=(float)(valTmp*REFERENCE_VOLTAGE*OPA_RES_R1/OPA_RES_R2/0xFFFFF);
-        cntFlag[number] = cntFlag[number]+1;
-      }
-      else
-      {
-        TraceUser("error:0x%X\n",sample[3]);
-      }
-    }
-  }
+				number = temp;
+				valTmp = (double) (ad7190_data[number] >> 4);
+				adcValue_Read[number] = (float) (valTmp * REFERENCE_VOLTAGE
+						* OPA_RES_R1 / OPA_RES_R2 / 0xFFFFF);
+				cntFlag[number] = cntFlag[number] + 1;
+				errCnt = 0;
+			}
+			else
+			{
+				errCnt += 1;
+				if(errCnt > 5)
+				{
+					ret = FATAL_ERROR;
+					TraceUser("error:0x%X, errcnt,%d\n", sample[3],errCnt);
+				}
+			}
+		}
+	}
+	if(ret != OK)
+	{
+
+		Adc_Setup();
+	}
 }
 
 
@@ -76,7 +91,7 @@ void StartADCMonitor(void const * argument)
 	bias_data[3]=BIAS_VOLTAGE_IN4;
 #if USE_EXT_DEV
 	Adc_Setup();
-	ad7190_unipolar_multichannel_conf();
+
 #endif
 	while (TASK_LOOP_ST)
 	{

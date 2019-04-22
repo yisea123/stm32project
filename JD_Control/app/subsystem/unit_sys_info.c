@@ -100,7 +100,9 @@ static uint32_t 	fileId2						__attribute__ ((section (".configsys_info")));
 uint16_t			instrumentType = STANDARD_VERSION;
 static uint32_t 	bootVersion = 0;
 #define MAX_BUFF_LEN	245
-
+uint16_t systemMsgClr = 0;
+uint16_t systemReset = 0;
+uint16_t ldRomDefaults = 0;
 uint8_t  burstBuff0[MAX_BUFF_LEN];
 uint8_t  burstBuff1[MAX_BUFF_LEN];
 uint16_t	autoReset = 1;
@@ -173,7 +175,9 @@ enum
 	IDX_CPU_GPIO = 17,
 	IDX_CPU_GPIO_CFG = 18,
 	IDX_CPU_GPIO_REG = 19,
-
+	OBJ_CLR_DBG_MSG = 25,
+	OBJ_DEVICE_RESET = 26,
+	IDX_LOAD_ROM_DF = 27,
 };
 
 
@@ -215,6 +219,12 @@ static const T_DATA_OBJ _ObjList[] =
 	CONSTRUCT_ARRAY_SIMPLE_U8(deviceName, sizeof(deviceName), NON_VOLATILE),
 	CONSTRUCT_ARRAY_SIMPLE_U8(SerialNumber,sizeof(SerialNumber), NON_VOLATILE),
 	CONSTRUCT_ARRAY_SIMPLE_U8(deviceName_Short,sizeof(deviceName_Short), NON_VOLATILE),
+
+	//25
+	CONSTRUCT_SIMPLE_U16(&systemMsgClr,	RAM),
+	CONSTRUCT_SIMPLE_U16(&systemReset,	RAM),
+	CONSTRUCT_SIMPLE_U16(&ldRomDefaults,	RAM),
+
 };
 
 
@@ -414,6 +424,28 @@ uint16_t Put_SysInfo(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 				else
 				{
 					result = RULE_VIOLATION_ERR;
+				}
+				break;
+			case OBJ_CLR_DBG_MSG:
+				if(systemMsgClr != 0)
+				{
+					validPrintMsg = 0;
+					validPrintLen = 0;
+				}
+				break;
+			case IDX_LOAD_ROM_DF:
+				LoadDefaultCfg(ldRomDefaults);
+
+				break;
+
+			case OBJ_DEVICE_RESET:
+				if(systemReset != 0)
+				{
+					//save eep data;
+					Trigger_DeviceReset();
+
+					//trigger reset by eep task
+
 				}
 				break;
 		 }

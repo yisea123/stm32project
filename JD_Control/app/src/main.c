@@ -171,7 +171,10 @@ void ResetDevice(uint16_t type)
 		NVIC_SystemReset();
 	}
 }
-
+void Trigger_DeviceReset(void)
+{
+	SigPush(eepTaskHandle, EEP_SIGNAL_RESET_SAVE);
+}
 //{0,			 0x800000},//flash
 
 uint16_t CheckAdrRWStatus(uint32_t adr, uint32_t len, ADR_RW_STATUS rwStatus)
@@ -340,6 +343,7 @@ __IO uint32_t kernelStarted = 0;
 
 int main(int argc, char* argv[])
 {
+
   	bsp_init();
 	// Send a greeting to the trace device (skipped on Release).
 	trace_puts("Hello ARM World!\n");

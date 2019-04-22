@@ -24,6 +24,7 @@ typedef struct
   __IO int      LastError;   //Error[-1]
   __IO int      PrevError;   //Error[-2]
   __IO float	MaxOutput;
+  __IO float	MinOutput;
 }PID_TypeDef;
 
 /* 私有宏定义 ----------------------------------------------------------------*/
@@ -72,7 +73,7 @@ static const char* taskStateDsp[] =
 	TO_STR(ST_MOTOR_FINISH),
 };
 
-void PID_ParamInit(void) ;
+void PID_ParamInit(float maxOut) ;
 float LocPIDCalc(int32_t NextPoint);
 
 
@@ -84,7 +85,7 @@ float LocPIDCalc(int32_t NextPoint);
   * 返 回 值: 无
   * 说    明: 无
   */
-void PID_ParamInit()
+void PID_ParamInit(float maxOut)
 {
     sPID.LastError = 0;               // Error[-1]
     sPID.PrevError = 0;               // Error[-2]
@@ -92,7 +93,8 @@ void PID_ParamInit()
     sPID.Integral = SPD_I_DATA;   // 积分常数  Integral Const
     sPID.Derivative = SPD_D_DATA; // 微分常数 Derivative Const
     sPID.SetPoint = TARGET_LOC;     // 设定目标Desired Value
-    sPID.MaxOutput = 10000.0;
+    sPID.MaxOutput = maxOut;
+    sPID.MinOutput = 50.0f;
 }
 
 /**
@@ -134,12 +136,34 @@ float LocPIDCalc(int32_t NextPoint)
 	{
 		OutVal = -sPID.MaxOutput;
 	}
+
+	if(iError != 0)
+	{
+		if((OutVal >0) &&(OutVal < sPID.MinOutput))
+			OutVal = sPID.MinOutput;
+		if((OutVal < 0) &&(OutVal > -sPID.MinOutput))
+			OutVal = -sPID.MinOutput;
+	}
 	return OutVal/100.0f;
 }
 
 
 void SetSpeedOutVolt(float duty)
 {
+	float actDuty = duty;
+	if(duty <= 0)
+	{
+		actDuty = -duty;
+	}
+	else
+	{
+		actDuty = duty;
+	}
+	if((actDuty < 0.4) &&(actDuty >0.01))
+	{
+		//0.4v
+		actDuty = 0.4f;
+	}
 	if(duty <= 0)
 	{
 		Motor_Dir = MOTOR_DIR_CCW;
@@ -150,8 +174,9 @@ void SetSpeedOutVolt(float duty)
 		Motor_Dir = MOTOR_DIR_CW;
 		digitOutput &= ~(1<<CHN_OUT_MOTOR_DIR);
 	}
+
 	lastDuty = duty;
-	SetDAOutputFloat(CHN_DA_SPEED_OUT, duty);
+	SetDAOutputFloat(CHN_DA_SPEED_OUT, actDuty);
 }
 
 void SetCurrOutVolt(float curr)
@@ -207,14 +232,13 @@ void StartMotorTsk(void const * argument)
 	uint32_t jogStartTick = 0;
 	float targetJogDuty;
 	float targetJogDutyAcc = 0.1f;
+	float highSpeedDuty = 5.0f;
 	uint16_t jogDir = MOTOR_DIR_CW;
 	InitTaskMsg(&locMsg);
 	TracePrint(taskID,"started  \n");
 	ENCODER_TIMx_Init();
 	SetSpeedOutVolt(0);
-	/* PID 参数初始化 */
-	PID_ParamInit();
-	/* 无限循环 */
+	PID_ParamInit(500);
 	while (TASK_LOOP_ST)
 	{
 		event = osMessageGet(MOTOR_CTRL, tickOut);
@@ -374,6 +398,8 @@ void StartMotorTsk(void const * argument)
 					tskState = ST_WELD_IDLE;
 					break;
 				case ST_MOTOR_HOME:
+					highSpeedDuty = GetSpeedCtrlOutput(motorSpeedSet.homeSpeed);
+					PID_ParamInit(highSpeedDuty*100.0f);
 					tickOut = 0;
 					tskState = ST_MOTOR_HOME_PID;
 					break;

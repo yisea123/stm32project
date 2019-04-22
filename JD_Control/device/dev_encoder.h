@@ -59,6 +59,6 @@ enum
 };
 
 
-#define MOTOR_HOME_DEVIATION 		50
+#define MOTOR_HOME_DEVIATION 		20
 
 #endif /* DEV_ENCODER_H_ */

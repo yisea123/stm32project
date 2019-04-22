@@ -168,7 +168,7 @@ float accSpeedPerSeond;
 */
 MotorSpeed motorSpeedSet_Default =
 {
-	4.0f,2.0f,0.01f,
+	8.0f,4.0f,0.5f,
 };
 /*
 uint16_t preGasTime;

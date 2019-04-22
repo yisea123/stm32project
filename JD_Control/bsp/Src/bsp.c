@@ -257,7 +257,7 @@ void Adc_Setup(void)
 		TraceUser("No  AD7190 !\n");
 		while (1)
 		{
-			HAL_Delay(1000);
+			HAL_Delay(10);
 			if (AD7190_Init())
 				break;
 		}
@@ -267,9 +267,7 @@ void Adc_Setup(void)
 
 	uint32_t weight_Zero_Data = AD7190_ReadAvg(6);
 	TraceUser("zero:%d\n",weight_Zero_Data);
-	TraceUser("AD5689 output\n");
-
-
+	ad7190_unipolar_multichannel_conf();
 
 }
 
