@@ -576,7 +576,7 @@ uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync, uint32_t 
 {
 	if(eepStatus[1] != OK)
 	{
-		devLock = 100;
+		devLock = EEP_INIT_CRC;
 		return OK;
 	}
 	if (len != 0)

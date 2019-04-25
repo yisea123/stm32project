@@ -36,10 +36,13 @@ static uint32_t fileId1							__attribute__ ((section (".configbuf_measdata")));
 static SegWeld segWeld[MAX_SEG_SIZE]			__attribute__ ((section (".configbuf_measdata")));
 MotorSpeed motorSpeedSet       					__attribute__ ((section (".configbuf_measdata")));
 WeldProcessCfg weldProcess    					__attribute__ ((section (".configbuf_measdata")));
-uint16_t segWeldNum 							__attribute__ ((section (".configbuf_measdata")));
 static uint32_t fileId2							__attribute__ ((section (".configbuf_measdata")));
 float gearRation					 			__attribute__ ((section (".configbuf_measdata")));
 uint16_t pulsePerLap				 			__attribute__ ((section (".configbuf_measdata")));
+uint16_t segNum_weld				 			__attribute__ ((section (".configbuf_measdata")));
+static uint32_t fileId2							__attribute__ ((section (".configbuf_measdata")));
+
+static SegWeld segWeldTmp;
 uint32_t    weldUsedCnt	= 1;
 float   	ang2CntRation = 1;
 uint16_t    gasRemainTime = 0;
@@ -61,7 +64,7 @@ float 	  actReqSpeed = 0.0f;
 float     actReqCurr = 0.0f;
 
 volatile  int32_t   motorPos_Read;
-float     motorAng_Read;
+float     motorAng_Read[2];
 float 	  motorSpeed_Read;
 float     weldCurr_Read;
 float 	  weldVolt_Read;
@@ -107,7 +110,8 @@ static uint16_t clearCurrCali = 0;
 const SegWeld* ptrCurrWeldSeg = &segWeld[0];
 static uint32_t segWeldCnt[MAX_SEG_SIZE] = {0,0,0};
 static const float currConvertRation_Default = 20.0f;
-static const uint32_t weldUsedCnt_Default = 20;
+static uint16_t segWeldClr = 20;
+static const uint16_t segNum_weld_Default = 0;
 static const CaliCurrent currCaliPoint_Default[MAX_CALI_CURR] = {
                                                     {1.0f, 	20.0f, 0},
 													{2.0f, 	40.0f, 0},
@@ -159,7 +163,7 @@ static const SegWeld segWeld_Default[MAX_SEG_SIZE] = {
 		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360, 1},
 		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360, 0},
 };
-static const uint16_t segWeldNum_Default = 8;
+
 static const int32_t motorPosHome_Default = 0;
 /*
 float homeSpeed;
@@ -203,9 +207,9 @@ static const  T_DATACLASS _ClassList[]=
 //	CONSTRUCTOR_DC_STATIC_CONSTDEF(caliFactor,caliFactor_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(motorSpeedSet,motorSpeedSet_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(weldProcess,weldProcess_Default),
-	CONSTRUCTOR_DC_STATIC_CONSTDEF(segWeldNum,segWeldNum_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(currCaliPoint,currCaliPoint_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(voltCaliPoint,voltCaliPoint_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(segNum_weld,segNum_weld_Default),
 
 
 };
@@ -241,7 +245,7 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_U16(&weldState,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&weldUsedCnt,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&motorHomeSet,	 RAM),
-		CONSTRUCT_SIMPLE_FLOAT(&motorAng_Read,	 READONLY_RAM),
+		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&motorAng_Read[0],sizeof(motorAng_Read)/sizeof(float),	 READONLY_RAM),
 	//20
 		CONSTRUCT_STRUCT_CALIPOINT(&tmp_CaliPointCurr,RAM),
 		CONSTRUCT_SIMPLE_U16(&currCaliPointNum, NON_VOLATILE),
@@ -286,14 +290,13 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_I32(&motorPos_WeldFinish,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&gasRemainTime,	 READONLY_RAM),
 		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_U16(&segNum_weld,  NON_VOLATILE),
 		//55
-		CONSTRUCT_SIMPLE_U16(&segWeldNum,	 NON_VOLATILE),
-
+		CONSTRUCT_SIMPLE_U16(&segWeldClr,	 RAM),
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&motorSpeedSet, sizeof(motorSpeedSet)/sizeof(float),    NON_VOLATILE),
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&weldProcess, sizeof(weldProcess)/sizeof(uint16_t),    NON_VOLATILE),
 		CONSTRUCT_SIMPLE_FLOAT(&currConvertRation,    NON_VOLATILE),
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_STRUCT_SEGWELD(&segWeldTmp,	 RAM),
 	//25
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[0], NON_VOLATILE),
 		CONSTRUCT_STRUCT_SEGWELD(&segWeld[1], NON_VOLATILE),
@@ -505,8 +508,12 @@ uint16_t Get_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 
 	switch(objectIndex)
 	{
-	case OBJ_IDX_MOTOR_HOMEREAD:
-		motorAng_Read = (motorPos_Read - motorPosHome) / ang2CntRation;
+	case OBJ_IDX_MOTOR_POSREAD:
+		motorAng_Read[0] = (motorPos_Read - motorPosHome) / ang2CntRation;
+		if(weldState != ST_WELD_IDLE)
+			motorAng_Read[1] = (motorPos_Read - motorPos_WeldStart) / ang2CntRation;
+		else
+			motorAng_Read[1] = motorAng_Read[0];
 		break;
 	}
 	return Get_T_UNIT(me,objectIndex,attributeIndex,ptrValue);
@@ -525,6 +532,38 @@ uint16_t Put_WeldCfg(const T_UNIT *me, uint16_t objectIndex, int16_t attributeIn
 	{
 		switch(objectIndex)
 		{
+		case OBJ_IDX_SEG_CLR:
+			if(segWeldClr != 0)
+			{
+				segNum_weld = 0;
+				segWeldTmp.state = 0;
+				memset((void*)&segWeld[0],0, sizeof(segWeld));
+				Trigger_EEPSave((void*)&segWeld[0], sizeof(segWeld),SYNC_CYCLE);
+				Trigger_EEPSave((void*)&segNum_weld,sizeof(segNum_weld),SYNC_IM);
+			}
+			break;
+		case OBJ_IDX_SEG_NEWSEG:
+			if(attributeIndex == 7)
+			{
+				if(segWeldTmp.state != 0)
+				{
+					if(segNum_weld < MAX_SEG_SIZE)
+					{
+						memcpy(&segWeld[segNum_weld],&segWeldTmp, sizeof(segWeldTmp));
+						segNum_weld = segNum_weld + 1;
+
+						Trigger_EEPSave((void*)&segWeld[0], sizeof(segWeld),SYNC_CYCLE);
+						Trigger_EEPSave((void*)&segNum_weld,sizeof(segNum_weld),SYNC_CYCLE);
+						segWeldTmp.state = 0;
+					}
+					else
+					{
+						result = RANGE_TOO_HIGH_ERR;
+					}
+				}
+			}
+
+			break;
 		case OBJ_IDX_SPEED_GEAR:
 		case OBJ_IDX_SPEED_PULSE_LAP:
 
