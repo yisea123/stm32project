@@ -23,8 +23,8 @@ void DHCP_Periodic_Handle(struct netif *netif);
 /* USER CODE BEGIN Includes */
 #define IP_ADDR0   (uint8_t) 192
 #define IP_ADDR1   (uint8_t) 168
-#define IP_ADDR2   (uint8_t) 31
-#define IP_ADDR3   (uint8_t) 14
+#define IP_ADDR2   (uint8_t) 0
+#define IP_ADDR3   (uint8_t) 184
 
 /*NETMASK*/
 #define NETMASK_ADDR0   (uint8_t) 255
@@ -35,7 +35,7 @@ void DHCP_Periodic_Handle(struct netif *netif);
 /*Gateway Address*/
 #define GW_ADDR0   (uint8_t) 192
 #define GW_ADDR1   (uint8_t) 168
-#define GW_ADDR2   (uint8_t) 31
+#define GW_ADDR2   (uint8_t) 0
 #define GW_ADDR3   (uint8_t) 1
 
 #define TCP_SERVER_RX_BUFSIZE	200		//¶¨Òåtcp server×î´ó½ÓÊÕÊý¾Ý³¤¶È

@@ -155,7 +155,7 @@ ST_SCH_STATE CheckAllInput()
 
 
 
-				if(digitInput&(1<<CHN_IN_GAS_ON))
+				if(uiBtn_GasOn || (digitInput&(1<<CHN_IN_GAS_ON)))
 				{
 					OutPutPins_Call(CHN_OUT_GAS, 1);
 				}

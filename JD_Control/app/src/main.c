@@ -366,6 +366,7 @@ int main(int argc, char* argv[])
 
 	/* Call init function for freertos objects (in freertos.c) */
 	MX_FREERTOS_Init();
+//	StartEthernet(NULL);
 	kernelStarted = 1;
 
 

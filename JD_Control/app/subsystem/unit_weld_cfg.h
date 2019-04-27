@@ -101,7 +101,7 @@ extern const SegWeld* 	ptrCurrWeldSeg;
 extern float 			currConvertRation;
 extern float 			speedAdjust;
 extern float  			currMicroAdjust;
-
+extern float			pwmMicroAdjust;
 
 extern WeldProcessCfg 	weldProcess;
 extern MotorSpeed 		motorSpeedSet  ;
@@ -137,8 +137,8 @@ extern uint16_t voltCaliReq;
 extern uint16_t currCaliReq;
 extern uint16_t speedCaliReq;
 extern uint16_t caliAllReq;
-
-
+extern uint16_t uiBtn_GasOn;
+extern uint16_t simulateWeld;
 extern float currCaliSetDiff;
 extern uint16_t currCaliPreGas;
 
@@ -147,6 +147,7 @@ extern uint16_t 	uiWeldSeg;
 extern uint16_t   	devLock;
 extern float	  	currOutputPwmFloat[2];
 extern float        actWelSpeedUsed;
+extern float     pwmActValueUsed;
 extern float		actWelCurrUsed[2];
 extern uint16_t  	currOutputPwmTime[2];
 

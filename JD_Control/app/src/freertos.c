@@ -93,21 +93,20 @@ void StartArcLinkTask(void const * argument)
 static const TaskConfiguration_t TaskConfiguration[] =
 {
 		//0
-		{{"eep ctrl",		StartEEPTask,		osPriorityNormal, 	0,		256},		TSK_ID_EEP, NULL},
-		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		384},		TSK_ID_LOCAL_BUS, NULL},
-		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		256},		TSK_ID_MOTOR, NULL},
-		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		256},		TSK_ID_WELD, NULL},
-		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		256},		TSK_ID_OUTPUT, NULL},
+		{{"eep ctrl",		StartEEPTask,		osPriorityNormal, 	0,		320},		TSK_ID_EEP, NULL},
+		{{"LB Task",		StartLBTask,		osPriorityNormal, 	0,		450},		TSK_ID_LOCAL_BUS, NULL},
+		{{"Motor Ctrl",		StartMotorTsk,		osPriorityNormal, 	0,		420},		TSK_ID_MOTOR, NULL},
+		{{"Weld Tsk",		StartWeldTask,		osPriorityNormal, 	0,		380},		TSK_ID_WELD, NULL},
+		{{"Output Tsk",		StartOutputTsk,		osPriorityHigh, 	0,		300},		TSK_ID_OUTPUT, NULL},
 		//5
-		{{"Ethernet Tsk",	StartEthernet,		osPriorityHigh, 	0,		1024},		TSK_ID_ETHERNET, NULL},
-		{{"ADC Monitor",	StartADCMonitor,		osPriorityAboveNormal, 	0,	256},		TSK_ID_ADC_MONITOR, NULL},
+		{{"Ethernet Tsk",	tcp_server_thread,		osPriorityHigh, 	0,		800},		TSK_ID_ETHERNET, NULL},
+		{{"ADC Monitor",	StartADCMonitor,		osPriorityNormal, 	0,	400},		TSK_ID_ADC_MONITOR, NULL},
 		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_TX, NULL},
 		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_RX, NULL},
-		{{"weldtask",		StartWeldTask,			osPriorityLow, 	0,			256},			TSK_ID_WELD, NULL},
 		//10
-		{{"currcali",		StartCurrCaliTask,		osPriorityLow, 	0,			256},			TSK_ID_CURR_CALI, NULL},
-		{{"schedule",		StartSchTask,			osPriorityLow, 	0,			256},			TSK_ID_CURR_CALI, NULL},
-		{{"pwmoutput",		StartPWMTsk,			osPriorityLow, 	0,			256},			TSK_ID_PWM, NULL},
+		{{"currcali",		StartCurrCaliTask,		osPriorityLow, 	0,			320},			TSK_ID_CURR_CALI, NULL},
+		{{"schedule",		StartSchTask,			osPriorityLow, 	0,			384},			TSK_ID_CURR_CALI, NULL},
+		{{"pwmoutput",		StartPWMTsk,			osPriorityLow, 	0,			320},			TSK_ID_PWM, NULL},
 
 };
 
@@ -131,7 +130,7 @@ void MX_FREERTOS_Init(void)
 	{
 		taskThreadID[TaskConfiguration[idx].TaskId] = osThreadCreate(&TaskConfiguration[idx].threadDef, TaskConfiguration[idx].para);
 	}
-
+	//tcp_server_init();
 }
 
 /* USER CODE BEGIN Application */

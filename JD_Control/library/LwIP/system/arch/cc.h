@@ -75,7 +75,7 @@ typedef int sys_prot_t;
 
 #endif
 
-#define LWIP_PLATFORM_ASSERT(x) //do { if(!(x)) while(1); } while(0)
+#define LWIP_PLATFORM_ASSERT(x)  TraceUser(x)//do { if(!(x)) while(1); } while(0)
 
 #define LWIP_RAND() ((u32_t)rand())
 

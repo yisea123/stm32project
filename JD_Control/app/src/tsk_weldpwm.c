@@ -56,10 +56,18 @@ void StartPWMTsk(void const * argument)
 					break;
 				case ST_PWM_CYC:
 				{
-					currOutputPwmTime[0] =ptrCurrWeldSeg->currHighMs;
-					currOutputPwmTime[1] =ptrCurrWeldSeg->currLowMs;
-					actWelCurrUsed[0] = ptrCurrWeldSeg->currHigh * currMicroAdjust;
-					actWelCurrUsed[1] = ptrCurrWeldSeg->currLow * currMicroAdjust;
+					if(pwmMicroAdjust > 0.01f)
+					{
+						currOutputPwmTime[0] =(uint16_t)(ptrCurrWeldSeg->currHighMs/pwmMicroAdjust);
+						currOutputPwmTime[1] =(uint16_t)(ptrCurrWeldSeg->currLowMs/pwmMicroAdjust);
+					}
+					pwmActValueUsed = 1000.0f/(float)(currOutputPwmTime[0] + currOutputPwmTime[1]);
+
+					if(currMicroAdjust > 0.01f)
+					{
+						actWelCurrUsed[0] = ptrCurrWeldSeg->currHigh * currMicroAdjust;
+						actWelCurrUsed[1] = ptrCurrWeldSeg->currLow * currMicroAdjust;
+					}
 					currOutputPwmFloat[0] = GetCurrCtrlOutput(actWelCurrUsed[0]);
 					currOutputPwmFloat[1] = GetCurrCtrlOutput(actWelCurrUsed[1]);
 
@@ -81,7 +89,7 @@ void StartPWMTsk(void const * argument)
 			{
 				pwmCnt = 0;
 				daOutputRawDA[CHN_DA_CURR_OUT] = 0;
-				digitOutput &= ~(1<<CHN_OUT_ARC_ON);
+				OutPutPins_Call(CHN_OUT_ARC_ON, 0);
 				SigPush(outputTaskHandle, (DA_OUT_REFRESH_SPEED|DA_OUT_REFRESH_CURR|DO_OUT_REFRESH));
 
 				tskState = ST_PWM_FINISH;

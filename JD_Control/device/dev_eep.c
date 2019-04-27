@@ -512,9 +512,12 @@ uint16_t ResetNVData(void)
 static uint16_t GetLockCode(void)
 {
 	uint32_t CpuID[3];
-	CpuID[0]=*(uint32_t*)(0x1ffff7e8);
-	CpuID[1]=*(uint32_t*)(0x1ffff7ec);
-	CpuID[2]=*(uint32_t*)(0x1ffff7f0);
+	CpuID[0]=*(uint32_t*)(0x1fff7a10);
+	CpuID[1]=*(uint32_t*)(0x1fff7a14);
+	CpuID[2]=*(uint32_t*)(0x1fff7a18);
+//	CpuID[0]=*(uint32_t*)(0x1ffff7e8);
+//	CpuID[1]=*(uint32_t*)(0x1ffff7ec);
+//	CpuID[2]=*(uint32_t*)(0x1ffff7f0);
 	return (uint16_t) ((CpuID[0]>>5)+(CpuID[1]>>8)+(CpuID[2])) ^ ((CpuID[0]<<3)+(CpuID[2]>>8)+(CpuID[1]));
 }
 
@@ -574,7 +577,7 @@ uint16_t Init_EEPData(void)
 
 uint16_t Trigger_EEPSaveInst(uint8_t* adr, uint16_t len, uint8_t sync, uint32_t _line)
 {
-	if(eepStatus[1] != OK)
+	if(eepStatus[0] != OK)
 	{
 		devLock = EEP_INIT_CRC;
 		return OK;
@@ -619,7 +622,7 @@ void StartEEPTask(void const * argument)
 	while (1)
 	{
 		//first save when load rom defaults is called!
-		if( (triggerSaveCnt) && (eepStatus[1] == OK))
+		if( (triggerSaveCnt) && (eepStatus[0] == OK) && (eepStatus[1] == OK))
 		{
 			TraceMsg(TSK_ID_EEP,"EEP task saved once  \n");
 			OS_Use(lock);

@@ -150,20 +150,27 @@ void StartWeldTask(void const * argument)
 			case ST_WELD_ARC_ON_DELAY:
 			{
 				uint32_t delay = GetTickDuring(tickStartArc);
-
-				if(weldCurr_Read > CURR_DETECT_LIMIT)
+				if(simulateWeld == 0)
+				{
+					if(weldCurr_Read > CURR_DETECT_LIMIT)
+					{
+						tskState = ST_WELD_MOTION;
+						SendTskMsgLOC(WELD_CTRL, &locMsg);
+					}
+					else if(weldProcess.preDelay*TIME_UNIT <= delay)
+					{
+						tskState = ST_WELD_STOP;
+						SendTskMsgLOC(WELD_CTRL, &locMsg);
+						TraceDBG(taskID,"No arc detect in time: %d %s\n", delay, taskStateDsp[tskState]);
+					}
+					else
+					{}
+				}
+				else
 				{
 					tskState = ST_WELD_MOTION;
 					SendTskMsgLOC(WELD_CTRL, &locMsg);
 				}
-				else if(weldProcess.preDelay*TIME_UNIT <= delay)
-				{
-					tskState = ST_WELD_STOP;
-					SendTskMsgLOC(WELD_CTRL, &locMsg);
-					TraceDBG(taskID,"No arc detect in time: %d %s\n", delay, taskStateDsp[tskState]);
-				}
-				else
-				{}
 				tickOut = WELD_DELAY_TIME;
 
 			}
@@ -275,9 +282,10 @@ void StartWeldTask(void const * argument)
 						break;
 
 					case ST_WELD_ARC_ON:
-						digitOutput &= ~(1<<CHN_OUT_ARC_ON);
 						SetSpeedOutVolt(0);
 						OutputCurrent(weldProcess.preCurr);
+						if(simulateWeld == 0)
+							OutPutPins_Call(CHN_OUT_ARC_ON, 1);
 						tskState = ST_WELD_ARC_ON_DELAY;
 						tickStartArc = HAL_GetTick();
 						tickOut = WELD_DELAY_TIME;

@@ -36,6 +36,17 @@ static void Netif_Config(void);
 extern void tcp_server_init(void);
 
 
+void StartEthPhy()
+{
+	  /* 初始化LWIP内核 */
+	  tcpip_init( NULL, NULL );
+	  /* 配置网络接口 */
+	  Netif_Config();
+	  /* 查看相关网络接口配置 */
+	  User_notification(&gnetif);
+
+}
+
 /**
   * @brief  Start Thread
   * @param  argument not used
@@ -43,6 +54,7 @@ extern void tcp_server_init(void);
   */
 void StartEthernet(void const * argument)
 {
+//	osDelay(3000);
   /* 初始化LWIP内核 */
   tcpip_init( NULL, NULL );
   /* 配置网络接口 */
@@ -55,14 +67,15 @@ void StartEthernet(void const * argument)
   osThreadDef(DHCP, DHCP_thread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
   osThreadCreate (osThread(DHCP), &gnetif);
 #endif
-
+//  for( ;; )
+  osDelay(1000);
   tcp_server_init();
 //	tcp_echoserver_connect();
-  for( ;; )
+//  for( ;; )
   {
     /* Delete the Init Thread */ 
 	
-    osThreadTerminate(NULL);
+//    osThreadTerminate(NULL);
   }  
 }
 

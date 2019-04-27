@@ -159,13 +159,13 @@ static void low_level_init(struct netif *netif)
   /* configure ethernet peripheral (GPIOs, clocks, MAC, DMA) */
   if (HAL_ETH_Init(&EthHandle) == HAL_OK)
   {
-    printf("ETH初始化成功\n");
+    TraceUser("ETH init ok\n");
     /* Set netif link flag */
     netif->flags |= NETIF_FLAG_LINK_UP;
   }
   else
   {
-    printf("ETH初始化失败\n");
+    TraceUser("ETH init Failed\n");
   }
   
   /* Initialize Tx Descriptors list: Chain Mode */
@@ -205,7 +205,7 @@ static void low_level_init(struct netif *netif)
   HAL_ETH_Start(&EthHandle);
   
   HAL_ETH_ReadPHYRegister(&EthHandle,0x02,&regvalue);
-  printf("reg=%d\n",regvalue);
+  TraceUser("reg=%d\n",regvalue);
   
   /**** Configure PHY to generate an interrupt when Eth Link state changes ****/
   /* Read Register Configuration */

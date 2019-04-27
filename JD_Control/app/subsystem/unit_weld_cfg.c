@@ -58,6 +58,7 @@ uint32_t  digitInputWeldBtn;
 float	  currOutputPwmFloat[2];
 float     actWelCurrUsed[2];
 float     actWelSpeedUsed;
+float     pwmActValueUsed;
 uint16_t  currOutputPwmTime[2];
 
 float 	  actReqSpeed = 0.0f;
@@ -82,6 +83,7 @@ extern uint16_t 	EEP_INIT_CRC;
  */
 float speedAdjust = 1.0f;
 float currMicroAdjust = 1.0f;
+float pwmMicroAdjust = 1.0f;
 uint16_t uiWeldSeg = 0;
 
 uint16_t uiBtn_Home = 0;
@@ -93,6 +95,8 @@ uint16_t voltCaliReq = 0;
 uint16_t currCaliReq = 0;
 uint16_t speedCaliReq = 0;
 uint16_t caliAllReq = 0;
+uint16_t simulateWeld = 0;
+uint16_t uiBtn_GasOn = 0;
 /*
 
 
@@ -163,7 +167,7 @@ static const SegWeld segWeld_Default[MAX_SEG_SIZE] = {
 		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360, 1},
 		{0.2f, 80.0f, 5.0f, 100, 50, 315, 360, 0},
 };
-
+static const uint32_t caliTime_Default = 0;
 static const int32_t motorPosHome_Default = 0;
 /*
 float homeSpeed;
@@ -210,6 +214,7 @@ static const  T_DATACLASS _ClassList[]=
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(currCaliPoint,currCaliPoint_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(voltCaliPoint,voltCaliPoint_Default),
 	CONSTRUCTOR_DC_STATIC_CONSTDEF(segNum_weld,segNum_weld_Default),
+	CONSTRUCTOR_DC_STATIC_CONSTDEF(caliTime,caliTime_Default),
 
 
 };
@@ -274,9 +279,9 @@ static const T_DATA_OBJ _ObjList[] =
 		//40
 		CONSTRUCT_SIMPLE_U16(&uiBtn_Home,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&uiWeldSeg,	 RAM),
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_U16(&uiBtn_GasOn,	 RAM),
+		CONSTRUCT_SIMPLE_U16(&simulateWeld,	 RAM),
+		CONSTRUCT_SIMPLE_FLOAT(&pwmMicroAdjust,	 RAM),
 
 		//45
 		CONSTRUCT_ARRAY_SIMPLE_FLOAT(&adcValue_Read[0],sizeof(adcValue_Read)/sizeof(float),	 READONLY_RAM),
@@ -289,7 +294,7 @@ static const T_DATA_OBJ _ObjList[] =
 		CONSTRUCT_SIMPLE_I32(&motorPos_WeldStart,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_I32(&motorPos_WeldFinish,	 READONLY_RAM),
 		CONSTRUCT_SIMPLE_U16(&gasRemainTime,	 READONLY_RAM),
-		NULL_T_DATA_OBJ,
+		CONSTRUCT_SIMPLE_FLOAT(&pwmActValueUsed,	 RAM),
 		CONSTRUCT_SIMPLE_U16(&segNum_weld,  NON_VOLATILE),
 		//55
 		CONSTRUCT_SIMPLE_U16(&segWeldClr,	 RAM),

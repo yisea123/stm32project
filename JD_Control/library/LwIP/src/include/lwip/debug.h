@@ -72,8 +72,7 @@
  * -- To disable assertions define LWIP_NOASSERT in arch/cc.h.
  */
 #ifndef LWIP_NOASSERT
-#define LWIP_ASSERT(message, assertion) do { if (!(assertion)) { \
-  LWIP_PLATFORM_ASSERT(message); }} while(0)
+#define LWIP_ASSERT(message, assertion) assert(assertion)
 #ifndef LWIP_PLATFORM_ASSERT
 #error "If you want to use LWIP_ASSERT, LWIP_PLATFORM_ASSERT(message) needs to be defined in your arch/cc.h"
 #endif
@@ -84,7 +83,7 @@
 /** if "expression" isn't true, then print "message" and execute "handler" expression */
 #ifndef LWIP_ERROR
 #ifndef LWIP_NOASSERT
-#define LWIP_PLATFORM_ERROR(message) LWIP_PLATFORM_ASSERT(message)
+#define LWIP_PLATFORM_ERROR(message) TraceUser(message)
 #elif defined LWIP_DEBUG
 #define LWIP_PLATFORM_ERROR(message) LWIP_PLATFORM_DIAG((message))
 #else

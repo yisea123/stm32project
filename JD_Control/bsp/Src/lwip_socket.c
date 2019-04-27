@@ -8,7 +8,7 @@
 #define	PORT			5000
 
 static int sock_conn;			/* request socked */
-static void tcp_server_thread(void *p_arg)
+void tcp_server_thread(void const *p_arg)
 {
 	struct sockaddr_in server_addr;
 	struct sockaddr_in conn_addr;
@@ -18,7 +18,7 @@ static void tcp_server_thread(void *p_arg)
 	int err;
 	int length;
 	int count = 0;
-
+	StartEthPhy();
 
 	sock_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock_fd == -1) {
@@ -82,5 +82,7 @@ uint16_t LB_Layer2_Eth_Tx(MsgFrame* ptrFrame)
 
 void tcp_server_init(void)
 {
+
+	//tcp_server_thread(NULL);
 	sys_thread_new("tcp_server_thread",  tcp_server_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO - 1);
 }
