@@ -306,7 +306,7 @@ void LTDC_Layer_Parameter_Config(u8 layerx,u32 bufaddr,u8 pixformat,u8 alpha,u8 
 	pLayerCfg.Alpha=alpha;				        //Alpha值设置，0~255,255为完全不透明
 	pLayerCfg.Alpha0=alpha0;			        //默认Alpha值
 	pLayerCfg.BlendingFactor1=(u32)bfac1<<8;    //设置层混合系数
-	pLayerCfg.BlendingFactor2=(u32)bfac2<<8;	//设置层混合系数
+	pLayerCfg.BlendingFactor2=(u32)bfac2;	//设置层混合系数
 	pLayerCfg.FBStartAdress=bufaddr;	        //设置层颜色帧缓存起始地址
 	pLayerCfg.ImageWidth=lcdltdc.pwidth;        //设置颜色帧缓冲区的宽度    
 	pLayerCfg.ImageHeight=lcdltdc.pheight;      //设置颜色帧缓冲区的高度

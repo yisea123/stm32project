@@ -10,6 +10,8 @@
 #include "Trace.h"
 
 
+extern void UpdateCurrentTaskInfo(char* str);
+
 
 
 void
@@ -24,6 +26,7 @@ __assert_func(const char *file, int line, const char *func,
 	dbg_printf("assertion \"%s\" failed: file \"%s\", line %d%s%s\n",
 			failedexpr, file, line, func ? ", function: " : "",
 			func ? func : "");
+	UpdateCurrentTaskInfo("__assert_func");
 	abort();
 	/* NOTREACHED */
 }

@@ -271,8 +271,8 @@ HAL_StatusTypeDef HAL_CAN_Init(CAN_HandleTypeDef *hcan)
   }
 
   /* Request initialisation */
-  SET_BIT(hcan->Instance->MCR, CAN_MCR_INRQ);
-
+//  SET_BIT(hcan->Instance->MCR, CAN_MCR_INRQ);
+  hcan->Instance->MCR = CAN_MCR_INRQ;
   /* Get tick */
   tickstart = HAL_GetTick();
 

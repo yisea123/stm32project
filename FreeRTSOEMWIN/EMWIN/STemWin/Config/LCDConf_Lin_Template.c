@@ -132,7 +132,7 @@ void HAL_LTDC_LineEvenCallback(LTDC_HandleTypeDef *LTDC_Handler)
                  layer_prop[layer].xSize * layer_prop[layer].ySize * layer_prop[layer].pending_buffer * layer_prop[layer].BytesPerPixel;
             HAL_LTDC_SetAddress(LTDC_Handler,Addr,layer);//…Ë÷√µÿ÷∑
             __HAL_LTDC_RELOAD_CONFIG(LTDC_Handler);
-            GUI_MULTIBUF_ConfirmEx(layer,layer_prop[layer].pending_buffer);
+           // GUI_MULTIBUF_ConfirmEx(layer,layer_prop[layer].pending_buffer);
             layer_prop[layer].pending_buffer=-1;
         }
     }

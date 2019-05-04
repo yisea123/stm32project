@@ -441,6 +441,11 @@ SECTIONS
 	  {
 	    *(.mb5ltdc)
 	  } >MEMORY_B5_1
+	  
+	  .memory_b5_2_text (NOLOAD) :
+	  {
+	    *(.mb5_2_malloc)
+	  } >MEMORY_B5_2
     /*
      * The EXTMEM.
      * The C or assembly source must explicitly place the code or data there

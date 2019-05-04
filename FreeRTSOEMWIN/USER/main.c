@@ -17,11 +17,12 @@
 #include "GUIDEMO.h"
 
 
- HeapRegion_t xHeapRegions[] =
+const HeapRegion_t xHeapRegions[] =
  {
-	{ ( uint8_t * ) 0x20000000UL,   0x018000 },     // 96KiB from RAM (192KiB)
- 	{ ( uint8_t * ) 0x10000000UL, 0x10000 }, //<< Defines a block of 64K bytes starting at address of 0x10000000UL --CCR
-  	{ NULL, 0 }                //<< Terminates the array.
+// 	{ ( uint8_t * ) 0x10000000UL, 0x10000 }, //<< Defines a block of 64K bytes starting at address of 0x10000000UL --CCR
+//	{ ( uint8_t * ) 0x20000000UL,   0x018000 },     // 96KiB from RAM (192KiB)
+	{ ( uint8_t * ) 0XC01F4000UL, 2000 *1024 },
+	{ NULL, 0 }                //<< Terminates the array.
  };
 
 /************************************************
@@ -82,24 +83,50 @@ int main(void)
     LED_Init();                     //初始化LED 
     KEY_Init();                     //初始化按键
     SDRAM_Init();                   //SDRAM初始化
+				        //触摸屏初始化
+#if 1
     TFTLCD_Init();  		        //LCD初始化
-    TP_Init();				        //触摸屏初始化
+    TP_Init();
     vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
-//    my_mem_init(SRAMIN);		    //初始化内部内存池
+    __HAL_RCC_CRC_CLK_ENABLE();		//使能CRC时钟
+	WM_SetCreateFlags(WM_CF_MEMDEV);
+	GUI_Init();  					//STemWin初始化
+	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
+ //   my_mem_init(SRAMIN);		    //初始化内部内存池
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
 	 
-	//创建开始任务
-    xTaskCreate((TaskFunction_t )start_task,            //任务函数
-                (const char*    )"start_task",          //任务名称
-                (uint16_t       )START_STK_SIZE,        //任务堆栈大小
-                (void*          )NULL,                  //传递给任务函数的参数
-                (UBaseType_t    )START_TASK_PRIO,       //任务优先级
-                (TaskHandle_t*  )&StartTask_Handler);   //任务句柄                
-    vTaskStartScheduler();          //开启任务调度
+    //创建触摸任务
+    /*
+	xTaskCreate((TaskFunction_t )touch_task,
+				(const char*    )"touch_task",
+				(uint16_t       )TOUCH_STK_SIZE,
+				(void*          )NULL,
+				(UBaseType_t    )TOUCH_TASK_PRIO,
+				(TaskHandle_t*  )&TouchTask_Handler);
 
+				*/
+	//创建LED0任务
+	xTaskCreate((TaskFunction_t )led0_task,
+				(const char*    )"led0_task",
+				(uint16_t       )LED0_STK_SIZE,
+				(void*          )NULL,
+				(UBaseType_t    )LED0_TASK_PRIO,
+				(TaskHandle_t*  )&Led0Task_Handler);
+
+
+/*
+    xTaskCreate((TaskFunction_t )emwindemo_task,
+                (const char*    )"emwindemo_task",
+                (uint16_t       )EMWINDEMO_STK_SIZE,
+                (void*          )NULL,
+                (UBaseType_t    )EMWINDEMO_TASK_PRIO,
+                (TaskHandle_t*  )&EmwindemoTask_Handler);
+*/
+    osKernelStart();
+#endif
 }
-
+#if 0
 //开始任务任务函数
 void start_task(void *pvParameters)
 {
@@ -108,31 +135,20 @@ void start_task(void *pvParameters)
 	GUI_Init();  					//STemWin初始化
 	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
     taskENTER_CRITICAL();           //进入临界区
-	//创建触摸任务
-    xTaskCreate((TaskFunction_t )touch_task,             
-                (const char*    )"touch_task",           
-                (uint16_t       )TOUCH_STK_SIZE,        
-                (void*          )NULL,                  
-                (UBaseType_t    )TOUCH_TASK_PRIO,        
-                (TaskHandle_t*  )&TouchTask_Handler);   	
-    //创建LED0任务
-    xTaskCreate((TaskFunction_t )led0_task,             
-                (const char*    )"led0_task",           
-                (uint16_t       )LED0_STK_SIZE,        
-                (void*          )NULL,                  
-                (UBaseType_t    )LED0_TASK_PRIO,        
-                (TaskHandle_t*  )&Led0Task_Handler);  
+
     //创建EMWIN Demo任务
+
     xTaskCreate((TaskFunction_t )emwindemo_task,             
                 (const char*    )"emwindemo_task",           
                 (uint16_t       )EMWINDEMO_STK_SIZE,        
                 (void*          )NULL,                  
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,        
-                (TaskHandle_t*  )&EmwindemoTask_Handler);   				
+                (TaskHandle_t*  )&EmwindemoTask_Handler);
+
     vTaskDelete(StartTask_Handler); //删除开始任务
     taskEXIT_CRITICAL();            //退出临界区
 }
-
+#endif
 //EMWINDEMO任务
 void emwindemo_task(void *pvParameters)
 {
