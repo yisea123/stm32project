@@ -1,0 +1,7 @@
+//  Gnu C/C++ (version 2.95.3 or later), -si4 -sp4, 
+//  Standard lint options
+
+
+-i"C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\bin"
+-i"C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include"
+-i"C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\lib\gcc\arm-none-eabi\5.4.1\include"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <includedir>
+        <dir name="app/inc/"/>
+        <dir name="bsp/Inc/"/>
+        <dir name="device/"/>
+        <dir name="library/FreeRTOS/include/"/>
+        <dir name="system/include/stm32f4-hal/"/>
+    </includedir>
+    <libraries>
+        <library>gnu</library>
+    </libraries>
+</project>

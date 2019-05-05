@@ -1,0 +1,5 @@
+cd %~dp0
+
+@echo off
+
+.\lint_Subsystem.BAT ..\app\src\*.c ..\app\subsystem ..\app\t_unit ..\app\shell 

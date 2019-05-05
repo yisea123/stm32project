@@ -1,0 +1,192 @@
+
+--- Module:   device\ad717x.c (C)
+
+--- Module:   device\at24c64.c (C)
+
+--- Module:   device\dev_ad7172.c (C)
+
+--- Module:   device\dev_dq18b20.c (C)
+
+--- Module:   device\dev_eep.c (C)
+
+--- Module:   device\dev_spi.c (C)
+
+--- Module:   device\dev_spiflash.c (C)
+
+--- Module:   device\dev_temp.c (C)
+
+--- Module:   bsp\Src\bsp.c (C)
+_
+_Noreturn void
+C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h 
+    310  Error 10: Expecting identifier or other declarator
+
+--- Module:   bsp\Src\can.c (C)
+
+--- Module:   bsp\Src\crc.c (C)
+
+--- Module:   bsp\Src\dma.c (C)
+
+--- Module:   bsp\Src\gpio.c (C)
+
+    --- Wrap-up for Module: bsp\Src\gpio.c
+
+Warning 528: Symbol 'testPins' (line 364, file bsp\Src\gpio.c) not referenced
+
+--- Module:   bsp\Src\i2c.c (C)
+
+--- Module:   bsp\Src\rng.c (C)
+
+--- Module:   bsp\Src\rtc.c (C)
+                                                 _
+#...                                             ((RCC_TypeDef *) RCC_BASE)
+#...   (((((((((uint8_t)0x41U)) >> 5U) == 1U)? RCC->CR :((((((uint8_t)0x41U)) >
+	while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET)
+bsp\Src\rtc.c  90  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+                                                 _
+#...                                             ((RCC_TypeDef *) RCC_BASE)
+#... CR :((((((uint8_t)0x41U)) >> 5U) == 2U) ? RCC->BDCR :((((((uint8_t)0x41U))
+	while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET)
+bsp\Src\rtc.c  90  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+                                                 _
+#...                                             ((RCC_TypeDef *) RCC_BASE)
+#... DCR :((((((uint8_t)0x41U)) >> 5U) == 3U)? RCC->CSR :RCC->CIR))) & ((uint32
+	while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET)
+bsp\Src\rtc.c  90  Warning 506: Constant value Boolean [MISRA 2012 Rule 2.1,
+    required]
+
+--- Module:   bsp\Src\spi.c (C)
+
+--- Module:   bsp\Src\stm32f4xx_hal_msp.c (C)
+
+--- Module:   bsp\Src\stm32f4xx_it.c (C)
+
+--- Module:   bsp\Src\tim.c (C)
+
+--- Module:   bsp\Src\usart.c (C)
+
+--- Module:   app\shell\cmd.c (C)
+_
+_Noreturn void
+C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q2\arm-none-eabi\include\stdlib.h 
+    310  Error 10: Expecting identifier or other declarator
+
+--- Module:   app\shell\Retarget.c (C)
+
+--- Module:   app\shell\shell_io.c (C)
+
+--- Module:   app\src\Common_Crc.c (C)
+
+--- Module:   app\src\freertos.c (C)
+
+    --- Wrap-up for Module: app\src\freertos.c
+
+Warning 528: Symbol 'StartCanIOTask(const void *)' (line 84, file
+    app\src\freertos.c) not referenced
+Warning 528: Symbol 'StartCanopenTask(const void *)' (line 91, file
+    app\src\freertos.c) not referenced
+
+--- Module:   app\src\main.c (C)
+
+    --- Wrap-up for Module: app\src\main.c
+
+Warning 528: Symbol 'FlashRdAccess(uint32_t, uint8_t *, uint16_t)' (line 145,
+    file app\src\main.c) not referenced
+Warning 528: Symbol 'FlashWrAccess(uint32_t, uint8_t *, uint16_t)' (line 154,
+    file app\src\main.c) not referenced
+
+--- Module:   app\src\tsk_flow_all.c (C)
+
+--- Module:   app\src\tsk_flow_poll.c (C)
+
+--- Module:   app\src\tsk_mcu_status.c (C)
+
+--- Module:   app\src\tsk_measure.c (C)
+
+--- Module:   app\src\tsk_meas_calc.c (C)
+
+--- Module:   app\src\tsk_meas_tim.c (C)
+
+--- Module:   app\src\tsk_motor_ctrl.c (C)
+
+--- Module:   app\src\tsk_poll_sch.c (C)
+
+--- Module:   app\src\tsk_sch_all.c (C)
+
+--- Module:   app\src\tsk_sch_cali.c (C)
+
+--- Module:   app\src\tsk_sch_clean.c (C)
+
+--- Module:   app\src\tsk_sch_io.c (C)
+
+--- Module:   app\src\tsk_sch_meas.c (C)
+
+--- Module:   app\src\tsk_substep_ctrl.c (C)
+
+--- Module:   app\src\tsk_temp_ctrl.c (C)
+
+--- Module:   app\src\tsk_valve_ctrl.c (C)
+
+--- Module:   app\src\_initialize_hardware.c (C)
+
+--- Module:   app\src\_write.c (C)
+
+--- Module:   app\subsystem\unit_data_log.c (C)
+
+--- Module:   app\subsystem\unit_flow_act.c (C)
+
+--- Module:   app\subsystem\unit_flow_cfg.c (C)
+
+--- Module:   app\subsystem\unit_io_cfg.c (C)
+
+--- Module:   app\subsystem\unit_meas_cfg.c (C)
+
+--- Module:   app\subsystem\unit_meas_data.c (C)
+
+--- Module:   app\subsystem\unit_rtc_cfg.c (C)
+
+--- Module:   app\subsystem\unit_sch_cfg.c (C)
+
+--- Module:   app\subsystem\unit_statistics_data.c (C)
+
+--- Module:   app\subsystem\unit_sys_diagnosis.c (C)
+
+--- Module:   app\subsystem\unit_sys_info.c (C)
+
+--- Module:   app\subsystem\unit_temp_cfg.c (C)
+
+--- Module:   app\localBus\LB_App.c (C)
+
+--- Module:   app\localBus\LB_Layer1_Can.c (C)
+
+    --- Wrap-up for Module: app\localBus\LB_Layer1_Can.c
+
+Warning 528: Symbol 'errorCountCan' (line 24, file app\localBus\LB_Layer1_Can.c)
+    not referenced
+Warning 528: Symbol 'PrintCanMsg(CanTxMsgTypeDef *)' (line 100, file
+    app\localBus\LB_Layer1_Can.c) not referenced
+Warning 528: Symbol 'canHWStatus' (line 21, file app\localBus\LB_Layer1_Can.c)
+    not referenced
+
+--- Module:   app\localBus\LB_Layer1_Uart.c (C)
+
+--- Module:   app\localBus\LB_Layer2.c (C)
+
+--- Module:   app\localBus\LB_Layer2_Can.c (C)
+
+--- Module:   app\localBus\LB_Layer2_Uart.c (C)
+
+--- Module:   app\localBus\LB_Layer7.c (C)
+
+--- Module:   app\localBus\LB_Layer_data.c (C)
+
+--- Module:   app\localBus\LB_Task.c (C)
+
+--- Global Wrap-up
+
+Warning 552: Symbol 'txCanCount1' (line 17, file app\localBus\LB_Layer1_Can.c)
+    not accessed
+Warning 552: Symbol 'rxCanCount' (line 18, file app\localBus\LB_Layer1_Can.c)
+    not accessed
