@@ -348,7 +348,7 @@ u16 LTDC_PanelID_Read(void)
 	else if(idx==2)return 0X7016;	//7寸屏,1024*600分辨率
 	else if(idx==3)return 0X7018;	//7寸屏,1280*800分辨率
 	else if(idx==4)return 0X8017; 	//8寸屏,1024*768分辨率
-	else return 0;
+	else return 0X7016;
 }
 
 

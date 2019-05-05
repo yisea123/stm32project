@@ -21,7 +21,7 @@ HeapRegion_t xHeapRegions[] =
 {
  	{ ( uint8_t * ) 0x10000000UL, 0x10000 }, //<< Defines a block of 64K bytes starting at address of 0x10000000UL --CCR
 //	{ ( uint8_t * ) 0x20000000UL, 0x018000 },     // 96KiB from RAM (192KiB)
-	{ ( uint8_t * ) 0XC0600000UL, 2000 *1024 },
+//	{ ( uint8_t * ) 0XC0600000UL, 2000 *1024 },
 	{ NULL, 0 }                //<< Terminates the array.
  };
 
@@ -95,7 +95,7 @@ int main(void)
 {
 	HAL_Init();                     //初始化HAL库
 //    Stm32_Clock_Init(360,25,2,8);   //设置时钟,180Mhz
-    if(xHeapRegions[1].pucStartAddress != 0XC0600000UL && 2000 *1024 != xHeapRegions[1].xSizeInBytes)
+    if(xHeapRegions[0].pucStartAddress != 0x10000000UL || 0x10000 != xHeapRegions[0].xSizeInBytes)
     {
     	assert(0);
     }
@@ -111,16 +111,16 @@ int main(void)
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();
     vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
-    memoryTest();
+ //   memoryTest();
 //   my_mem_init(SRAMIN);		    //初始化内部内存池
-//	WM_SetCreateFlags(WM_CF_MEMDEV);
-//	GUI_Init();  					//STemWin初始化
-//	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
+	WM_SetCreateFlags(WM_CF_MEMDEV);
+	GUI_Init();  					//STemWin初始化
+	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
 	 
     //创建触摸任务
-    /*
+
 	xTaskCreate((TaskFunction_t )touch_task,
 				(const char*    )"touch_task",
 				(uint16_t       )TOUCH_STK_SIZE,
@@ -128,7 +128,7 @@ int main(void)
 				(UBaseType_t    )TOUCH_TASK_PRIO,
 				(TaskHandle_t*  )&TouchTask_Handler);
 
-				*/
+
 	//创建LED0任务
 	xTaskCreate((TaskFunction_t )led0_task,
 				(const char*    )"led0_task",
@@ -138,14 +138,14 @@ int main(void)
 				(TaskHandle_t*  )&Led0Task_Handler);
 
 
-/*
+
     xTaskCreate((TaskFunction_t )emwindemo_task,
                 (const char*    )"emwindemo_task",
                 (uint16_t       )EMWINDEMO_STK_SIZE,
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
-*/
+
     osKernelStart();
 #endif
 #endif

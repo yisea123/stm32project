@@ -57,7 +57,7 @@ Purpose     : Shows how to use memory devices for rotation.
   ******************************************************************************
   */
 
-#include "main.h"
+#include "bsp.h"
 #include "GUIDEMO.h"
 #include "arm_math.h"
 
