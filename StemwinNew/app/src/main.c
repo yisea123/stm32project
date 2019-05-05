@@ -21,7 +21,7 @@ HeapRegion_t xHeapRegions[] =
 {
  	{ ( uint8_t * ) 0x10000000UL, 0x10000 }, //<< Defines a block of 64K bytes starting at address of 0x10000000UL --CCR
 //	{ ( uint8_t * ) 0x20000000UL, 0x018000 },     // 96KiB from RAM (192KiB)
-//	{ ( uint8_t * ) 0XC0600000UL, 2000 *1024 },
+	{ ( uint8_t * ) 0XC0600000UL, 2000 *1024 },
 	{ NULL, 0 }                //<< Terminates the array.
  };
 
@@ -110,9 +110,9 @@ int main(void)
 #if 1
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();
-    vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
+//    vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
  //   memoryTest();
-//   my_mem_init(SRAMIN);		    //初始化内部内存池
+   my_mem_init(SRAMEX);		    //初始化内部内存池
 	WM_SetCreateFlags(WM_CF_MEMDEV);
 	GUI_Init();  					//STemWin初始化
 	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到

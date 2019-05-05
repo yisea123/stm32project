@@ -36,7 +36,7 @@ _lcd_dev lcddev;
 void LCD_WR_REG(vu16 regval)
 {   
 	regval=regval;		//使用-O2优化的时候,必须插入的延时
-	LCD->LCD_REG=regval;//写入要写的寄存器序号	 
+	LCD->LCD_REG=regval;//写入要写的寄存器序号
 }
 //写LCD数据
 //data:要写入的值
