@@ -61,6 +61,8 @@ void touch_task(void *pvParameters);
 #define LED0_STK_SIZE			128
 //任务句柄
 TaskHandle_t Led0Task_Handler;
+TaskHandle_t ctrlTask_Handler;
+
 //led0任务
 void led0_task(void *pvParameters);
 
@@ -90,15 +92,11 @@ void memoryTest()
 
 //emwindemo_task任务
 void emwindemo_task(void *pvParameters);
-
+void ctrlTask(void *pvParameters);
 int main(void)
 {
 	HAL_Init();                     //初始化HAL库
-//    Stm32_Clock_Init(360,25,2,8);   //设置时钟,180Mhz
-    if(xHeapRegions[0].pucStartAddress != 0x10000000UL || 0x10000 != xHeapRegions[0].xSizeInBytes)
-    {
-    	assert(0);
-    }
+
 #if 1
     delay_init(180);                //初始化延时函数
     uart_init(115200);              //初始化USART
@@ -110,15 +108,18 @@ int main(void)
 #if 1
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();
+    MX_USART2_UART_Init();
+    MX_USART3_UART_Init();
+    PCF8574_Init();
 //    vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
  //   memoryTest();
-   my_mem_init(SRAMEX);		    //初始化内部内存池
+    my_mem_init(SRAMEX);		    //初始化内部内存池
 	WM_SetCreateFlags(WM_CF_MEMDEV);
 	GUI_Init();  					//STemWin初始化
 	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
-	 
+
     //创建触摸任务
 
 	xTaskCreate((TaskFunction_t )touch_task,
@@ -137,11 +138,17 @@ int main(void)
 				(UBaseType_t    )LED0_TASK_PRIO,
 				(TaskHandle_t*  )&Led0Task_Handler);
 
+	xTaskCreate((TaskFunction_t )ctrlTask,
+					(const char*    )"ctrl_task",
+					(uint16_t       )400,
+					(void*          )NULL,
+					(UBaseType_t    )1,
+					(TaskHandle_t*  )&ctrlTask_Handler);
 
 
     xTaskCreate((TaskFunction_t )emwindemo_task,
                 (const char*    )"emwindemo_task",
-                (uint16_t       )EMWINDEMO_STK_SIZE,
+                (uint16_t       )EMWINDEMO_STK_SIZE*2,
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
@@ -174,12 +181,19 @@ void start_task(void *pvParameters)
 }
 #endif
 //EMWINDEMO任务
+#include "listboxdemo.h"
 void emwindemo_task(void *pvParameters)
 {
+//	GUI_CURSOR_Show();
+//
+	Tsk();
+
 	while(1)
 	{
-		GUIDEMO_Main();
-	//	vTaskDelay(500);		//延时500ms
+
+
+		//GUIDEMO_Main();
+		vTaskDelay(500);		//延时500ms
 	}
 }
 
@@ -200,6 +214,21 @@ void led0_task(void *p_arg)
 	{
 		LED0 = !LED0;
 		vTaskDelay(500);		//延时500ms
+		AddData(0,0);
+	}
+}
+
+void ctrlTask(void* p_arg)
+{
+	(void)p_arg;
+
+	while(1)
+	{
+		UpdateTH();
+		for(int i =0; i<5; i++)
+		{
+			osDelay(100);
+		}
 	}
 }
 

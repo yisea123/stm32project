@@ -70,6 +70,12 @@ uint32_t GetTickDeviation(const uint32_t oldTick, const uint32_t reqTick);
 int32_t TickTimeDiff(const uint32_t oldTick, const uint32_t reqTick);
 
 
+void MX_USART2_UART_Init(void);
+void MX_USART3_UART_Init(void);
+uint16_t NewUartData(uint16_t type, uint8_t* ptrData);
+void Usart2RXHandle(void);
+void Usart3RXHandle(void);
+
 #ifdef __cplusplus
 }
 #endif

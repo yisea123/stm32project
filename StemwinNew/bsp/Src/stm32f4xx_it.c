@@ -143,6 +143,45 @@ void DebugMon_Handler(void)
 }
 
 
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart3;
+/**
+* @brief This function handles USART2 global interrupt.
+*/
+void USART2_IRQHandler(void)
+{
+	uint32_t tmp1 = __HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE);
+
+	if(tmp1 != RESET)
+	{
+		Usart2RXHandle();
+	}
+	else
+	{
+		HAL_UART_IRQHandler(&huart2);
+	}
+
+}
+
+
+/**
+* @brief This function handles USART3 global interrupt.
+*/
+void USART3_IRQHandler(void)
+{
+	uint32_t tmp1 = __HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE);
+
+	if(tmp1 != RESET)
+	{
+		Usart3RXHandle();
+	}
+	else
+	{
+		HAL_UART_IRQHandler(&huart3);
+	}
+}
+
+
 /**
   * @brief  This function handles SVCall exception.
   * @param  None
