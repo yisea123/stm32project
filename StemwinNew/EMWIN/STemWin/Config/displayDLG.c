@@ -22,7 +22,7 @@
 // USER END
 
 #include "DIALOG.h"
-
+#include "stdint.h"
 /*********************************************************************
 *
 *       Defines
@@ -289,11 +289,39 @@ static const void * _GetImageById(U32 Id, U32 * pSize) {
   }
   return NULL;
 }
+extern int16_t tempTh[2];
+static WM_HWIN gHwn;
+void DISPLAY_DATA_DHT11(void)
+{
+	char temperature_s[10];
+	char humidity_s[10];
+	WM_HWIN hItem;
+	WM_HWIN hWin = gHwn;
+
+	float temp = tempTh[0]/10.0f;
+	float hum = tempTh[1]/10.0f;
+    /*****				温度数据				*******/
+    snprintf(temperature_s,5, "%.1f", temp);
+    snprintf(humidity_s,5, "%.1f", hum);
+
+    hItem = WM_GetDialogItem(hWin, ID_EDIT_0);
+    EDIT_SetText(hItem, temperature_s);
+   // EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+   // EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
+    /*****				湿度数据				*******/
+    hItem = WM_GetDialogItem(hWin, ID_EDIT_1);
+    EDIT_SetText(hItem, humidity_s);
+   // EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+  //  EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
+}
 
 // USER START (Optionally insert additional static code)
 // USER END
 GRAPH_SCALE_Handle hScaleV, hScaleH;
 GRAPH_DATA_Handle pdataTemp, pdataHumidity;
+
+
+
 /*********************************************************************
 *
 *       _cbDialog
@@ -308,10 +336,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   // USER END
 
   switch (pMsg->MsgId) {
+  case WM_TIMER:
+      //      GET_Data_DHT11();				//获得温湿度数据，在其他进程中完成，因此省略此段
+              DISPLAY_DATA_DHT11();			//更新Edit中
+              WM_RestartTimer(pMsg->Data.v, 450);
+          break;
   case WM_INIT_DIALOG:
     //
     // Initialization of 'display'
     //
+	  gHwn = pMsg->hWin;
     hItem = pMsg->hWin;
     FRAMEWIN_SetFont(hItem, GUI_FONT_32B_ASCII);
     FRAMEWIN_SetTextColor(hItem, GUI_MAKE_COLOR(0x00000000));
@@ -393,7 +427,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     CHECKBOX_SetText(hItem, "Open Relay");
     CHECKBOX_SetFont(hItem, GUI_FONT_32B_ASCII);
     // USER START (Optionally insert additional code for further widget initialization)
-    // USER END
+  //  WM_CreateTimer(WM_GetClientWindow(pMsg->hWin), 0, 450, 0);	    //添加此段
+      // USER END
     break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
@@ -505,6 +540,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   }
 }
 
+
 /*********************************************************************
 *
 *       Public code
@@ -517,10 +553,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 */
 WM_HWIN Createdisplay(void);
 WM_HWIN Createdisplay(void) {
-  WM_HWIN hWin;
+  //WM_HWIN hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-  return hWin;
+  gHwn = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+//  WM_CreateTimer(WM_GetClientWindow(gHwn), 0, 450, 0);	    //添加此段
+  return gHwn;
 }
 
 // USER START (Optionally insert additional public code)
@@ -531,6 +568,7 @@ void Tsk()
 	long int NumFreeBytes = GUI_ALLOC_GetNumFreeBytes();
 	if (NumFreeBytes > NUMBYTES_NEEDED)
 	{
+	//	Createdisplay();
 		WM_SetCallback(WM_HBKWIN, &_cbDialog);
 
 		GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);

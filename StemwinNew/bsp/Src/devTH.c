@@ -29,15 +29,23 @@
 #define UART_BUFF_SIZE 		20
 #define UART_IDX_MSK		(0x00007FU)
 /* USER CODE END 0 */
-
+enum
+{
+	NONE_ACT,
+	READ_RELAY,
+	WRITE_RELAY,
+};
 
 int16_t tempTh[2] = {9999,9999};
-
+uint16_t uart3Idx = 0;
 uint16_t uart2Idx = 0;
-
+uint16_t uart2cnt = 0;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
-
+uint16_t uart3State = 0;
+uint16_t relayInput[4] = {0,0,0,0};
+uint16_t relayOutput[4] = {0,0,0,0};
+uint16_t uart3cnt = 0;
 /* USART2 init function */
 
 void MX_USART2_UART_Init(void)
@@ -73,6 +81,45 @@ void UpdateTH(void)
 	uart2Idx = 0;
 	PCF8574_WriteBit(6,0);
 	//osDelay(200);
+	extern void DISPLAY_DATA_DHT11();
+	DISPLAY_DATA_DHT11();
+}
+
+void ReadRelay(void)
+{
+	static const uint8_t sendData[18] =
+	{0x48,0x3a,0x01,0x52,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xd5,0x45,0x44,};
+	HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart3, (uint8_t*)sendData, (uint16_t)15, 100);
+	if(ret != HAL_OK)
+	{
+		//retry?
+
+	}
+	uart3Idx = 0;
+	uart3State = READ_RELAY;
+}
+
+void WriteRelay(void)
+{
+	static uint8_t sendData[18] =
+	{0x48,0x3a,0x01,0x57,0x01,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0xdC,0x45,0x44,};
+	for(uint16_t i =0; i<4;i++)
+	{
+		sendData[4+i] = relayOutput[i];
+	}
+	sendData[12] = 0;
+	for(uint16_t i=0; i<12;i++)
+	{
+		sendData[12] = sendData[12] + sendData[i];
+	}
+	HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart3, (uint8_t*)sendData, (uint16_t)15, 100);
+	if(ret != HAL_OK)
+	{
+		//retry?
+
+	}
+	uart3Idx = 0;
+	uart3State = WRITE_RELAY;
 }
 
 
@@ -80,7 +127,7 @@ void MX_USART3_UART_Init(void)
 {
 
 	huart3.Instance = USART3;
-	huart3.Init.BaudRate = 115200;
+	huart3.Init.BaudRate = 9600;
 	huart3.Init.WordLength = UART_WORDLENGTH_8B;
 	huart3.Init.StopBits = UART_STOPBITS_1;
 	huart3.Init.Parity = UART_PARITY_NONE;
@@ -121,6 +168,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 		else if (uartHandle->Instance == USART2)
 	{
 		/* USER CODE BEGIN USART2_MspInit 0 */
+			__HAL_RCC_GPIOA_CLK_ENABLE();			//使能GPIOA时钟
+			__HAL_RCC_GPIOD_CLK_ENABLE();			//使能GPIOA时钟
 
 		/* USER CODE END USART2_MspInit 0 */
 		/* Peripheral clock enable */
@@ -135,10 +184,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
+		__HAL_UART_ENABLE_IT(uartHandle, USART_IT_RXNE);
+		//USART_ITConfig(USART2_IRQn, USART_IT_RXNE, ENABLE);
 		/* Peripheral interrupt init */
 		HAL_NVIC_SetPriority(USART2_IRQn, ISR_PRIORITY_UART,
-				ISR_SUB_PRIORITY_UART + 1);
+				1);
 		HAL_NVIC_EnableIRQ(USART2_IRQn);
 		/* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -147,6 +197,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 	else if (uartHandle->Instance == USART3)
 	{
 		/* USER CODE BEGIN USART3_MspInit 0 */
+		__HAL_RCC_GPIOB_CLK_ENABLE();			//使能GPIOB时钟
 
 		/* USER CODE END USART3_MspInit 0 */
 		/* Peripheral clock enable */
@@ -166,8 +217,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
 
 		/* Peripheral interrupt init */
+		__HAL_UART_ENABLE_IT(uartHandle, USART_IT_RXNE);
 		HAL_NVIC_SetPriority(USART3_IRQn, ISR_PRIORITY_UART,
-				ISR_SUB_PRIORITY_UART + 2);
+				2);
 		HAL_NVIC_EnableIRQ(USART3_IRQn);
 		/* USER CODE BEGIN USART3_MspInit 1 */
 
@@ -222,21 +274,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 
-uint16_t NewUartData(uint16_t type, uint8_t* ptrData)
-{
-	static uint8_t uartBuff[UART_BUFF_SIZE];
-	static uint32_t uartShellIdx = 0;
-	static uint32_t lastId = 0;
-	if (type == 0)
-	{
-		uartBuff[uartShellIdx++ & UART_IDX_MSK] = *ptrData;
-
-	}
-	return 0;
-}
-
-static uint8_t shellData2[UART_BUFF_SIZE];
-static uint8_t shellData2Len = 0;
 void Usart2RXHandle(void)
 {
 	uint8_t data = (uint8_t) (huart2.Instance->DR & (uint8_t) 0x00FFU);
@@ -245,8 +282,9 @@ void Usart2RXHandle(void)
 	uartBuff[uart2Idx++] = data;
 	if(uart2Idx >= 9)
 	{
-		tempTh[0] = uartBuff[3]*256+uartBuff[4];
-		tempTh[1] = uartBuff[5]*256+uartBuff[6];
+		uart2cnt++;
+		tempTh[0] = (uint16_t)(uartBuff[3]*256+uartBuff[4]);
+		tempTh[1] = (uint16_t)(uartBuff[5]*256+uartBuff[6]);
 		uart2Idx = 0;
 	}
 }
@@ -255,4 +293,24 @@ void Usart3RXHandle(void)
 {
 	uint8_t data = (uint8_t) (huart3.Instance->DR & (uint8_t) 0x00FFU);
 	//LB_Layer1_Uart_Rx(data);
+	static uint8_t uartBuff[30];
+	uartBuff[uart3Idx++] = data;
+	if(uart3Idx >= 15)
+	{
+		if(uart3State == WRITE_RELAY)
+		{
+			//write
+			uart3cnt += 0x100;
+		}
+		else
+		{
+			relayInput[0] = uartBuff[4];
+			relayInput[1] = uartBuff[5];
+			relayInput[2] = uartBuff[6];
+			relayInput[3] = uartBuff[7];
+
+			uart3cnt += 1;
+		}
+	}
+
 }

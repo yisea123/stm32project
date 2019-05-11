@@ -111,6 +111,7 @@ int main(void)
     MX_USART2_UART_Init();
     MX_USART3_UART_Init();
     PCF8574_Init();
+    PCF8574_WriteBit(6,0);
 //    vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
  //   memoryTest();
     my_mem_init(SRAMEX);		    //初始化内部内存池
@@ -120,8 +121,15 @@ int main(void)
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
 
-    //创建触摸任务
 
+	xTaskCreate((TaskFunction_t )ctrlTask,
+					(const char*    )"ctrl_task",
+					(uint16_t       )400,
+					(void*          )NULL,
+					(UBaseType_t    )1,
+					(TaskHandle_t*  )&ctrlTask_Handler);
+    //创建触摸任务
+#if 1
 	xTaskCreate((TaskFunction_t )touch_task,
 				(const char*    )"touch_task",
 				(uint16_t       )TOUCH_STK_SIZE,
@@ -138,13 +146,6 @@ int main(void)
 				(UBaseType_t    )LED0_TASK_PRIO,
 				(TaskHandle_t*  )&Led0Task_Handler);
 
-	xTaskCreate((TaskFunction_t )ctrlTask,
-					(const char*    )"ctrl_task",
-					(uint16_t       )400,
-					(void*          )NULL,
-					(UBaseType_t    )1,
-					(TaskHandle_t*  )&ctrlTask_Handler);
-
 
     xTaskCreate((TaskFunction_t )emwindemo_task,
                 (const char*    )"emwindemo_task",
@@ -152,7 +153,7 @@ int main(void)
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
-
+#endif
     osKernelStart();
 #endif
 #endif
@@ -221,14 +222,18 @@ void led0_task(void *p_arg)
 void ctrlTask(void* p_arg)
 {
 	(void)p_arg;
-
+	uint16_t state = 1;
+	MX_USART3_UART_Init();
+	MX_USART2_UART_Init();
 	while(1)
 	{
-		UpdateTH();
-		for(int i =0; i<5; i++)
-		{
-			osDelay(100);
-		}
+		if(state != 0)
+			UpdateTH();
+		ReadRelay();
+		osDelay(200);
+		WriteRelay();
+		osDelay(200);
+
 	}
 }
 
