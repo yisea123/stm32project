@@ -110,7 +110,9 @@ int main(void)
     TP_Init();
     MX_USART2_UART_Init();
     MX_USART3_UART_Init();
+    MX_DMA_Init();
     PCF8574_Init();
+    W25QXX_Init();
     PCF8574_WriteBit(6,0);
 //    vPortDefineHeapRegions( xHeapRegions ); // << Pass the array into vPortDefineHeapRegions().
  //   memoryTest();

@@ -39,9 +39,18 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+
+enum
+{
+	OK = 0,
+	FATAL_ERROR = 96,
+};
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-
+#include <stdio.h>
+#include "Trace.h"
+#include "bsp.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
