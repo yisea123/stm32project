@@ -119,6 +119,8 @@ int main(void)
     my_mem_init(SRAMEX);		    //初始化内部内存池
 	WM_SetCreateFlags(WM_CF_MEMDEV);
 	GUI_Init();  					//STemWin初始化
+	GUI_UC_SetEncodeUTF8();
+
 	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
@@ -151,7 +153,7 @@ int main(void)
 
     xTaskCreate((TaskFunction_t )emwindemo_task,
                 (const char*    )"emwindemo_task",
-                (uint16_t       )EMWINDEMO_STK_SIZE*2,
+                (uint16_t       )EMWINDEMO_STK_SIZE*5,
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
@@ -217,7 +219,7 @@ void led0_task(void *p_arg)
 	{
 		LED0 = !LED0;
 		vTaskDelay(500);		//延时500ms
-		AddData(0,0);
+		//AddData(0,0);
 	}
 }
 
@@ -232,9 +234,9 @@ void ctrlTask(void* p_arg)
 		if(state != 0)
 			UpdateTH();
 		ReadRelay();
-		osDelay(200);
+		osDelay(100);
 		WriteRelay();
-		osDelay(200);
+		//osDelay(100);
 
 	}
 }

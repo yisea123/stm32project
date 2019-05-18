@@ -396,9 +396,9 @@ static void DMA2D_CopyBuffer(uint32_t LayerIndex,void * pSrc,void * pDst,uint32_
     DMA2D->CR|=DMA2D_CR_START;                      //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)                 //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	                //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	                //超时退出
     }
 }
 
@@ -424,9 +424,9 @@ static void DMA2D_FillBuffer(uint32_t LayerIndex,void * pDst,uint32_t xSize,uint
     DMA2D->CR|=DMA2D_CR_START;                      //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)                 //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	                //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	                //超时退出
     }
 }
 
@@ -563,9 +563,9 @@ static void DMA2D_AlphaBlendingBulk(LCD_COLOR *pColorFG,LCD_COLOR *pColorBG,LCD_
     DMA2D->CR|=DMA2D_CR_START;                  //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)             //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	            //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	            //超时退出
     }
 }
 
@@ -593,9 +593,9 @@ static LCD_COLOR DMA2D_MixColors(LCD_COLOR Color,LCD_COLOR BkColor,U8 Intens)
     DMA2D->CR|=DMA2D_CR_START;                  //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)             //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	            //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	            //超时退出
     }
     return (ColorDst^0xFF000000);               //返回混合后的颜色
 }
@@ -620,9 +620,9 @@ static void DMA2D_ConvertColor(void * pSrc,void * pDst,uint32_t PixelFormatSrc,u
     DMA2D->CR|=DMA2D_CR_START;                  //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)             //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	            //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	            //超时退出
     }
 }
 
@@ -673,9 +673,9 @@ static void DMA2D_MixColorsBulk(LCD_COLOR * pColorFG, LCD_COLOR * pColorBG, LCD_
     DMA2D->CR|=DMA2D_CR_START;                  //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)             //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	            //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	            //超时退出
     }
 }
 
@@ -739,9 +739,9 @@ static void DMA2D_DrawBitmapL8(void * pSrc, void * pDst,  uint32_t OffSrc, uint3
     DMA2D->CR|=DMA2D_CR_START;                  //启动DMA2D传输
     while(DMA2D->CR&DMA2D_CR_START)             //等待传输完成 
     {
-    	osDelay(10);
-        //timeout++;
-		//if(timeout>0X1FFFFF)break;	            //超时退出
+    	//osDelay(5);
+        timeout++;
+		if(timeout>0X1FFFFF)break;	            //超时退出
     }
 }
 
