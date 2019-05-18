@@ -65,7 +65,7 @@ TaskHandle_t ctrlTask_Handler;
 
 //led0任务
 void led0_task(void *pvParameters);
-
+void MainTask1(void *pvParameters);
 //EMWINDEMO任务
 //设置任务优先级
 #define EMWINDEMO_TASK_PRIO		4
@@ -91,8 +91,11 @@ void memoryTest()
 }
 
 //emwindemo_task任务
+
+void MainTask12(void *pvParameters);
 void emwindemo_task(void *pvParameters);
 void ctrlTask(void *pvParameters);
+void Tsk(void*p);
 int main(void)
 {
 	HAL_Init();                     //初始化HAL库
@@ -125,7 +128,6 @@ int main(void)
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
 
-
 	xTaskCreate((TaskFunction_t )ctrlTask,
 					(const char*    )"ctrl_task",
 					(uint16_t       )400,
@@ -150,14 +152,16 @@ int main(void)
 				(UBaseType_t    )LED0_TASK_PRIO,
 				(TaskHandle_t*  )&Led0Task_Handler);
 
-
-    xTaskCreate((TaskFunction_t )emwindemo_task,
+#if 1
+    xTaskCreate((TaskFunction_t )Tsk,//MainTask12,//tsk,
                 (const char*    )"emwindemo_task",
                 (uint16_t       )EMWINDEMO_STK_SIZE*5,
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
 #endif
+#endif
+//	MainTask1(NULL);
     osKernelStart();
 #endif
 #endif
@@ -191,15 +195,13 @@ void emwindemo_task(void *pvParameters)
 {
 //	GUI_CURSOR_Show();
 //
-	Tsk();
+	//Tsk();
 
-	while(1)
-	{
+	  while (1) {
+		  GUI_Exec();
+		  osDelay(20);
 
-
-		//GUIDEMO_Main();
-		vTaskDelay(500);		//延时500ms
-	}
+	  }
 }
 
 //触摸任务的任务函数

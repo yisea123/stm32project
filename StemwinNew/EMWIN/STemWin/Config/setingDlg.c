@@ -29,21 +29,24 @@
 *
 **********************************************************************
 */
-#define ID_FRAMEWIN_0 (GUI_ID_USER + 0x00)
-#define ID_GRAPH_0 (GUI_ID_USER + 0x01)
-#define ID_LISTWHEEL_0 (GUI_ID_USER + 0x02)
-#define ID_EDIT_0 (GUI_ID_USER + 0x03)
-#define ID_EDIT_1 (GUI_ID_USER + 0x04)
-#define ID_GRAPH_1 (GUI_ID_USER + 0x05)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x06)
-#define ID_LISTWHEEL_1 (GUI_ID_USER + 0x07)
-#define ID_TEXT_0 (GUI_ID_USER + 0x08)
-#define ID_TEXT_1 (GUI_ID_USER + 0x09)
-#define ID_BUTTON_1 (GUI_ID_USER + 0x0A)
-#define ID_BUTTON_2 (GUI_ID_USER + 0x0B)
-
+#define ID_FRAMEWIN_0 (GUI_ID_USER + 0x0C)
+#define ID_SPINBOX_0 (GUI_ID_USER + 0x0D)
+#define ID_DROPDOWN_0 (GUI_ID_USER + 0x10)
+#define ID_TEXT_0 (GUI_ID_USER + 0x11)
+#define ID_TEXT_1 (GUI_ID_USER + 0x15)
+#define ID_SPINBOX_1 (GUI_ID_USER + 0x17)
+#define ID_TEXT_2 (GUI_ID_USER + 0x18)
+#define ID_SPINBOX_2 (GUI_ID_USER + 0x19)
+#define ID_TEXT_3 (GUI_ID_USER + 0x1A)
+#define ID_BUTTON_0 (GUI_ID_USER + 0x1B)
+#define ID_BUTTON_1 (GUI_ID_USER + 0x1C)
+#define ID_GRAPH_0 (GUI_ID_USER + 0x1D)
+#define ID_TEXT_4 (GUI_ID_USER + 0x1E)
+#define ID_BUTTON_2 (GUI_ID_USER + 0x1F)
+#define ID_CHECKBOX_0 (GUI_ID_USER + 0x20)
+#define ID_BUTTON_3 (GUI_ID_USER + 0x21)
 extern const GUI_FONT GUI_Fontused_U48;
-uint16_t newWindow = 0;
+extern uint16_t newWindow;
 // USER START (Optionally insert additional defines)
 // USER END
 
@@ -62,18 +65,22 @@ uint16_t newWindow = 0;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { FRAMEWIN_CreateIndirect, "display", ID_FRAMEWIN_0, 0, 0, 1024, 600, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 170, 11, 610, 260, 0, 0x0, 0 },
-  { LISTWHEEL_CreateIndirect, "Listwheel", ID_LISTWHEEL_0, 1612, 252, 50, 30, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "Edit", ID_EDIT_0, 10, 130, 150, 80, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "Edit", ID_EDIT_1, 10, 420, 155, 80, 0, 0x64, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 170, 279, 610, 310, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 810, 50, 190, 100, 0, 0x0, 0 },
-  { LISTWHEEL_CreateIndirect, "Listwheel", ID_LISTWHEEL_1, 1806, 82, 50, 30, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 10, 55, 150, 70, 0, 0x64, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 10, 340, 150, 70, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 810, 220, 190, 100, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 810, 390, 190, 100, 0, 0x0, 0 },
+  { FRAMEWIN_CreateIndirect, "Setting", ID_FRAMEWIN_0, -3, -3, 1024, 600, 0, 0x0, 0 },
+  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_0, 810, 170, 199, 129, 0, 0x0, 0 },
+  { DROPDOWN_CreateIndirect, "Dropdown", ID_DROPDOWN_0, 600, 170, 200, 200, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 630, 90, 380, 70, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 630, 5, 380, 70, 0, 0x64, 0 },
+  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_1, 280, 193, 241, 120, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 50, 224, 170, 70, 0, 0x64, 0 },
+  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_2, 280, 331, 242, 120, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_3, 50, 358, 170, 70, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 160, 480, 200, 80, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 720, 480, 200, 90, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 581, 12, 4, 583, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_4, 5, 5, 574, 70, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 320, 100, 200, 80, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Checkbox", ID_CHECKBOX_0, 70, 100, 250, 80, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 720, 370, 200, 80, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -84,45 +91,9 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 **********************************************************************
 */
-float tempRatio = 0.4*50;
-float humRatio = 1.0;
-float tempOffset = 50;
-GRAPH_DATA_Handle pdataTemp, pdataHumidity;
-extern int16_t tempTh[2];
-static WM_HWIN gHwn;//WM_GetDesktopWindow
-float temp1 = 0;
-float hum1 = 0;
-void DISPLAY_DATA_DHT11(void)
-{
-	char temperature_s[10];
-	char humidity_s[10];
-	WM_HWIN hItem;
-	WM_HWIN hWin = gHwn;
-
-	float temp = tempTh[0]/10.0f;
-	float hum = tempTh[1]/10.0f;
-    /*****				温度数据				*******/
-    snprintf(temperature_s,5, "%.1f", temp);
-    snprintf(humidity_s,5, "%.1f", hum);
-
-    hItem = WM_GetDialogItem(hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, temperature_s);
-   // EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-   // EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
-    hItem = WM_GetDialogItem(hWin, ID_EDIT_1);
-    /*****				湿度数据				*******/
-    EDIT_SetText(hItem, humidity_s);
-   // EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-  //  EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
-
-    GRAPH_DATA_YT_AddValue(pdataTemp, tempOffset + (int)(temp*tempRatio+0.5));
-    GRAPH_DATA_YT_AddValue(pdataHumidity, (int)(hum*humRatio+0.5));
-}
 
 // USER START (Optionally insert additional static code)
 // USER END
-
-
 
 /*********************************************************************
 *
@@ -132,126 +103,110 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   WM_HWIN hItem;
   int     NCode;
   int     Id;
-  GRAPH_SCALE_Handle hScaleV, hScaleH;
   // USER START (Optionally insert additional variables)
   // USER END
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
     //
-    // Initialization of 'display'
+    // Initialization of 'Setting'
     //
-	  gHwn = pMsg->hWin;
     hItem = pMsg->hWin;
-    FRAMEWIN_SetFont(hItem, GUI_FONT_32B_ASCII);
-    FRAMEWIN_SetTextColor(hItem, GUI_MAKE_COLOR(0x00000000));
+    FRAMEWIN_SetFont(hItem, &GUI_Fontused_U48);
+    FRAMEWIN_SetTextColor(hItem, GUI_BLUE);
     FRAMEWIN_SetTitleVis(hItem, 0);
     //
-    // Initialization of 'Graph'
+    // Initialization of 'Spinbox'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_GRAPH_0);
-    GRAPH_SetBorder(hItem,40, 5, 5, 30);
-    GRAPH_SetGridVis(hItem,1);
-    GRAPH_SetGridFixedX(hItem,1);
-    GRAPH_SetGridDistY(hItem,25);
-    GRAPH_SetGridDistX(hItem,50);
-    GRAPH_SetVSizeY(hItem,100);
-    GRAPH_SetVSizeX(hItem, 50);
-    GRAPH_SetColor (hItem, GUI_LIGHTGREEN,   GRAPH_CI_GRID);
-    hScaleV =GRAPH_SCALE_Create(40, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 50);
-    GRAPH_SCALE_SetTextColor(hScaleV,GUI_RED);
-    GRAPH_SCALE_SetFont(hScaleV,GUI_FONT_24_ASCII);
-    GRAPH_SCALE_SetOff(hScaleV, 50);
-    GRAPH_SCALE_SetFactor(hScaleV,0.4f);
-    tempRatio = 1.0f/0.4f;
-    tempOffset = 50;
-
-    GRAPH_AttachScale(hItem,hScaleV);
-
-    hScaleH =GRAPH_SCALE_Create(235, GUI_TA_HCENTER, GRAPH_SCALE_CF_HORIZONTAL, 100);
-    GRAPH_SCALE_SetFont(hScaleH,GUI_FONT_24_ASCII);
-    GRAPH_SCALE_SetTextColor(hScaleH,GUI_RED);
-    GRAPH_SCALE_SetFactor(hScaleH,0.1f);
-    GRAPH_AttachScale(hItem,hScaleH);
-
-    pdataTemp =GRAPH_DATA_YT_Create(GUI_MAGENTA, 560, 0, 0);
-    GRAPH_AttachData(hItem,pdataTemp);
-
-    //GRAPH_DATA_XY_SetPenSize(hItem, 3);
-    ///////////////////////////////**************************/////////////////
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_GRAPH_1);
-    GRAPH_SetBorder(hItem,40, 5, 5, 30);
-    GRAPH_SetGridVis(hItem,1);
-    GRAPH_SetGridFixedX(hItem,1);
-    GRAPH_SetGridDistY(hItem,25);
-    GRAPH_SetGridDistX(hItem,50);
-    GRAPH_SetVSizeY(hItem,100);
-    GRAPH_SetVSizeX(hItem, 50);
-    GRAPH_SetColor (hItem, GUI_LIGHTGREEN,   GRAPH_CI_GRID);
-    hScaleV =GRAPH_SCALE_Create(40, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 50);
-    GRAPH_SCALE_SetTextColor(hScaleV,GUI_RED);
-    GRAPH_SCALE_SetFont(hScaleV,GUI_FONT_24_ASCII);
-    //GRAPH_SCALE_SetOff(hScaleV, 60);
-    GRAPH_SCALE_SetFactor(hScaleV,0.4f);
-    humRatio = 1.0f/0.4f;
-
-    GRAPH_AttachScale(hItem,hScaleV);
-
-    hScaleH =GRAPH_SCALE_Create(282, GUI_TA_HCENTER, GRAPH_SCALE_CF_HORIZONTAL, 100);
-    GRAPH_SCALE_SetTextColor(hScaleH,GUI_RED);
-    GRAPH_SCALE_SetFont(hScaleH,GUI_FONT_24_ASCII);
-    GRAPH_SCALE_SetFactor(hScaleH,0.1f);
-    GRAPH_AttachScale(hItem,hScaleH);
-    pdataHumidity =GRAPH_DATA_YT_Create(GUI_BLUE, 560/*最大数据个数*/, 0, 0);
-    GRAPH_AttachData(hItem,pdataHumidity);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_0);
+    SPINBOX_SetFont(hItem, &GUI_Fontused_U48);
     //
-    // Initialization of 'Edit'
+    // Initialization of 'Dropdown'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, "123");
-    EDIT_SetFont(hItem, &GUI_Fontused_U48);
-    EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_MAKE_COLOR(0x00FF00FF));
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-    //
-    // Initialization of 'Edit'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_1);
-    EDIT_SetText(hItem, "123");
-    EDIT_SetFont(hItem, &GUI_Fontused_U48);
-    EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_MAKE_COLOR(0x00FF0000));
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-    //
-    // Initialization of 'Button'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
-    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
-    BUTTON_SetText(hItem, "吹  扫");
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_DROPDOWN_0);
+    DROPDOWN_SetFont(hItem, &GUI_Fontused_U48);
+    DROPDOWN_AddString(hItem, "Year");
+    DROPDOWN_AddString(hItem, "Month");
+    DROPDOWN_AddString(hItem, "Date");
+    DROPDOWN_AddString(hItem, "Hour");
+    DROPDOWN_AddString(hItem, "Min");
+    DROPDOWN_AddString(hItem, "Second");
     //
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    TEXT_SetFont(hItem, &GUI_Fontused_U48);
-    TEXT_SetText(hItem, "温  度");
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetText(hItem, "2019-05-18 10:20");
     //
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     TEXT_SetFont(hItem, &GUI_Fontused_U48);
-    TEXT_SetText(hItem, "湿  度");
+    TEXT_SetText(hItem, "时钟设置");
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+
+    TEXT_SetTextColor(hItem, GUI_BLUE);
+    //
+    // Initialization of 'Spinbox'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+    SPINBOX_SetFont(hItem, &GUI_Fontused_U48);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
+    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetText(hItem, "吹扫间隔");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //
+    // Initialization of 'Spinbox'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_2);
+    SPINBOX_SetFont(hItem, &GUI_Fontused_U48);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetText(hItem, "吹扫时间");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //
+    // Initialization of 'Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
+    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
+    BUTTON_SetText(hItem, "确  定");
     //
     // Initialization of 'Button'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
-    BUTTON_SetText(hItem, "历  史");
+     BUTTON_SetText(hItem, "返  回");
+   //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_GRAPH_0);
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+    TEXT_SetText(hItem, "控 制 模 式");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetTextColor(hItem, GUI_BLUE);
     //
     // Initialization of 'Button'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+    BUTTON_SetText(hItem, "同步零点");
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
-    BUTTON_SetText(hItem, "设  置");
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
+    CHECKBOX_SetText(hItem, "手  动");
+    CHECKBOX_SetFont(hItem, &GUI_Fontused_U48);
+    //
+    // Initialization of 'Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
+    BUTTON_SetText(hItem, "确  定");
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -259,7 +214,29 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
     switch(Id) {
-    case ID_LISTWHEEL_0: // Notifications sent by 'Listwheel'
+    case ID_SPINBOX_0: // Notifications sent by 'Spinbox'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_MOVED_OUT:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_DROPDOWN_0: // Notifications sent by 'Dropdown'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
@@ -277,13 +254,17 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_EDIT_0: // Notifications sent by 'Edit'
+    case ID_SPINBOX_1: // Notifications sent by 'Spinbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_MOVED_OUT:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -295,13 +276,17 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_EDIT_1: // Notifications sent by 'Edit'
+    case ID_SPINBOX_2: // Notifications sent by 'Spinbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_MOVED_OUT:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -327,24 +312,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_LISTWHEEL_1: // Notifications sent by 'Listwheel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_SEL_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
     case ID_BUTTON_1: // Notifications sent by 'Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -352,8 +319,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-    	  newWindow = 2;
-    	  // USER START (Optionally insert code for reacting on notification message)
+		newWindow = 1;
+        // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -367,7 +334,38 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-    	  newWindow = 2;
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_CHECKBOX_0: // Notifications sent by 'Checkbox'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_3: // Notifications sent by 'Button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -395,76 +393,26 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 */
 /*********************************************************************
 *
-*       Createdisplay
+*       CreateSetting
 */
-
-WM_HWIN allUI[2];
-
-WM_HWIN Createdisplay(void);
-WM_HWIN Createdisplay(void) {
- // WM_HWIN hWin;
-
-	allUI[0] = gHwn = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-//  WM_CreateTimer(WM_GetClientWindow(gHwn), 0, 450, 0);	    //添加此段
-  return gHwn;
+WM_HWIN settingUI;
+extern WM_HWIN allUI[2];
+WM_HWIN CreateSetting(void);
+WM_HWIN CreateSetting(void) {
+  WM_HWIN hWin;
+  WM_SetCreateFlags(WM_CF_HIDE);
+  allUI[1] = settingUI = hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+  WM_HideWindow(hWin);
+  return hWin;
 }
-void StartUIMain()
-{
 
-	WM_HideWindow(allUI[1]);
-	WM_ShowWindow(allUI[0]);
+// USER START (Optionally insert additional public code)
+void StartUISetting(uint16_t type)
+{
+	WM_ShowWindow(allUI[1]);
+	WM_HideWindow(allUI[0]);
 	WM_SetCallback(WM_HBKWIN, &_cbDialog);
 }
-// USER START (Optionally insert additional public code)
-#define NUMBYTES_NEEDED   0x200000
-void Tsk(void*p)
-{
-	long int NumFreeBytes = GUI_ALLOC_GetNumFreeBytes();
-
-	if (NumFreeBytes > NUMBYTES_NEEDED)
-	{
-		//WM_SetCreateFlags(WM_CF_MEMDEV);
-		WM_SetCreateFlags(WM_CF_MEMDEV);
-
-		Createdisplay();
-		CreateSetting();
-		StartUIMain();
-		while (1)
-		{
-			if(newWindow == 1)
-			{
-				newWindow = 0;
-				StartUIMain();
-			}
-			else if (newWindow == 2)
-			{
-				newWindow = 0;
-				StartUISetting(1);
-			}
-			GUI_Exec();
-			if(newWindow == 0)
-				osDelay(20);
-		}
-//	GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-
-	}
-}
-
-void AddData(int x0, int x1)
-{
-	static unsigned int i =0;
-	GUI_MULTIBUF_Begin();
-	for (int j=0; j<5;j++)
-	{
-	i++;
-
-	GRAPH_DATA_YT_AddValue(pdataTemp, (i%70)*3+80);
-	GRAPH_DATA_YT_AddValue(pdataHumidity, (i%100)*3+10);
-
-	}
-	GUI_MULTIBUF_End();
-}
-
 // USER END
 
 /*************************** End of file ****************************/

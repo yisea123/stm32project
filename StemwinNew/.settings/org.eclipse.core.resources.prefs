@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
+encoding//EMWIN/STemWin/Config/UI.c=UTF-8
 encoding//EMWIN/STemWin/Config/displayDLG.c=UTF-8
+encoding//EMWIN/STemWin/Config/setingDlg.c=UTF-8
 encoding//app/localBus/LB_Layer2.c=UTF-8
 encoding//app/localBus/LB_Layer2_Can.c=UTF-8
 encoding//app/localBus/LB_Layer2_Can.h=UTF-8
