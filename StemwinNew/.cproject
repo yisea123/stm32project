@@ -649,7 +649,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="STemWin/Config/UI.c|STemWin/Config/settingsDLG.c|STemWin/Config/SettingDLG.c|STemWin/OS/GUI_X.c|STemWin/Config/LCDConf_FlexColor_Template.c|STemWin/Config/GUIDRV_Template.c|Demo/test.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="EMWIN"/>
+						<entry excluding="Demo|STemWin/Config/testDLG.c|STemWin/Config/WIDGET_ListWheel.c|STemWin/Config/UI.c|STemWin/Config/settingsDLG.c|STemWin/Config/SettingDLG.c|STemWin/OS/GUI_X.c|STemWin/Config/LCDConf_FlexColor_Template.c|STemWin/Config/GUIDRV_Template.c|Demo/test.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="EMWIN"/>
 						<entry excluding="MemMang|MemMang/heap_4.c|MemMang/heap_3.c|MemMang/heap_2.c|MemMang/heap_1.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Library"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MALLOC"/>
 						<entry excluding="Src/bsp_driver_sd.c|Src/stm32f4xx_hal_timebase_TIM.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="bsp"/>

@@ -23,6 +23,8 @@
 
 #include "DIALOG.h"
 #include "stdint.h"
+#include "rtc.h"
+#include "bsp.h"
 /*********************************************************************
 *
 *       Defines
@@ -65,22 +67,22 @@ extern uint16_t newWindow;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { FRAMEWIN_CreateIndirect, "Setting", ID_FRAMEWIN_0, -3, -3, 1024, 600, 0, 0x0, 0 },
-  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_0, 810, 170, 199, 129, 0, 0x0, 0 },
-  { DROPDOWN_CreateIndirect, "Dropdown", ID_DROPDOWN_0, 600, 170, 200, 200, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 630, 90, 380, 70, 0, 0x64, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 630, 5, 380, 70, 0, 0x64, 0 },
-  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_1, 280, 193, 241, 120, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 50, 224, 170, 70, 0, 0x64, 0 },
-  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_2, 280, 331, 242, 120, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_3, 50, 358, 170, 70, 0, 0x64, 0 },
+  { FRAMEWIN_CreateIndirect, "Setting", ID_FRAMEWIN_0, 0, 0, 1024, 600, 0, 0x0, 0 },
+  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_0, 778, 170, 231, 129, 0, 0x0, 0 },
+  { DROPDOWN_CreateIndirect, "Dropdown", ID_DROPDOWN_0, 550, 169, 210, 300, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 543, 90, 467, 70, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 540, 5, 470, 70, 0, 0x64, 0 },
+  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_1, 260, 193, 240, 120, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 30, 220, 170, 70, 0, 0x64, 0 },
+  { SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_2, 260, 330, 240, 120, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_3, 30, 360, 170, 70, 0, 0x64, 0 },
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 160, 480, 200, 80, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 720, 480, 200, 90, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 581, 12, 4, 583, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_4, 5, 5, 574, 70, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 320, 100, 200, 80, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Checkbox", ID_CHECKBOX_0, 70, 100, 250, 80, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 720, 370, 200, 80, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 670, 470, 200, 90, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 533, 1, 4, 583, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_4, 5, 5, 526, 70, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 300, 100, 200, 80, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Checkbox", ID_CHECKBOX_0, 60, 99, 230, 80, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 670, 345, 200, 80, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -91,6 +93,114 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 **********************************************************************
 */
+
+static const uint16_t timeRange[6][2] =
+{
+		{2019, 3100},
+		{1, 12},
+		{1, 31},
+		{0, 23},
+		{0, 59},
+		{0, 59},
+};
+void SaveLoadRTC(WM_MESSAGE * pMsg, U16 type)
+{
+	WM_HWIN hItem;
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_DROPDOWN_0);
+	U16 eTp = DROPDOWN_GetSel(hItem);
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_0);
+
+	if(type == 0)
+	{
+		//update
+		I32 val = SPINBOX_GetValue(hItem);
+		UpdateRTC(eTp, val);
+	}
+	else
+	{
+		I32 val= GetRTC(eTp);
+		SPINBOX_SetRange(hItem, timeRange[eTp][0], timeRange[eTp][1]);
+		SPINBOX_SetValue(hItem, val);
+		//load
+	}
+}
+void ChkBox(WM_MESSAGE * pMsg, U16 type)
+{
+	WM_HWIN hItem;
+
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
+	if(type)
+	{
+
+		if( prvReadBackupRegister(MANUAL_STATE) != 0)
+		{
+			CHECKBOX_Check(hItem);
+		}
+		else
+		{
+			CHECKBOX_Uncheck(hItem);
+		}
+	}
+	if(CHECKBOX_IsChecked(hItem))
+	{
+		  //
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+
+		WM_EnableWindow(hItem);
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+		WM_EnableWindow(hItem);
+
+		WM_ValidateWindow(hItem);
+	}
+	else
+	{
+
+
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+		WM_DisableWindow(hItem);
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+		WM_DisableWindow(hItem);
+	}
+}
+
+
+void SaveLoadValue(WM_MESSAGE * pMsg, U16 type)
+{
+	WM_HWIN hItem;
+	I32 val;
+
+	if(type != 0)
+	{
+// save
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+		val = SPINBOX_GetValue(hItem);
+		prvWriteBackupRegister(INTERVAL_SET, val);
+
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_2);
+		val = SPINBOX_GetValue(hItem);
+		prvWriteBackupRegister(TIME_EXEC, val);
+
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
+		if(CHECKBOX_IsChecked(hItem))
+			val = 1;
+		else
+			val = 0;
+		prvWriteBackupRegister(MANUAL_STATE, val);
+
+	}
+	else
+	{
+//load
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+		val = prvReadBackupRegister(INTERVAL_SET);
+		SPINBOX_SetValue(hItem, val);
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_2);
+		val = prvReadBackupRegister(TIME_EXEC);
+		SPINBOX_SetValue(hItem, val);
+
+
+	}
+}
 
 // USER START (Optionally insert additional static code)
 // USER END
@@ -107,6 +217,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   // USER END
 
   switch (pMsg->MsgId) {
+  case WM_TIMER:
+	  hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+	  TEXT_SetText(hItem, GetRTCStr());
+	  WM_RestartTimer(pMsg->Data.v, 1000);
+	  break;
   case WM_INIT_DIALOG:
     //
     // Initialization of 'Setting'
@@ -137,7 +252,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetFont(hItem, &GUI_Fontused_U48);
-    TEXT_SetText(hItem, "2019-05-18 10:20");
+    TEXT_SetText(hItem, GetRTCStr());
     //
     // Initialization of 'Text'
     //
@@ -201,12 +316,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
     CHECKBOX_SetText(hItem, "手  动");
     CHECKBOX_SetFont(hItem, &GUI_Fontused_U48);
+    CHECKBOX_SetState(hItem, 1);
     //
     // Initialization of 'Button'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
     BUTTON_SetText(hItem, "确  定");
+    ChkBox(pMsg, 1);
+    SaveLoadValue(pMsg, 0);
+    SaveLoadRTC(pMsg, 1);
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -239,6 +358,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     case ID_DROPDOWN_0: // Notifications sent by 'Dropdown'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
+    	 // SaveLoadRTC(pMsg, 1);
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -247,6 +367,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_SEL_CHANGED:
+    	  SaveLoadRTC(pMsg, 1);
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -269,6 +390,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
+
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -305,6 +427,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
+    	  SaveLoadValue(pMsg, 1);
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -352,6 +475,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
+    	  ChkBox(pMsg, 0);
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -366,6 +490,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
+    	  SaveLoadRTC(pMsg, 0);
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -409,8 +534,11 @@ WM_HWIN CreateSetting(void) {
 // USER START (Optionally insert additional public code)
 void StartUISetting(uint16_t type)
 {
-	WM_ShowWindow(allUI[1]);
+
 	WM_HideWindow(allUI[0]);
+	WM_ShowWindow(allUI[1]);
+
+	WM_CreateTimer(WM_HBKWIN,0,1000,0);
 	WM_SetCallback(WM_HBKWIN, &_cbDialog);
 }
 // USER END

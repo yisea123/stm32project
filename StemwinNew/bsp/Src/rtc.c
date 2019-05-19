@@ -193,7 +193,138 @@ uint16_t Init_RTC(void)
 	return ret;
 }
 
+char* GetRTCStr()
+{
+	static char buff[20];
+	RTC_TimeTypeDef RTC_TimeStruct;
+	RTC_DateTypeDef RTC_DateStruct;
+	int len = 0;
+	HAL_RTC_GetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+	//lint -e586
+	len = snprintf((void*)buff, 20, "%04d-%02d-%02d %02d:%02d:%02d", (uint16_t)(RTC_DateStruct.Year+2000),\
+			RTC_DateStruct.Month,RTC_DateStruct.Date,\
+			RTC_TimeStruct.Hours,RTC_TimeStruct.Minutes,RTC_TimeStruct.Seconds);
+	return buff;
+}
 
+
+#define START_DATES		730000 //start from 2000,×÷ÓÃ
+
+/* mktime from linux kernel code, since mdk mktime doesn't work */
+uint32_t CalcDays(const uint32_t year0, const uint8_t mon0, const uint8_t day)
+{
+	int32_t mon = (int)mon0;
+	uint32_t year = year0;
+	if(year < 2000)
+	{
+		year = 2000;
+		mon = 1;
+	}
+	uint32_t dateTime = 0;
+    /* 1..12 -> 11,12,1..10 */
+    if (0 >= (int) (mon -= 2))
+    {
+        mon = (int32_t)(mon + 12);  /* Puts Feb last since it has leap day */
+        year--;
+    }
+    dateTime = (uint32_t)((year/4 - year/100 + year/400 + (uint32_t)(367*mon/12) + (uint32_t)day) +
+              year*365 );
+    if(START_DATES<=dateTime)
+    	dateTime -= START_DATES;
+    return dateTime;/* finally seconds */
+}
+static void UpdateWeekDay(RTC_DateTypeDef* RTC_DateStruct)
+{
+	uint16_t year =(uint16_t)( RTC_DateStruct->Year+2000U);
+
+	uint32_t days = CalcDays(year,RTC_DateStruct->Month, RTC_DateStruct->Date );//from 2016.1.1, w5
+	RTC_DateStruct->WeekDay = (uint8_t)((days+5)%7 + 1);
+}
+
+
+void UpdateRTC(uint16_t eTp,uint16_t value)
+{
+	RTC_TimeTypeDef RTC_TimeStruct;
+	RTC_DateTypeDef RTC_DateStruct;
+	HAL_RTC_GetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+	switch(eTp)
+	{
+	case e_year:
+		RTC_DateStruct.Year = (uint8_t)(value-2000);
+		UpdateWeekDay(&RTC_DateStruct);
+		(void)HAL_RTC_SetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+		break;
+	case e_month:
+		RTC_DateStruct.Month = value;
+		UpdateWeekDay(&RTC_DateStruct);
+		(void)HAL_RTC_SetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+		break;
+	case e_date:
+		RTC_DateStruct.Date = value;
+		UpdateWeekDay(&RTC_DateStruct);
+		(void)HAL_RTC_SetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+		break;
+	case e_hour:
+		//not sure why,
+
+		RTC_TimeStruct.Hours = (value);
+		if(RTC_TimeStruct.Hours == 0)
+			RTC_TimeStruct.Hours = 24;
+		RTC_TimeStruct.Hours = RTC_TimeStruct.Hours - 1;
+		(void)HAL_RTC_SetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+		break;
+	case e_min:
+
+		if(RTC_TimeStruct.Hours == 0)
+			RTC_TimeStruct.Hours = 24;
+		RTC_TimeStruct.Hours = RTC_TimeStruct.Hours - 1;
+		RTC_TimeStruct.Minutes = value;
+		(void)HAL_RTC_SetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+		break;
+	case e_sec:
+
+		if(RTC_TimeStruct.Hours == 0)
+			RTC_TimeStruct.Hours = 24;
+		RTC_TimeStruct.Hours = RTC_TimeStruct.Hours - 1;
+		RTC_TimeStruct.Seconds = value;
+		(void)HAL_RTC_SetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+		break;
+	}
+}
+
+
+uint16_t GetRTC(uint16_t eTp)
+{
+	RTC_TimeTypeDef RTC_TimeStruct;
+	RTC_DateTypeDef RTC_DateStruct;
+	uint16_t value = 0;
+	HAL_RTC_GetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+	switch(eTp)
+	{
+	case e_year:
+		value = RTC_DateStruct.Year + 2000;
+		break;
+	case e_month:
+		value = RTC_DateStruct.Month;
+		break;
+	case e_date:
+		value = RTC_DateStruct.Date;
+		break;
+	case e_hour:
+		value = RTC_TimeStruct.Hours;
+		break;
+	case e_min:
+		value = RTC_TimeStruct.Minutes;
+		break;
+	case e_sec:
+		value = RTC_TimeStruct.Seconds;
+		break;
+	}
+	return value;
+}
 
 int sprintf_rtc(uint8_t* buff, uint8_t len1)
 {

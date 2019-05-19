@@ -109,8 +109,10 @@ int main(void)
     __HAL_RCC_CRC_CLK_ENABLE();		//使能CRC时钟
 				        //触摸屏初始化
 #if 1
+    Init_RTC();
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();
+    W25QXX_Init();
     MX_USART2_UART_Init();
     MX_USART3_UART_Init();
     MX_DMA_Init();
@@ -190,7 +192,6 @@ void start_task(void *pvParameters)
 }
 #endif
 //EMWINDEMO任务
-#include "listboxdemo.h"
 void emwindemo_task(void *pvParameters)
 {
 //	GUI_CURSOR_Show();

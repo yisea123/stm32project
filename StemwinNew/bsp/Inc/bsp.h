@@ -77,6 +77,16 @@ uint16_t NewUartData(uint16_t type, uint8_t* ptrData);
 void Usart2RXHandle(void);
 void Usart3RXHandle(void);
 
+
+enum
+{
+	MANUAL_STATE= RTC_BKP_DR6,
+	INTERVAL_SET,
+	TIME_EXEC,
+	ADR_FLASHSTART,
+	ADR_ENDFLASH,
+};
+
 #ifdef __cplusplus
 }
 #endif

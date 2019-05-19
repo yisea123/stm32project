@@ -43,6 +43,20 @@ uint16_t Init_RTC(void);
 extern void xprintf_rtc(void);
 extern void xprintf_tick(void);
 int sprintf_rtc(uint8_t* buff, uint8_t len);
+
+
+void UpdateRTC(uint16_t eTp,uint16_t value);
+uint16_t GetRTC(uint16_t eTp);
+enum
+{
+	e_year,
+	e_month,
+	e_date,
+	e_hour,
+	e_min,
+	e_sec,
+};
+
 #ifdef __cplusplus
 }
 #endif

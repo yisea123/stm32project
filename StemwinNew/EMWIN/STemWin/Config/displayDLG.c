@@ -410,7 +410,7 @@ WM_HWIN Createdisplay(void) {
 }
 void StartUIMain()
 {
-
+	//WM_DeleteTimer(0);
 	WM_HideWindow(allUI[1]);
 	WM_ShowWindow(allUI[0]);
 	WM_SetCallback(WM_HBKWIN, &_cbDialog);

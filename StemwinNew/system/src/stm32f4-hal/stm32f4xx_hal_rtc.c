@@ -515,7 +515,8 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
   else
   {
     /* Set the RTC_TR register */
-    hrtc->Instance->TR = (uint32_t)(tmpreg & RTC_TR_RESERVED_MASK);
+	uint32_t val = (uint32_t)(tmpreg & RTC_TR_RESERVED_MASK);
+    hrtc->Instance->TR = val;
      
     /* Clear the bits to be configured */
     hrtc->Instance->CR &= (uint32_t)~RTC_CR_BCK;
