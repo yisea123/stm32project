@@ -65,12 +65,12 @@ enum
 	DIR_INC,
 	DIR_DEC,
 };
-uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t startTime );
+uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* startTime );
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-
+void StartHistory(void);
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

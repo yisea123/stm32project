@@ -234,6 +234,7 @@ uint32_t CalcDays(const uint32_t year0, const uint8_t mon0, const uint8_t day)
     	dateTime -= START_DATES;
     return dateTime;/* finally seconds */
 }
+
 static void UpdateWeekDay(RTC_DateTypeDef* RTC_DateStruct)
 {
 	uint16_t year =(uint16_t)( RTC_DateStruct->Year+2000U);
@@ -570,6 +571,32 @@ uint32_t CalcSeconds(const uint8_t hour, const uint8_t min, const uint8_t second
 uint32_t GetSeconds(const uint32_t days, const uint32_t seconds)
 {
    return days*86400 + seconds;/* finally seconds */
+}
+
+uint32_t GetST_SecLater(uint32_t timeSt, uint32_t seconds)
+{
+	TimeCfg timeCfg;
+	ConvertBack_U32Time(timeSt, &timeCfg);
+	uint32_t days = CalcDays(timeCfg.year, timeCfg.month, timeCfg.date);
+	uint32_t secs = CalcSeconds(timeCfg.hour, timeCfg.minute, timeCfg.second);
+
+	uint32_t secN =  GetSeconds(days,secs);
+	seconds += secN;
+	GetTimeFromSeconds(seconds, &timeCfg);
+	return CalcTime_ST(&timeCfg);
+}
+
+char* GetSTStr(uint32_t timeSt)
+{
+	TimeCfg timeCfg;
+	ConvertBack_U32Time(timeSt, &timeCfg);
+	static char buff[20];
+		//lint -e586
+	snprintf((void*)buff, 20, "%04d-%02d-%02d %02d:%02d:%02d", timeCfg.year,\
+			timeCfg.month,timeCfg.date,\
+			timeCfg.hour,timeCfg.minute,timeCfg.second);
+	return buff;
+
 }
 uint32_t tstSt = 0;
 uint16_t TestCaseRTC()

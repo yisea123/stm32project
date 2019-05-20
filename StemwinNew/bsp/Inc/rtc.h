@@ -47,6 +47,9 @@ int sprintf_rtc(uint8_t* buff, uint8_t len);
 
 void UpdateRTC(uint16_t eTp,uint16_t value);
 uint16_t GetRTC(uint16_t eTp);
+char* GetSTStr(uint32_t timeSt);
+uint32_t GetST_SecLater(uint32_t timeSt, uint32_t seconds);
+
 enum
 {
 	e_year,

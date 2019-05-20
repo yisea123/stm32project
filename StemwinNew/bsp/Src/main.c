@@ -364,10 +364,15 @@ uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
 	if(ret != FATAL_ERROR)
 	{
 		W25QXX_Read((void*)&tmpHumdata[0], loadAdr, READBACK_SIZE);
-		int val = UpdateHistNewData(&tmpHumdata[0], READBACK_DATA_SIZE, loadTimeST);
+		int val = UpdateHistNewData(&tmpHumdata[0], READBACK_DATA_SIZE, &loadTimeST);
 		if(val > 0)
 		{
 		//	loadTimeST
+
+		}
+		else
+		{
+			ret = FATAL_ERROR;
 		}
 	}
 
