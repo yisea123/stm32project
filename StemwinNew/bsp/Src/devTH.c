@@ -81,8 +81,7 @@ void UpdateTH(void)
 	uart2Idx = 0;
 	PCF8574_WriteBit(6,0);
 	//osDelay(200);
-	extern void DISPLAY_DATA_DHT11();
-	DISPLAY_DATA_DHT11();
+
 }
 
 void ReadRelay(void)

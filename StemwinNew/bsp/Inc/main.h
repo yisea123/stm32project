@@ -43,6 +43,7 @@
 enum
 {
 	OK = 0,
+	WARNING = 1,
 	FATAL_ERROR = 96,
 };
 
@@ -51,6 +52,20 @@ enum
 #include <stdio.h>
 #include "Trace.h"
 #include "bsp.h"
+
+#define STORE_FLASH_MAX 	5
+#define STORE_SIZE_MAX  	524288
+#define STORE_SECTOR_SIZE	128
+
+#define READBACK_DATA_SIZE		512
+#define READBACK_SIZE			(READBACK_DATA_SIZE*4)
+enum
+{
+	DIR_NONE,
+	DIR_INC,
+	DIR_DEC,
+};
+uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t startTime );
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/

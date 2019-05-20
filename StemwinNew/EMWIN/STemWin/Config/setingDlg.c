@@ -521,7 +521,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *       CreateSetting
 */
 WM_HWIN settingUI;
-extern WM_HWIN allUI[2];
+extern WM_HWIN allUI[3];
 WM_HWIN CreateSetting(void);
 WM_HWIN CreateSetting(void) {
   WM_HWIN hWin;

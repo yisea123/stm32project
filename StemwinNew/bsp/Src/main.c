@@ -16,7 +16,10 @@
 #include "WM.h"
 #include "GUIDEMO.h"
 #include "assert.h"
-
+#include "rtc.h"
+#include "bsp.h"
+#include "w25qxx.h"
+#include "main.h"
 HeapRegion_t xHeapRegions[] =
 {
  	{ ( uint8_t * ) 0x10000000UL, 0x10000 }, //<< Defines a block of 64K bytes starting at address of 0x10000000UL --CCR
@@ -53,7 +56,7 @@ void start_task(void *pvParameters);
 TaskHandle_t TouchTask_Handler;
 //touch任务
 void touch_task(void *pvParameters);
-
+void SaveDataTsk(void* p_arg);
 //LED0任务
 //设置任务优先级
 #define LED0_TASK_PRIO 			3
@@ -73,6 +76,9 @@ void MainTask1(void *pvParameters);
 #define EMWINDEMO_STK_SIZE		512
 //任务句柄
 TaskHandle_t EmwindemoTask_Handler;
+
+TaskHandle_t flashTask_Handler;
+
 
 void memoryTest()
 {
@@ -161,6 +167,15 @@ int main(void)
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
+
+
+    xTaskCreate((TaskFunction_t )SaveDataTsk,//MainTask12,//tsk,
+                (const char*    )"flash_task",
+                (uint16_t       )EMWINDEMO_STK_SIZE,
+                (void*          )NULL,
+                (UBaseType_t    )6,
+                (TaskHandle_t*  )&flashTask_Handler);
+
 #endif
 #endif
 //	MainTask1(NULL);
@@ -240,6 +255,219 @@ void ctrlTask(void* p_arg)
 		osDelay(100);
 		WriteRelay();
 		//osDelay(100);
+		extern void DISPLAY_DATA_DHT11();
+		DISPLAY_DATA_DHT11();
+	}
+}
+
+
+
+uint16_t currentUseFlashID = 0;
+uint32_t currentFlashAdr = 0;
+static const flashWriteAdr[STORE_FLASH_MAX] =
+{
+		0x0000,
+		STORE_SIZE_MAX,
+		STORE_SIZE_MAX*2,
+		STORE_SIZE_MAX*3,
+		STORE_SIZE_MAX*4,
+
+};
+static uint16_t SaveFlashRTC()
+{
+	uint16_t stIdx = 0;
+	uint32_t val[STORE_FLASH_MAX];
+	for(uint16_t i = 0; i < STORE_FLASH_MAX;i++)
+	{
+		val[i] = prvReadBackupRegister(ADR_FLASHSTART1+i);
+		if(ValidChkT32(&val[i], 0) != 0)
+		{
+			val[i] = 0;
+			prvWriteBackupRegister(ADR_FLASHSTART1+i, val[i]);
+		}
+	}
+
+	for(uint16_t i = 1; i< STORE_FLASH_MAX;i++)
+	{
+		if(val[stIdx] > val[i])
+			stIdx = i;
+	}
+	val[stIdx] = GetCurrentST();
+	prvWriteBackupRegister(ADR_FLASHSTART1+stIdx, val[stIdx]);
+	currentUseFlashID = stIdx;
+	currentFlashAdr = flashWriteAdr[stIdx];
+
+	for(uint32_t i = 0; i< STORE_SECTOR_SIZE;i++)
+	{
+		uint32_t secSize = 4096;
+		W25QXX_Erase_Sector(currentFlashAdr/secSize+i);
+	}
+	return stIdx;
+}
+static uint16_t historyIdx[STORE_FLASH_MAX];
+static uint16_t historyTime[STORE_FLASH_MAX] = {0,0,0,0,0};
+static uint16_t historyCnt = 0;
+
+static uint32_t loadStartAdr = 0x00;
+static uint32_t loadAdr = 0x0;
+static uint32_t loadCnt;
+
+static uint16_t tmpHumdata[READBACK_DATA_SIZE*2];
+
+uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
+{
+	//
+	uint16_t ret = OK;
+	static uint16_t oldIdx = 0xFFFF;
+	static uint32_t loadTimeST = 0x0;
+
+	if(idx != oldIdx)
+	{
+		dir = DIR_NONE;
+		oldIdx = idx;
+		if(historyIdx[idx] < STORE_FLASH_MAX)
+		{
+			loadAdr = loadStartAdr = flashWriteAdr[historyIdx[idx]];
+			loadTimeST = historyTime[historyIdx[idx]];
+		}
+		else
+		{
+			loadStartAdr = 0x0;
+			ret = FATAL_ERROR;
+		}
+	}
+	//if have valid data
+	if(ret == OK)
+	{
+		if(dir == DIR_INC)
+		{
+			loadAdr = loadAdr + READBACK_SIZE;
+			if( (loadAdr - loadStartAdr) >= STORE_SIZE_MAX)
+			{
+				ret = FATAL_ERROR;
+			}
+		}
+		else if(dir == DIR_INC)
+		{
+			if(loadAdr > READBACK_SIZE)
+				loadAdr = loadAdr - READBACK_SIZE;
+			else
+				ret = WARNING;
+			if(loadAdr  < loadStartAdr)
+			{
+				ret = WARNING;
+				loadAdr = loadStartAdr;
+			}
+		}
+	}
+
+	if(ret != FATAL_ERROR)
+	{
+		W25QXX_Read((void*)&tmpHumdata[0], loadAdr, READBACK_SIZE);
+		int val = UpdateHistNewData(&tmpHumdata[0], READBACK_DATA_SIZE, loadTimeST);
+		if(val > 0)
+		{
+		//	loadTimeST
+		}
+	}
+
+	return ret;
+
+}
+
+uint16_t LoadFlashSegsRTC()
+{
+	uint16_t stIdx = 0;
+	uint32_t val;
+
+	for(uint16_t i = 0; i < STORE_FLASH_MAX;i++)
+	{
+		historyTime[i] = 0;
+		historyIdx[i] = -1;
+		if(i != currentUseFlashID)
+		{
+			val = prvReadBackupRegister(ADR_FLASHSTART1+i);
+			if(ValidChkT32(&val, 0) == 0)
+			{
+				historyCnt++;
+				historyTime[i] = val;
+				historyIdx[i] = i;
+			}
+		}
+	}
+
+	for(uint16_t i = 0; i< STORE_FLASH_MAX;i++)
+	{
+		for(uint16_t j = 1; j< STORE_FLASH_MAX;j++)
+		{
+			if(historyTime[i] < historyTime[j])
+			{
+				uint32_t tmp = historyTime[i];
+				historyTime[i] = historyTime[j];
+				historyTime[j] = tmp;
+				uint16_t kk = historyIdx[i];
+				historyIdx[i] = historyIdx[j];
+				historyIdx[j] = kk;
+			}
+		}
+	}
+	return historyCnt;
+}
+
+
+
+
+
+
+#define TMP_STORE_SIZE		16
+static int16_t tempStoreData[TMP_STORE_SIZE+4];
+
+static int32_t TickTimeDelay(const uint32_t oldTick, const uint32_t reqTick)
+{
+	uint32_t newTick = HAL_GetTick();
+	newTick = GetTickDeviation(oldTick, newTick);
+	if(newTick < reqTick)
+		return (int32_t)(reqTick - newTick);
+	else
+		return 20;
+}
+
+extern int16_t tempTh[2];
+void SaveDataTsk(void* p_arg)
+{
+	(void)p_arg;
+	uint32_t lastTick = 0;
+	uint32_t delayTick = 990;
+	uint32_t adr = 0;
+	uint16_t tmpId = 0;
+	while(1)
+	{
+		osDelay(delayTick);
+		if(lastTick == 0)
+		{
+			SaveFlashRTC();
+			adr = currentFlashAdr;
+			tmpId = 0;
+		}
+		lastTick = HAL_GetTick();
+
+		tempStoreData[tmpId++] = tempTh[0];
+		tempStoreData[tmpId++] = tempTh[1];
+		if(tmpId >= TMP_STORE_SIZE)
+		{
+			W25QXX_Write((void*)&tempStoreData[0], adr, TMP_STORE_SIZE*2);
+			adr += TMP_STORE_SIZE*2;
+			tmpId = 0;
+		}
+		delayTick = TickTimeDelay(lastTick, 1000);
+		if(adr-currentFlashAdr >= STORE_SIZE_MAX)
+		{
+			lastTick = 0;
+			delayTick = 0;
+		}
+
+
+
 
 	}
 }

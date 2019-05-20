@@ -84,10 +84,10 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 **********************************************************************
 */
-float tempRatio = 0.4*50;
-float humRatio = 1.0;
-float tempOffset = 50;
-GRAPH_DATA_Handle pdataTemp, pdataHumidity;
+static float tempRatio = 0.4*50;
+static float humRatio = 1.0;
+static float tempOffset = 50;
+static GRAPH_DATA_Handle pdataTemp, pdataHumidity;
 extern int16_t tempTh[2];
 static WM_HWIN gHwn;//WM_GetDesktopWindow
 float temp1 = 0;
@@ -118,6 +118,7 @@ void DISPLAY_DATA_DHT11(void)
     GRAPH_DATA_YT_AddValue(pdataTemp, tempOffset + (int)(temp*tempRatio+0.5));
     GRAPH_DATA_YT_AddValue(pdataHumidity, (int)(hum*humRatio+0.5));
 }
+
 
 // USER START (Optionally insert additional static code)
 // USER END
@@ -352,7 +353,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-    	  newWindow = 2;
+    	  newWindow = 3;
     	  // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -398,7 +399,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *       Createdisplay
 */
 
-WM_HWIN allUI[2];
+WM_HWIN allUI[3];
 
 WM_HWIN Createdisplay(void);
 WM_HWIN Createdisplay(void) {
@@ -428,6 +429,7 @@ void Tsk(void*p)
 
 		Createdisplay();
 		CreateSetting();
+		Createhistory();
 		StartUIMain();
 		while (1)
 		{
@@ -440,6 +442,11 @@ void Tsk(void*p)
 			{
 				newWindow = 0;
 				StartUISetting(1);
+			}
+			else if (newWindow == 3)
+			{
+				newWindow = 0;
+				StartHistory(1);
 			}
 			GUI_Exec();
 			if(newWindow == 0)

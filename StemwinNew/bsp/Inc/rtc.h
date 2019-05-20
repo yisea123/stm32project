@@ -57,6 +57,35 @@ enum
 	e_sec,
 };
 
+
+
+typedef struct
+{
+	uint16_t year;
+	uint8_t month;
+	uint8_t date;
+	uint8_t hour;
+	uint8_t minute;
+	uint8_t second;
+}TimeCfg;
+
+
+
+#define T32_START_YEAR		0u //2000
+
+#define T32_YEAR			26
+#define T32_MONTH			22
+#define T32_DATE			17
+#define T32_HOUR			12
+#define T32_MINUTES			6
+#define T32_SECONDS			0
+
+
+void ConvertBack_U32Time(const uint32_t time, TimeCfg* ptrTime);
+uint32_t CalcTime_ST(const TimeCfg* ptrTime);
+uint32_t GetCurrentST(void);
+uint32_t GetDiviationST(const uint32_t startST, const uint32_t deviation);
+uint16_t ValidChkT32(uint32_t* ptrT32, uint16_t typ);
 #ifdef __cplusplus
 }
 #endif

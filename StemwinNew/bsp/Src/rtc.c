@@ -209,7 +209,7 @@ char* GetRTCStr()
 }
 
 
-#define START_DATES		730000 //start from 2000,作用
+#define START_DATES		(730000+456) //start from 2000,作用
 
 /* mktime from linux kernel code, since mdk mktime doesn't work */
 uint32_t CalcDays(const uint32_t year0, const uint8_t mon0, const uint8_t day)
@@ -355,6 +355,9 @@ void xprintf_rtc()
 }
 
 
+
+
+
 void xprintf_tick()
 {
 	uint32_t tickstart = HAL_GetTick() ;
@@ -363,3 +366,240 @@ void xprintf_tick()
 
 }
 // End of file
+
+
+void ConvertBack_U32Time(const uint32_t time, TimeCfg* ptrTime)
+{
+	ptrTime->year = (uint16_t)( 2000 + (int)(time>>T32_YEAR));
+	ptrTime->month = (uint8_t)( (time>>T32_MONTH)&0x0F);
+	ptrTime->date = (uint8_t)( (time>>T32_DATE)&0x1F);
+	ptrTime->hour = (uint8_t)( (time>>T32_HOUR)&0x1F);
+	ptrTime->minute = (uint8_t)( (time>>T32_MINUTES)&0x3F);
+	ptrTime->second = (uint8_t)( (time>>T32_SECONDS)&0x3F);
+
+}
+
+
+uint32_t CalcTime_ST(const TimeCfg* ptrTime)
+{
+	uint32_t val = 0;
+	if(ptrTime->year >= (T32_START_YEAR+2000))
+	{
+		val = (uint32_t)(ptrTime->year - T32_START_YEAR - 2000u);
+		val = (uint32_t)(val<<T32_YEAR) | (uint32_t)(ptrTime->month<<T32_MONTH) | (uint32_t)(ptrTime->date<<T32_DATE) |\
+					(uint32_t)(ptrTime->hour<<T32_HOUR) | (uint32_t)(ptrTime->minute<<T32_MINUTES) | (uint32_t)(ptrTime->second<<T32_SECONDS);
+	}
+	else
+	{
+		val = 0;
+	}
+
+
+	return val;
+}
+uint32_t GetCurrentST(void)
+{
+	RTC_TimeTypeDef RTC_TimeStruct;
+	RTC_DateTypeDef RTC_DateStruct;
+
+	HAL_RTC_GetTime(&sRtcHandle, &RTC_TimeStruct, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+
+	TimeCfg timeCfg;
+	timeCfg.year = (uint16_t)(RTC_DateStruct.Year + 2000);
+	timeCfg.month = RTC_DateStruct.Month;
+	timeCfg.date = RTC_DateStruct.Date;
+
+	timeCfg.hour = RTC_TimeStruct.Hours;
+	timeCfg.minute = RTC_TimeStruct.Minutes;
+	timeCfg.second = RTC_TimeStruct.Seconds;
+
+	return CalcTime_ST(&timeCfg);
+}
+
+uint16_t ValidChkT32(uint32_t* ptrT32, uint16_t typ)
+{
+	uint16_t ret = OK;
+	TimeCfg cfg;
+	ConvertBack_U32Time(*(uint32_t*)ptrT32, &cfg);
+	if(cfg.year < 2019)
+	{
+		ret = FATAL_ERROR;
+		if(typ != 0)
+		{
+			cfg.year = 2019;
+		}
+	}
+	if((cfg.month >= 13) || (cfg.month < 1))
+	{
+		ret = FATAL_ERROR;
+		if(typ != 0)
+		{
+			cfg.month = 1;
+		}
+	}
+	if((cfg.date >= 32) || (cfg.date < 1))
+	{
+		ret = FATAL_ERROR;
+		if(typ != 0)
+		{
+			cfg.date = 1;
+		}
+	}
+	if(cfg.hour >= 25)
+	{
+		ret = FATAL_ERROR;
+		if(typ != 0)
+		{
+			cfg.hour = 0;
+		}
+	}
+	if(cfg.minute >= 60)
+	{
+		ret = FATAL_ERROR;
+		if(typ != 0)
+		{
+			cfg.minute = 0;
+		}
+	}
+	if(cfg.second >= 60)
+	{
+		ret = FATAL_ERROR;
+		if(typ != 0)
+		{
+			cfg.second = 0;
+		}
+	}
+	if((ret == FATAL_ERROR ) && (typ != 0))
+	{
+		*ptrT32 = CalcTime_ST(&cfg);
+		ret = 1;
+	}
+	return ret;
+}
+
+
+
+static uint16_t GetDateFromDays(uint32_t _days,TimeCfg* timeCfg)
+{
+    int day1[]  = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int day2[]  = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	int i = 0;
+	_days = _days + 1;
+	while(1)
+	{
+		if(_days <=366)
+		{
+			break;
+		}
+		if ((i+2000) % 400 == 0 || ((i+2000) % 4 == 0 && (i+2000) % 100 != 0))
+		{
+			_days -=366;
+		}
+		else
+		{
+			_days -=365;
+		}
+		i++;
+	}
+	if(_days == 366)
+	{
+		if((i + 2000) % 400 == 0 || ((i + 2000) % 4 == 0 && (i + 2000) % 100 != 0))
+		{
+			timeCfg->year = (i + 2000);
+			timeCfg->month = 12;
+			timeCfg->date = 31;
+		}
+		else
+		{
+			timeCfg->year = (i + 2000 + 1);
+			timeCfg->month = 1;
+			timeCfg->date = 1;
+		}
+	}
+	else
+	{
+		timeCfg->year = (i + 2000);
+		int* mothDays = &day1[0];
+		if(timeCfg->year % 400 == 0 || (timeCfg->year % 4 == 0 && timeCfg->year% 100 != 0))
+		{
+			mothDays = &day2[0];
+		}
+		for(i=0; i< 12;i++)
+		{
+			if(_days >=mothDays[i])
+			{
+				_days -= mothDays[i];
+			}
+			else
+			{
+				break;
+			}
+		}
+		timeCfg->month = i+1;
+		timeCfg->date = _days;
+	}
+	return OK;
+}
+
+uint16_t GetTimeFromSeconds(uint32_t seconds, TimeCfg* timeCfg)
+{
+	uint32_t days = seconds/(24*3600);
+	uint32_t sec = seconds%(24*3600);
+
+	timeCfg->hour = sec/3600;
+	timeCfg->minute = (sec/60)%60;
+	timeCfg->second = sec%60;
+	GetDateFromDays(days,timeCfg);
+
+	return OK;
+}
+
+
+
+
+/* mktime from linux kernel code, since mdk mktime doesn't work */
+uint32_t CalcSeconds(const uint8_t hour, const uint8_t min, const uint8_t second)
+{
+    uint32_t seconds = (uint32_t)second + (uint32_t)min*60 + (uint32_t)hour*3600;
+
+    return seconds;/* finally seconds */
+}
+
+
+uint32_t GetSeconds(const uint32_t days, const uint32_t seconds)
+{
+   return days*86400 + seconds;/* finally seconds */
+}
+uint32_t tstSt = 0;
+uint16_t TestCaseRTC()
+{
+#define SEC_TEST  3820
+#define SEC_START (START_DATES*24*3600U)
+	TimeCfg timeCfg;
+	uint32_t days;
+	uint32_t seconds;
+	uint32_t secN;
+	uint32_t sec;
+	for(uint32_t st = 0; st < 2110000; st++)
+	{
+		sec = SEC_TEST*st + 31536000;
+
+		if(tstSt == st)
+		{
+			sec+=1;
+		}
+		GetTimeFromSeconds(sec, &timeCfg);
+		days = CalcDays(timeCfg.year, timeCfg.month, timeCfg.date);
+		seconds = CalcSeconds(timeCfg.hour, timeCfg.minute, timeCfg.second);
+
+		secN =  GetSeconds(days,seconds);
+		if(sec != secN)
+		{
+			timeCfg.year = 2018;
+			return FATAL_ERROR;
+		}
+	}
+
+	return OK;
+}
