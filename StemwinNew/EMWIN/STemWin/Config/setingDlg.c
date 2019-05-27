@@ -31,22 +31,22 @@
 *
 **********************************************************************
 */
-#define ID_FRAMEWIN_0 (GUI_ID_USER + 0x0C)
-#define ID_SPINBOX_0 (GUI_ID_USER + 0x0D)
-#define ID_DROPDOWN_0 (GUI_ID_USER + 0x10)
-#define ID_TEXT_0 (GUI_ID_USER + 0x11)
-#define ID_TEXT_1 (GUI_ID_USER + 0x15)
-#define ID_SPINBOX_1 (GUI_ID_USER + 0x17)
-#define ID_TEXT_2 (GUI_ID_USER + 0x18)
-#define ID_SPINBOX_2 (GUI_ID_USER + 0x19)
-#define ID_TEXT_3 (GUI_ID_USER + 0x1A)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x1B)
-#define ID_BUTTON_1 (GUI_ID_USER + 0x1C)
-#define ID_GRAPH_0 (GUI_ID_USER + 0x1D)
-#define ID_TEXT_4 (GUI_ID_USER + 0x1E)
-#define ID_BUTTON_2 (GUI_ID_USER + 0x1F)
-#define ID_CHECKBOX_0 (GUI_ID_USER + 0x20)
-#define ID_BUTTON_3 (GUI_ID_USER + 0x21)
+#define ID_FRAMEWIN_0 (GUI_ID_USER + 0x3C)
+#define ID_SPINBOX_0 (GUI_ID_USER + 0x3D)
+#define ID_DROPDOWN_0 (GUI_ID_USER + 0x40)
+#define ID_TEXT_0 (GUI_ID_USER + 0x41)
+#define ID_TEXT_1 (GUI_ID_USER + 0x45)
+#define ID_SPINBOX_1 (GUI_ID_USER + 0x47)
+#define ID_TEXT_2 (GUI_ID_USER + 0x48)
+#define ID_SPINBOX_2 (GUI_ID_USER + 0x49)
+#define ID_TEXT_3 (GUI_ID_USER + 0x4A)
+#define ID_BUTTON_0 (GUI_ID_USER + 0x4B)
+#define ID_BUTTON_1 (GUI_ID_USER + 0x4C)
+#define ID_GRAPH_0 (GUI_ID_USER + 0x4D)
+#define ID_TEXT_4 (GUI_ID_USER + 0x4E)
+#define ID_BUTTON_2 (GUI_ID_USER + 0x4F)
+#define ID_CHECKBOX_0 (GUI_ID_USER + 0x50)
+#define ID_BUTTON_3 (GUI_ID_USER + 0x51)
 extern const GUI_FONT GUI_Fontused_U48;
 extern uint16_t newWindow;
 // USER START (Optionally insert additional defines)
@@ -534,7 +534,7 @@ WM_HWIN CreateSetting(void) {
 // USER START (Optionally insert additional public code)
 void StartUISetting(uint16_t type)
 {
-
+	WM_HideWindow(allUI[2]);
 	WM_HideWindow(allUI[0]);
 	WM_ShowWindow(allUI[1]);
 

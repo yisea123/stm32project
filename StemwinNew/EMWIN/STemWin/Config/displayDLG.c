@@ -23,6 +23,7 @@
 
 #include "DIALOG.h"
 #include "stdint.h"
+#include "bsp.h"
 /*********************************************************************
 *
 *       Defines
@@ -130,6 +131,7 @@ void DISPLAY_DATA_DHT11(void)
 *       _cbDialog
 */
 static void _cbDialog(WM_MESSAGE * pMsg) {
+	static uint16_t cuiShaoState = 0;
   WM_HWIN hItem;
   int     NCode;
   int     Id;
@@ -323,6 +325,19 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
+    	   hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
+    	   if(cuiShaoState == 0)
+    	   {
+    		   BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
+    		   cuiShaoState = 1;
+
+    	   }
+    	   else
+		   {
+    		   WM_HWIN hItem1 = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    		   BUTTON_SetBkColor(hItem,BUTTON_CI_UNPRESSED, BUTTON_GetBkColor(hItem1, BUTTON_CI_UNPRESSED));
+    		   cuiShaoState = 0;
+		   }
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
@@ -412,9 +427,20 @@ WM_HWIN Createdisplay(void) {
 void StartUIMain()
 {
 	//WM_DeleteTimer(0);
+
+	WM_HideWindow(allUI[2]);
 	WM_HideWindow(allUI[1]);
 	WM_ShowWindow(allUI[0]);
 	WM_SetCallback(WM_HBKWIN, &_cbDialog);
+	WM_HWIN hItem = WM_GetDialogItem(WM_HBKWIN, ID_BUTTON_0);
+	if( prvReadBackupRegister(MANUAL_STATE) != 0)
+	{
+		WM_EnableWindow(hItem);
+	}
+	else
+	{
+		WM_DisableWindow(hItem);
+	}
 }
 // USER START (Optionally insert additional public code)
 #define NUMBYTES_NEEDED   0x200000

@@ -34,16 +34,16 @@ extern WM_HWIN allUI[3];
 *
 **********************************************************************
 */
-#define ID_FRAMEWIN_0 (GUI_ID_USER + 0x0C)
-#define ID_GRAPH_0 (GUI_ID_USER + 0x0D)
-#define ID_GRAPH_1 (GUI_ID_USER + 0x0E)
-#define ID_DROPDOWN_0 (GUI_ID_USER + 0x0F)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x10)
-#define ID_SCROLLBAR_0 (GUI_ID_USER + 0x11)
-#define ID_TEXT_0 (GUI_ID_USER + 0x12)
-#define ID_TEXT_1 (GUI_ID_USER + 0x13)
-#define ID_TEXT_2 (GUI_ID_USER + 0x14)
-#define ID_TEXT_3 (GUI_ID_USER + 0x15)
+#define ID_FRAMEWIN_0 (GUI_ID_USER + 0x7C)
+#define ID_GRAPH_0 (GUI_ID_USER + 0x7D)
+#define ID_GRAPH_1 (GUI_ID_USER + 0x7E)
+#define ID_DROPDOWN_0 (GUI_ID_USER + 0x7F)
+#define ID_BUTTON_0 (GUI_ID_USER + 0x80)
+#define ID_SCROLLBAR_0 (GUI_ID_USER + 0x81)
+#define ID_TEXT_0 (GUI_ID_USER + 0x82)
+#define ID_TEXT_1 (GUI_ID_USER + 0x83)
+#define ID_TEXT_2 (GUI_ID_USER + 0x84)
+#define ID_TEXT_3 (GUI_ID_USER + 0x85)
 
 extern const GUI_FONT GUI_Fontused_U48;
 
@@ -54,7 +54,18 @@ extern uint16_t newWindow;
 
 static GRAPH_DATA_Handle pdataTemp, pdataHumidity;
 // USER START (Optionally insert additional defines)
-
+uint16_t UpdateDisplay(uint16_t ret)
+{
+	if(ret == FATAL_ERROR)
+	{
+		GRAPH_DATA_YT_Clear(pdataTemp);
+		GRAPH_DATA_YT_Clear(pdataHumidity);
+		WM_HWIN hItem = WM_GetDialogItem(allUI[2], ID_TEXT_1);
+		TEXT_SetText(hItem, "No Data");
+		hItem = WM_GetDialogItem(allUI[2], ID_TEXT_2);
+		TEXT_SetText(hItem, "No Data");
+	}
+}
 uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* ptrStartTime )
 {
 	uint16_t i = 0;
@@ -67,20 +78,23 @@ uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* ptrStartTi
 		uint16_t hum = ptrVal[i*2+1];
 		if((temp != 0xFFFF) && (hum != 0xFFFF))
 		{
-			 GRAPH_DATA_YT_AddValue(pdataTemp, tempOffset + (int)(temp*tempRatio+0.5));
-			 GRAPH_DATA_YT_AddValue(pdataHumidity, (int)(hum*humRatio+0.5));
+			float t = temp/10.0f;
+			float h = hum/10.0f;
+			GRAPH_DATA_YT_AddValue(pdataTemp, tempOffset + (int)(t*tempRatio+0.5));
+			GRAPH_DATA_YT_AddValue(pdataHumidity, (int)(h*humRatio+0.5));
 		}
 		else
 		{
 			break;
 		}
 	}
-	*ptrStartTime = GetST_SecLater(*ptrStartTime, i);
+	uint32_t laterTime = GetST_SecLater(*ptrStartTime, i);
 
 	WM_HWIN hItem = WM_GetDialogItem(allUI[2], ID_TEXT_1);
 	TEXT_SetText(hItem, GetSTStr(*ptrStartTime));
-	hItem = WM_GetDialogItem(allUI[2], ID_TEXT_3);
-	TEXT_SetText(hItem, GetSTStr(*ptrStartTime));
+	hItem = WM_GetDialogItem(allUI[2], ID_TEXT_2);
+	TEXT_SetText(hItem, GetSTStr(laterTime));
+	*ptrStartTime = laterTime;
 	return i;
 
 }
@@ -104,15 +118,15 @@ uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* ptrStartTi
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "history", ID_FRAMEWIN_0, 0, 0, 1024, 600, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 5, 14, 800, 260, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 5, 280, 800, 310, 0, 0x0, 0 },
-  { DROPDOWN_CreateIndirect, "Dropdown", ID_DROPDOWN_0, 810, 15, 190, 25, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 829, 469, 157, 70, 0, 0x0, 0 },
-  { SCROLLBAR_CreateIndirect, "Scrollbar", ID_SCROLLBAR_0, 816, 350, 192, 53, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "From", ID_TEXT_0, 810, 80, 190, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 810, 140, 190, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 810, 260, 190, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "To", ID_TEXT_3, 809, 200, 190, 50, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 5, 14, 700, 260, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 5, 280, 700, 310, 0, 0x0, 0 },
+  { DROPDOWN_CreateIndirect, "Dropdown", ID_DROPDOWN_0, 710, 15, 290, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 730, 470, 200, 100, 0, 0x0, 0 },
+  { SCROLLBAR_CreateIndirect, "Scrollbar", ID_SCROLLBAR_0, 716, 350, 290, 53, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "From", ID_TEXT_0, 710, 90, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 710, 150, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 710, 270, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "To", ID_TEXT_3, 710, 210, 290, 50, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -231,12 +245,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
-    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
-    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //
     // Initialization of 'To'
     //
@@ -339,6 +353,7 @@ WM_HWIN Createhistory(void) {
 void StartHistory(void)
 {
 	//WM_DeleteTimer(0);
+	WM_HideWindow(allUI[1]);
 	WM_HideWindow(allUI[0]);
 	WM_ShowWindow(allUI[2]);
 	WM_SetCallback(WM_HBKWIN, &_cbDialog);

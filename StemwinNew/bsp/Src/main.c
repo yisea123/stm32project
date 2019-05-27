@@ -27,6 +27,17 @@ HeapRegion_t xHeapRegions[] =
 	{ ( uint8_t * ) 0XC0600000UL, 2000 *1024 },
 	{ NULL, 0 }                //<< Terminates the array.
  };
+typedef struct {
+	osMessageQId* ptrQid;
+	uint16_t size;
+}QueIDInit;
+
+osMessageQId MB_MAINSTEP			= NULL;
+
+static const QueIDInit QID[]=
+{
+	{&MB_MAINSTEP,				4},
+};
 
 /************************************************
  ALIENTEK 阿波罗STM32F429开发板 FreeRTOS实验21-1
@@ -98,6 +109,16 @@ void memoryTest()
 
 //emwindemo_task任务
 
+static void CreateAllQid(void)
+{
+	uint16_t qNum = sizeof(QID)/sizeof(QueIDInit);
+	for(uint16_t idx = 0; idx<qNum; idx++)
+	{
+		osMessageQDef(TSK_Queue, QID[idx].size, uint32_t);
+		*(QID[idx].ptrQid) = osMessageCreate(osMessageQ(TSK_Queue), NULL);
+	}
+}
+
 void MainTask12(void *pvParameters);
 void emwindemo_task(void *pvParameters);
 void ctrlTask(void *pvParameters);
@@ -114,6 +135,7 @@ int main(void)
     SDRAM_Init();                   //SDRAM初始化
     __HAL_RCC_CRC_CLK_ENABLE();		//使能CRC时钟
 				        //触摸屏初始化
+    CreateAllQid();
 #if 1
     Init_RTC();
     TFTLCD_Init();  		        //LCD初始化
@@ -163,7 +185,7 @@ int main(void)
 #if 1
     xTaskCreate((TaskFunction_t )Tsk,//MainTask12,//tsk,
                 (const char*    )"emwindemo_task",
-                (uint16_t       )EMWINDEMO_STK_SIZE*5,
+                (uint16_t       )EMWINDEMO_STK_SIZE*10,
                 (void*          )NULL,
                 (UBaseType_t    )EMWINDEMO_TASK_PRIO,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
@@ -241,22 +263,153 @@ void led0_task(void *p_arg)
 	}
 }
 
+enum
+{
+	e_read_th,
+	e_read_relay,
+	e_write_relay,
+	e_read_relay1,
+	e_write_relay1,
+	e_read_relay2,
+	e_write_relay2,
+	e_cmd_max,
+};
+
+extern uint16_t relayInput[4];
+extern uint16_t relayOutput[4];
+
+static uint16_t ChkInput()
+{
+	uint16_t ret = 0;
+	if((relayInput[0] == 0) && (relayInput[1] == 0))
+	{
+		ret = 1;
+	}
+	else if((relayInput[2] == 1) && (relayInput[3] == 1))
+	{
+		ret = 1;
+	}
+	return ret;
+}
 void ctrlTask(void* p_arg)
 {
+#define TICK_EACH_TIME		100
 	(void)p_arg;
 	uint16_t state = 1;
 	MX_USART3_UART_Init();
 	MX_USART2_UART_Init();
+	uint32_t tickOut = osWaitForever;
+	uint32_t startTick = 0;
+	uint32_t tickTime = 0;
+	uint32_t newTick;
+	uint16_t IOState = 0;
+	osEvent event;
+
+	uint32_t timeExecReq[2] = {0,0};
 	while(1)
 	{
-		if(state != 0)
-			UpdateTH();
-		ReadRelay();
-		osDelay(100);
-		WriteRelay();
-		//osDelay(100);
-		extern void DISPLAY_DATA_DHT11();
-		DISPLAY_DATA_DHT11();
+		event = osMessageGet(MB_MAINSTEP, tickOut );
+		if( event.status != osEventMessage )
+		{
+			tickOut = TICK_EACH_TIME;
+			switch(state)
+			{
+			case e_read_th:
+				UpdateTH();
+				tickOut = 0;
+				break;
+			case e_read_relay:
+			case e_read_relay1:
+			case e_read_relay2:
+				ReadRelay();
+				break;
+			case e_write_relay:
+			case e_write_relay1:
+			case e_write_relay2:
+				WriteRelay();
+				break;
+			}
+			state = (state+1)%e_cmd_max;
+			if(state == 4)
+			{
+				DISPLAY_DATA_DHT11();
+			}
+		}
+		else//message
+		{
+			if(event.value.v == IO_STATE_ON)
+			{
+
+				IOState = 1;
+				startTick = HAL_GetTick();
+			}
+			else if(event.value.v == IO_STATE_OFF)
+			{
+				relayOutput[0] = relayOutput[1] = 0;
+				relayOutput[2] = relayOutput[3] = 1;
+				IOState = 0;
+				startTick = HAL_GetTick();
+			}
+		}
+		timeExecReq[0] = prvReadBackupRegister(INTERVAL_SET);
+		timeExecReq[1] = prvReadBackupRegister(TIME_EXEC);
+		newTick = HAL_GetTick();
+		if( prvReadBackupRegister(MANUAL_STATE) != 0)
+		{
+			//manual
+			uint32_t tick = GetTickDeviation(startTick, newTick);
+			if(tick >= timeExecReq[IOState]*1000)
+			{
+				//finish?
+				startTick = newTick;
+				if(IOState)	IOState = 0;
+				else IOState=1;
+			}
+			else
+			{
+				uint32_t tickOut1 = timeExecReq[IOState]*1000 - tick;
+				if(tickOut > tickOut1)
+				{
+					tickOut = tickOut1;
+				}
+			}
+		}
+		else
+		{
+			//auto
+			if(IOState == 0)
+			{
+				if(ChkInput() == 1)
+				{
+					IOState = 1;
+					startTick = newTick;
+				}
+			}
+			else
+			{
+				uint32_t tick = GetTickDeviation(startTick, newTick);
+				if(tick >= timeExecReq[IOState]*1000)
+				{
+					//finish?
+					startTick = newTick;
+					if(IOState)	IOState = 0;
+					else IOState=1;
+				}
+			}
+
+
+		}
+		if(IOState != 0)
+		{
+			relayOutput[0] = relayOutput[1] = 1;
+			relayOutput[2] = relayOutput[3] = 0;
+		}
+		else
+		{
+			relayOutput[0] = relayOutput[1] = 1;
+			relayOutput[2] = relayOutput[3] = 0;
+		}
+
 	}
 }
 
@@ -287,7 +440,7 @@ static uint16_t SaveFlashRTC()
 		}
 	}
 
-	for(uint16_t i = 1; i< STORE_FLASH_MAX;i++)
+	for(uint16_t i = 0; i< STORE_FLASH_MAX;i++)
 	{
 		if(val[stIdx] > val[i])
 			stIdx = i;
@@ -305,7 +458,7 @@ static uint16_t SaveFlashRTC()
 	return stIdx;
 }
 static uint16_t historyIdx[STORE_FLASH_MAX];
-static uint16_t historyTime[STORE_FLASH_MAX] = {0,0,0,0,0};
+static uint32_t historyTime[STORE_FLASH_MAX] = {0,0,0,0,0};
 static uint16_t historyCnt = 0;
 
 static uint32_t loadStartAdr = 0x00;
@@ -320,21 +473,34 @@ uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
 	uint16_t ret = OK;
 	static uint16_t oldIdx = 0xFFFF;
 	static uint32_t loadTimeST = 0x0;
-
+	if(idx == 0)
+	{
+		UpdateDisplay(FATAL_ERROR);
+		return OK;
+	}
+	else
+	{
+		idx = idx - 1;
+	}
 	if(idx != oldIdx)
 	{
+		LoadFlashSegsRTC();
 		dir = DIR_NONE;
 		oldIdx = idx;
 		if(historyIdx[idx] < STORE_FLASH_MAX)
 		{
 			loadAdr = loadStartAdr = flashWriteAdr[historyIdx[idx]];
-			loadTimeST = historyTime[historyIdx[idx]];
+			loadTimeST = historyTime[idx];
 		}
 		else
 		{
 			loadStartAdr = 0x0;
 			ret = FATAL_ERROR;
 		}
+	}
+	if(loadTimeST == 0)
+	{
+		ret = FATAL_ERROR;
 	}
 	//if have valid data
 	if(ret == OK)
@@ -375,35 +541,39 @@ uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
 			ret = FATAL_ERROR;
 		}
 	}
+	else
+	{
+		UpdateDisplay(ret);
+	}
 
 	return ret;
 
 }
 
-uint16_t LoadFlashSegsRTC()
+uint16_t LoadFlashSegsRTC(void)
 {
 	uint16_t stIdx = 0;
 	uint32_t val;
-
+	static uint32_t historyTimeRTC[STORE_FLASH_MAX] = {0,0,0,0,0};
+	historyCnt = 0;
 	for(uint16_t i = 0; i < STORE_FLASH_MAX;i++)
 	{
-		historyTime[i] = 0;
-		historyIdx[i] = -1;
+		historyTimeRTC[i] = historyTime[i] = 0;
+		historyIdx[i] = i;
 		if(i != currentUseFlashID)
 		{
 			val = prvReadBackupRegister(ADR_FLASHSTART1+i);
 			if(ValidChkT32(&val, 0) == 0)
 			{
 				historyCnt++;
-				historyTime[i] = val;
-				historyIdx[i] = i;
+				historyTimeRTC[i] = historyTime[i] = val;
 			}
 		}
 	}
 
 	for(uint16_t i = 0; i< STORE_FLASH_MAX;i++)
 	{
-		for(uint16_t j = 1; j< STORE_FLASH_MAX;j++)
+		for(uint16_t j = i+1; j< STORE_FLASH_MAX;j++)
 		{
 			if(historyTime[i] < historyTime[j])
 			{

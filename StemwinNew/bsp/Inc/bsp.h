@@ -9,7 +9,7 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "cmsis_os.h"
-
+#include "rtc.h"
 #define WDI_TRIGGER		HAL_GPIO_TogglePin(WDI_GPIO_Port,WDI_Pin)
 
 #pragma GCC diagnostic ignored "-Wpadded"

@@ -65,6 +65,18 @@ enum
 	DIR_INC,
 	DIR_DEC,
 };
+
+enum
+{
+	IO_STATE_ON,
+	IO_STATE_OFF,
+	IO_STATE_AUTO,
+};
+
+
+uint16_t UpdateDisplay(uint16_t ret);
+uint16_t LoadFlashSegsRTC(void);
+uint16_t loadFromFlash(uint16_t idx, uint16_t dir);
 uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* startTime );
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
