@@ -77,7 +77,9 @@ uint16_t NewUartData(uint16_t type, uint8_t* ptrData);
 void Usart2RXHandle(void);
 void Usart3RXHandle(void);
 
-
+void UpdateTH(void);
+void ReadRelay(void);
+void WriteRelay(void);
 enum
 {
 	MANUAL_STATE= RTC_BKP_DR6,

@@ -37,13 +37,16 @@ extern WM_HWIN allUI[3];
 #define ID_FRAMEWIN_0 (GUI_ID_USER + 0x7C)
 #define ID_GRAPH_0 (GUI_ID_USER + 0x7D)
 #define ID_GRAPH_1 (GUI_ID_USER + 0x7E)
-#define ID_DROPDOWN_0 (GUI_ID_USER + 0x7F)
 #define ID_BUTTON_0 (GUI_ID_USER + 0x80)
-#define ID_SCROLLBAR_0 (GUI_ID_USER + 0x81)
-#define ID_TEXT_0 (GUI_ID_USER + 0x82)
-#define ID_TEXT_1 (GUI_ID_USER + 0x83)
-#define ID_TEXT_2 (GUI_ID_USER + 0x84)
-#define ID_TEXT_3 (GUI_ID_USER + 0x85)
+#define ID_BUTTON_1 (GUI_ID_USER + 0x8C)
+#define ID_BUTTON_2 (GUI_ID_USER + 0x8D)
+#define ID_BUTTON_3 (GUI_ID_USER + 0x8E)
+#define ID_BUTTON_4 (GUI_ID_USER + 0x8F)
+#define ID_TEXT_0 (GUI_ID_USER + 0x86)
+#define ID_TEXT_1 (GUI_ID_USER + 0x87)
+#define ID_TEXT_2 (GUI_ID_USER + 0x88)
+#define ID_TEXT_3 (GUI_ID_USER + 0x89)
+#define ID_TEXT_4 (GUI_ID_USER + 0x8A)
 
 extern const GUI_FONT GUI_Fontused_U48;
 
@@ -118,15 +121,18 @@ uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* ptrStartTi
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "history", ID_FRAMEWIN_0, 0, 0, 1024, 600, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 5, 14, 700, 260, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 5, 280, 700, 310, 0, 0x0, 0 },
-  { DROPDOWN_CreateIndirect, "Dropdown", ID_DROPDOWN_0, 710, 15, 290, 40, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 730, 470, 200, 100, 0, 0x0, 0 },
-  { SCROLLBAR_CreateIndirect, "Scrollbar", ID_SCROLLBAR_0, 716, 350, 290, 53, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "From", ID_TEXT_0, 710, 90, 290, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 710, 150, 290, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 710, 270, 290, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "To", ID_TEXT_3, 710, 210, 290, 50, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 5, 14, 695, 260, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 5, 279, 695, 310, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 755, 500, 200, 90, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "From", ID_TEXT_0, 715, 22, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 715, 79, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 715, 192, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "To", ID_TEXT_3, 715, 134, 290, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_4, 740, 240, 199, 55, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 705, 300, 150, 85, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 862, 300, 150, 85, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 705, 400, 150, 85, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_4, 862, 400, 150, 85, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -149,6 +155,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   WM_HWIN hItem;
   int     NCode;
   int     Id;
+  static  int selId = -1;
   GRAPH_SCALE_Handle hScaleV, hScaleH;
   // USER START (Optionally insert additional variables)
   // USER END
@@ -162,17 +169,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     FRAMEWIN_SetFont(hItem, &GUI_Fontused_U48);
     FRAMEWIN_SetTextColor(hItem, GUI_BLUE);
     FRAMEWIN_SetTitleVis(hItem, 0);
-    //
-    // Initialization of 'Dropdown'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_DROPDOWN_0);
-    DROPDOWN_SetFont(hItem, &GUI_Fontused_U48);
-    DROPDOWN_SetListHeight(hItem, 300);
-    DROPDOWN_AddString(hItem, "NONE");
-    DROPDOWN_AddString(hItem, "历史 一");
-    DROPDOWN_AddString(hItem, "历史 二");
-    DROPDOWN_AddString(hItem, "历史 三");
-    DROPDOWN_AddString(hItem, "历史 四");
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_GRAPH_0);
     GRAPH_SetBorder(hItem,40, 5, 5, 30);
@@ -199,7 +195,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SCALE_SetFactor(hScaleH,0.1f);
     GRAPH_AttachScale(hItem,hScaleH);
 
-    pdataTemp =GRAPH_DATA_YT_Create(GUI_MAGENTA, 600, 0, 0);
+    pdataTemp =GRAPH_DATA_YT_Create(GUI_MAGENTA, 650, 0, 0);
     GRAPH_AttachData(hItem,pdataTemp);
 
     //GRAPH_DATA_XY_SetPenSize(hItem, 3);
@@ -228,7 +224,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SCALE_SetFont(hScaleH,GUI_FONT_24_ASCII);
     GRAPH_SCALE_SetFactor(hScaleH,0.1f);
     GRAPH_AttachScale(hItem,hScaleH);
-    pdataHumidity =GRAPH_DATA_YT_Create(GUI_BLUE, 600/*鏈�澶ф暟鎹釜鏁�*/, 0, 0);
+    pdataHumidity =GRAPH_DATA_YT_Create(GUI_BLUE, 650/*鏈�澶ф暟鎹釜鏁�*/, 0, 0);
     GRAPH_AttachData(hItem,pdataHumidity);
     //
     // Initialization of 'Button'
@@ -256,6 +252,39 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
     TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+    TEXT_SetText(hItem, "历史");
+    TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    //
+    // Initialization of 'Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
+    BUTTON_SetText(hItem, "<<历史");
+    WM_DisableWindow(hItem);
+    //
+    // Initialization of 'Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
+    BUTTON_SetText(hItem, "历史>>");
+    //
+    // Initialization of 'Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
+    BUTTON_SetText(hItem, "<<时间");
+    WM_DisableWindow(hItem);
+    //WM_DisableWindow(hItem);
+    //
+    // Initialization of 'Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+    BUTTON_SetFont(hItem, &GUI_Fontused_U48);
+    BUTTON_SetText(hItem, "时间>>");
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -263,30 +292,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
     switch(Id) {
-    case ID_DROPDOWN_0: // Notifications sent by 'Dropdown'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_SEL_CHANGED:
-      {
-			WM_HWIN hItem;
-			hItem = WM_GetDialogItem(pMsg->hWin, ID_DROPDOWN_0);
-			U16 eTp = DROPDOWN_GetSel(hItem);
-			loadFromFlash(eTp, DIR_NONE);
-      }
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
     case ID_BUTTON_0: // Notifications sent by 'Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -294,7 +299,97 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-    	  newWindow = 1;
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+		newWindow = 1;
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_2: // Notifications sent by 'Button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+
+
+		if(selId < 3)
+		{
+			selId+=1;
+			uint16_t ret= loadFromFlash(selId, DIR_NONE);
+			if(ret != OK)
+			{
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+				WM_DisableWindow(hItem);
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+				WM_DisableWindow(hItem);
+			}
+			else
+			{
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+				WM_DisableWindow(hItem);
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+				WM_EnableWindow(hItem);
+			}
+			//disbale window
+		}
+		if(selId >= 3)
+		{
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+			WM_DisableWindow(hItem);
+		}
+		if(selId >= 1)
+		{
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+			WM_EnableWindow(hItem);
+		}
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_1: // Notifications sent by 'Button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+		if (selId >= 1) {
+			selId -= 1;
+			uint16_t ret= loadFromFlash(selId, DIR_NONE);
+			if(ret != OK)
+			{
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+				WM_DisableWindow(hItem);
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+				WM_DisableWindow(hItem);
+			}
+			else
+			{
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+				WM_DisableWindow(hItem);
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+				WM_EnableWindow(hItem);
+			}
+		}
+		if (selId <= 0)
+		{
+			selId = 0;
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+			WM_DisableWindow(hItem);
+			//disbale window
+		}
+		if(selId < 3)
+		{
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+			WM_EnableWindow(hItem);
+		}
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -302,7 +397,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_SCROLLBAR_0: // Notifications sent by 'Scrollbar'
+    case ID_BUTTON_4: // Notifications sent by 'Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
@@ -311,11 +406,61 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
+		if ((selId >= 0) && (selId <= 3)) {
+
+			uint16_t ret= loadFromFlash(selId, DIR_INC);
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+			WM_EnableWindow(hItem);
+			if(ret != OK)
+			{
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+				WM_DisableWindow(hItem);
+			}
+			else
+			{
+				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+				WM_EnableWindow(hItem);
+			}
+
+		} else
+
+		{
+			//disbale window
+		}
         break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_3: // Notifications sent by 'Button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
+      case WM_NOTIFICATION_RELEASED:
+    	  if ((selId >= 0) && (selId <= 3)) {
+		uint16_t ret= loadFromFlash(selId, DIR_DEC);
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+		WM_EnableWindow(hItem);
+		if(ret != OK)
+		{
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+			WM_DisableWindow(hItem);
+		}
+		else
+		{
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+			WM_EnableWindow(hItem);
+		}
+
+	} else
+
+	{
+		//disbale window
+	}
+        break;
+
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
       }

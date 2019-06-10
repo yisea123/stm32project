@@ -162,7 +162,7 @@ int main(void)
 					(const char*    )"ctrl_task",
 					(uint16_t       )400,
 					(void*          )NULL,
-					(UBaseType_t    )1,
+					(UBaseType_t    )osPriorityAboveNormal,
 					(TaskHandle_t*  )&ctrlTask_Handler);
     //创建触摸任务
 #if 1
@@ -170,7 +170,7 @@ int main(void)
 				(const char*    )"touch_task",
 				(uint16_t       )TOUCH_STK_SIZE,
 				(void*          )NULL,
-				(UBaseType_t    )TOUCH_TASK_PRIO,
+				(UBaseType_t    )osPriorityHigh,
 				(TaskHandle_t*  )&TouchTask_Handler);
 
 
@@ -179,7 +179,7 @@ int main(void)
 				(const char*    )"led0_task",
 				(uint16_t       )LED0_STK_SIZE,
 				(void*          )NULL,
-				(UBaseType_t    )LED0_TASK_PRIO,
+				(UBaseType_t    )osPriorityNormal,
 				(TaskHandle_t*  )&Led0Task_Handler);
 
 #if 1
@@ -187,7 +187,7 @@ int main(void)
                 (const char*    )"emwindemo_task",
                 (uint16_t       )EMWINDEMO_STK_SIZE*10,
                 (void*          )NULL,
-                (UBaseType_t    )EMWINDEMO_TASK_PRIO,
+                (UBaseType_t    )osPriorityNormal,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
 
 
@@ -195,7 +195,7 @@ int main(void)
                 (const char*    )"flash_task",
                 (uint16_t       )EMWINDEMO_STK_SIZE,
                 (void*          )NULL,
-                (UBaseType_t    )6,
+                (UBaseType_t    )osPriorityBelowNormal,
                 (TaskHandle_t*  )&flashTask_Handler);
 
 #endif
@@ -241,13 +241,14 @@ void emwindemo_task(void *pvParameters)
 
 	  }
 }
-
+uint16_t uiStarted = 0;
 //触摸任务的任务函数
 void touch_task(void *pvParameters)
 {
 	while(1)
 	{
-		GUI_TOUCH_Exec();
+		//if(uiStarted == 1)
+			GUI_TOUCH_Exec();
 		vTaskDelay(5);		//延时5ms
 	}
 }
@@ -278,7 +279,7 @@ enum
 extern uint16_t relayInput[4];
 extern uint16_t relayOutput[4];
 
-static uint16_t ChkInput()
+static uint16_t ChkInput(void)
 {
 	uint16_t ret = 0;
 	if((relayInput[0] == 0) && (relayInput[1] == 0))
@@ -298,14 +299,19 @@ void ctrlTask(void* p_arg)
 	uint16_t state = 1;
 	MX_USART3_UART_Init();
 	MX_USART2_UART_Init();
-	uint32_t tickOut = osWaitForever;
+	uint32_t tickOut = TICK_EACH_TIME;
 	uint32_t startTick = 0;
-	uint32_t tickTime = 0;
 	uint32_t newTick;
 	uint16_t IOState = 0;
 	osEvent event;
 
 	uint32_t timeExecReq[2] = {0,0};
+	for(uint16_t index = 0; index < 3;index++)
+	{
+		UpdateTH();
+		osDelay(40);
+	}
+	DISPLAY_DATA_DHT11();
 	while(1)
 	{
 		event = osMessageGet(MB_MAINSTEP, tickOut );
@@ -467,20 +473,18 @@ static uint32_t loadCnt;
 
 static uint16_t tmpHumdata[READBACK_DATA_SIZE*2];
 
-uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
+uint16_t loadFromFlash(int idx, uint16_t dir)
 {
 	//
+	uint32_t readSize = READBACK_SIZE;
 	uint16_t ret = OK;
 	static uint16_t oldIdx = 0xFFFF;
 	static uint32_t loadTimeST = 0x0;
-	if(idx == 0)
+	static int sizeId = 0;
+	if(idx < 0 || idx > 3)
 	{
 		UpdateDisplay(FATAL_ERROR);
 		return OK;
-	}
-	else
-	{
-		idx = idx - 1;
 	}
 	if(idx != oldIdx)
 	{
@@ -491,9 +495,11 @@ uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
 		{
 			loadAdr = loadStartAdr = flashWriteAdr[historyIdx[idx]];
 			loadTimeST = historyTime[idx];
+			sizeId = 0;
 		}
 		else
 		{
+			sizeId = 10000;
 			loadStartAdr = 0x0;
 			ret = FATAL_ERROR;
 		}
@@ -505,40 +511,47 @@ uint16_t loadFromFlash(uint16_t idx, uint16_t dir)
 	//if have valid data
 	if(ret == OK)
 	{
+		readSize = READBACK_SIZE;
 		if(dir == DIR_INC)
 		{
-			loadAdr = loadAdr + READBACK_SIZE;
-			if( (loadAdr - loadStartAdr) >= STORE_SIZE_MAX)
+			sizeId = sizeId + 1;
+			loadAdr = loadAdr + READBACK_SIZE*sizeId;
+			if(loadAdr >= (loadStartAdr + STORE_SIZE_MAX))
+			{
+				readSize = 0;
+				ret = FATAL_ERROR;
+			}
+			else
+			{
+				uint32_t size = loadAdr - loadStartAdr;
+				if(size < READBACK_SIZE)
+					readSize = size;
+			}
+
+		}
+		else if(dir == DIR_DEC)
+		{
+			sizeId = sizeId - 1;
+			loadAdr = loadStartAdr + READBACK_SIZE*sizeId;
+			if(sizeId  < 0)
 			{
 				ret = FATAL_ERROR;
 			}
-		}
-		else if(dir == DIR_INC)
-		{
-			if(loadAdr > READBACK_SIZE)
-				loadAdr = loadAdr - READBACK_SIZE;
 			else
-				ret = WARNING;
-			if(loadAdr  < loadStartAdr)
 			{
-				ret = WARNING;
-				loadAdr = loadStartAdr;
+				readSize = READBACK_SIZE;
 			}
+
 		}
 	}
 
 	if(ret != FATAL_ERROR)
 	{
-		W25QXX_Read((void*)&tmpHumdata[0], loadAdr, READBACK_SIZE);
-		int val = UpdateHistNewData(&tmpHumdata[0], READBACK_DATA_SIZE, &loadTimeST);
-		if(val > 0)
+		W25QXX_Read((void*)&tmpHumdata[0], loadAdr, readSize);
+		int val = UpdateHistNewData(&tmpHumdata[0], readSize/2, &loadTimeST);
+		if(val != readSize/4)
 		{
-		//	loadTimeST
-
-		}
-		else
-		{
-			ret = FATAL_ERROR;
+			ret = WARNING;
 		}
 	}
 	else

@@ -24,6 +24,8 @@
 #include "DIALOG.h"
 #include "stdint.h"
 #include "bsp.h"
+#include "main.h"
+#include "cmsis_os.h"
 /*********************************************************************
 *
 *       Defines
@@ -330,13 +332,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	   {
     		   BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
     		   cuiShaoState = 1;
-
+    		   osMessagePut(MB_MAINSTEP, (uint32_t) IO_STATE_ON, 0);
     	   }
     	   else
 		   {
     		   WM_HWIN hItem1 = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     		   BUTTON_SetBkColor(hItem,BUTTON_CI_UNPRESSED, BUTTON_GetBkColor(hItem1, BUTTON_CI_UNPRESSED));
     		   cuiShaoState = 0;
+    		   osMessagePut(MB_MAINSTEP, (uint32_t) IO_STATE_OFF, 0);
 		   }
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -424,13 +427,17 @@ WM_HWIN Createdisplay(void) {
 //  WM_CreateTimer(WM_GetClientWindow(gHwn), 0, 450, 0);	    //添加此段
   return gHwn;
 }
-void StartUIMain()
+void StartUIMain(uint16_t typ)
 {
 	//WM_DeleteTimer(0);
-
-	WM_HideWindow(allUI[2]);
-	WM_HideWindow(allUI[1]);
-	WM_ShowWindow(allUI[0]);
+	if(typ == 1)
+	{
+		WM_HideWindow(allUI[2]);
+		WM_HideWindow(allUI[1]);
+		WM_ShowWindow(allUI[0]);
+	}
+	else
+		WM_ShowWindow(allUI[0]);
 	WM_SetCallback(WM_HBKWIN, &_cbDialog);
 	WM_HWIN hItem = WM_GetDialogItem(WM_HBKWIN, ID_BUTTON_0);
 	if( prvReadBackupRegister(MANUAL_STATE) != 0)
@@ -444,6 +451,7 @@ void StartUIMain()
 }
 // USER START (Optionally insert additional public code)
 #define NUMBYTES_NEEDED   0x200000
+extern uint16_t uiStarted;
 void Tsk(void*p)
 {
 	long int NumFreeBytes = GUI_ALLOC_GetNumFreeBytes();
@@ -456,13 +464,14 @@ void Tsk(void*p)
 		Createdisplay();
 		CreateSetting();
 		Createhistory();
-		StartUIMain();
+		uiStarted = 1;
+		newWindow = 1;
 		while (1)
 		{
 			if(newWindow == 1)
 			{
 				newWindow = 0;
-				StartUIMain();
+				StartUIMain(1);
 			}
 			else if (newWindow == 2)
 			{
@@ -472,11 +481,11 @@ void Tsk(void*p)
 			else if (newWindow == 3)
 			{
 				newWindow = 0;
-				StartHistory(1);
+				StartHistory();
 			}
 			GUI_Exec();
 			if(newWindow == 0)
-				osDelay(20);
+				osDelay(5);
 		}
 //	GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
 

@@ -25,6 +25,7 @@
 #include "stdint.h"
 #include "rtc.h"
 #include "bsp.h"
+#include "main.h"
 /*********************************************************************
 *
 *       Defines
@@ -459,6 +460,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
+    	  osMessagePut(MB_MAINSTEP, (uint32_t) IO_STATE_ON, 0);
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
