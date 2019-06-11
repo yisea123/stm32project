@@ -39,7 +39,6 @@
 #define ID_EDIT_1 (GUI_ID_USER + 0x04)
 #define ID_GRAPH_1 (GUI_ID_USER + 0x05)
 #define ID_BUTTON_0 (GUI_ID_USER + 0x06)
-#define ID_LISTWHEEL_1 (GUI_ID_USER + 0x07)
 #define ID_TEXT_0 (GUI_ID_USER + 0x08)
 #define ID_TEXT_1 (GUI_ID_USER + 0x09)
 #define ID_BUTTON_1 (GUI_ID_USER + 0x0A)
@@ -72,7 +71,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { EDIT_CreateIndirect, "Edit", ID_EDIT_1, 10, 420, 155, 80, 0, 0x64, 0 },
   { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 170, 279, 610, 310, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 810, 50, 190, 100, 0, 0x0, 0 },
-  { LISTWHEEL_CreateIndirect, "Listwheel", ID_LISTWHEEL_1, 1806, 82, 50, 30, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_0, 10, 55, 150, 70, 0, 0x64, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_1, 10, 340, 150, 70, 0, 0x64, 0 },
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 810, 220, 190, 100, 0, 0x0, 0 },
@@ -231,6 +229,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
     BUTTON_SetText(hItem, "吹  扫");
+    //BUTTON_SetTextColor(hItem,BUTTON_CI_DISABLED, GUI_TRANSPARENT);
     //
     // Initialization of 'Text'
     //
@@ -346,24 +345,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_LISTWHEEL_1: // Notifications sent by 'Listwheel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_SEL_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
     case ID_BUTTON_1: // Notifications sent by 'Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -417,7 +398,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *       Createdisplay
 */
 
-WM_HWIN allUI[3];
+WM_HWIN allUI[3]={0,0,0,};
 
 WM_HWIN Createdisplay(void);
 WM_HWIN Createdisplay(void) {
@@ -447,6 +428,7 @@ void StartUIMain(uint16_t typ)
 	else
 	{
 		WM_DisableWindow(hItem);
+
 	}
 }
 // USER START (Optionally insert additional public code)
@@ -484,8 +466,7 @@ void Tsk(void*p)
 				StartHistory();
 			}
 			GUI_Exec();
-			if(newWindow == 0)
-				osDelay(5);
+			osDelay(5);
 		}
 //	GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
 

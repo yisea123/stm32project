@@ -527,7 +527,7 @@ extern WM_HWIN allUI[3];
 WM_HWIN CreateSetting(void);
 WM_HWIN CreateSetting(void) {
   WM_HWIN hWin;
-  WM_SetCreateFlags(WM_CF_HIDE);
+  WM_SetCreateFlags(WM_CF_HIDE|WM_CF_MEMDEV);
   allUI[1] = settingUI = hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
   WM_HideWindow(hWin);
   return hWin;

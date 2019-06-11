@@ -77,7 +77,7 @@ extern osMessageQId MB_MAINSTEP;
 
 uint16_t UpdateDisplay(uint16_t ret);
 uint16_t LoadFlashSegsRTC(void);
-uint16_t loadFromFlash(int idx, uint16_t dir);
+uint16_t loadFromFlash(int idx, uint16_t dir, int* ptrSizeId);
 uint16_t UpdateHistNewData(uint16_t* ptrVal, uint16_t size, uint32_t* startTime );
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

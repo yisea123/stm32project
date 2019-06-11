@@ -157,13 +157,14 @@ int main(void)
 	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
-
+#if 1
 	xTaskCreate((TaskFunction_t )ctrlTask,
 					(const char*    )"ctrl_task",
 					(uint16_t       )400,
 					(void*          )NULL,
 					(UBaseType_t    )osPriorityAboveNormal,
 					(TaskHandle_t*  )&ctrlTask_Handler);
+#endif
     //创建触摸任务
 #if 1
 	xTaskCreate((TaskFunction_t )touch_task,
@@ -173,7 +174,7 @@ int main(void)
 				(UBaseType_t    )osPriorityHigh,
 				(TaskHandle_t*  )&TouchTask_Handler);
 
-
+#if 1
 	//创建LED0任务
 	xTaskCreate((TaskFunction_t )led0_task,
 				(const char*    )"led0_task",
@@ -181,6 +182,7 @@ int main(void)
 				(void*          )NULL,
 				(UBaseType_t    )osPriorityNormal,
 				(TaskHandle_t*  )&Led0Task_Handler);
+#endif
 
 #if 1
     xTaskCreate((TaskFunction_t )Tsk,//MainTask12,//tsk,
@@ -189,7 +191,7 @@ int main(void)
                 (void*          )NULL,
                 (UBaseType_t    )osPriorityNormal,
                 (TaskHandle_t*  )&EmwindemoTask_Handler);
-
+#if 1
 
     xTaskCreate((TaskFunction_t )SaveDataTsk,//MainTask12,//tsk,
                 (const char*    )"flash_task",
@@ -197,6 +199,7 @@ int main(void)
                 (void*          )NULL,
                 (UBaseType_t    )osPriorityBelowNormal,
                 (TaskHandle_t*  )&flashTask_Handler);
+#endif
 
 #endif
 #endif
@@ -259,7 +262,7 @@ void led0_task(void *p_arg)
 	while(1)
 	{
 		LED0 = !LED0;
-		vTaskDelay(500);		//延时500ms
+		osDelay(500);		//延时500ms
 		//AddData(0,0);
 	}
 }
@@ -473,7 +476,7 @@ static uint32_t loadCnt;
 
 static uint16_t tmpHumdata[READBACK_DATA_SIZE*2];
 
-uint16_t loadFromFlash(int idx, uint16_t dir)
+uint16_t loadFromFlash(int idx, uint16_t dir, int* ptrSizeId)
 {
 	//
 	uint32_t readSize = READBACK_SIZE;
@@ -558,7 +561,7 @@ uint16_t loadFromFlash(int idx, uint16_t dir)
 	{
 		UpdateDisplay(ret);
 	}
-
+	*ptrSizeId = sizeId;
 	return ret;
 
 }
@@ -628,6 +631,7 @@ void SaveDataTsk(void* p_arg)
 	uint32_t delayTick = 990;
 	uint32_t adr = 0;
 	uint16_t tmpId = 0;
+
 	while(1)
 	{
 		osDelay(delayTick);

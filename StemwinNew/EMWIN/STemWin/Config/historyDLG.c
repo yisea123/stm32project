@@ -143,7 +143,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 **********************************************************************
 */
-
+static const char* displayText[4] = {
+		"历史  一",
+		"历史  二",
+		"历史  三",
+		"历史  四",
+};
 // USER START (Optionally insert additional static code)
 // USER END
 
@@ -156,6 +161,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   int     NCode;
   int     Id;
   static  int selId = -1;
+  int 	  flashId = 0;
   GRAPH_SCALE_Handle hScaleV, hScaleH;
   // USER START (Optionally insert additional variables)
   // USER END
@@ -242,11 +248,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'To'
     //
@@ -256,8 +264,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
-    TEXT_SetText(hItem, "历史");
+    TEXT_SetText(hItem, "历      史");
     TEXT_SetFont(hItem, &GUI_Fontused_U48);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Button'
     //
@@ -285,6 +294,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
     BUTTON_SetText(hItem, "时间>>");
+    WM_DisableWindow(hItem);
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -320,7 +330,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		if(selId < 3)
 		{
 			selId+=1;
-			uint16_t ret= loadFromFlash(selId, DIR_NONE);
+			uint16_t ret= loadFromFlash(selId, DIR_NONE, &flashId);
 			if(ret != OK)
 			{
 				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
@@ -347,6 +357,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
 			WM_EnableWindow(hItem);
 		}
+
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+		if((selId >=0) && (selId<=3))
+			TEXT_SetText(hItem, displayText[selId]);
+		else
+			TEXT_SetText(hItem, "历        史");
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -362,7 +378,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
 		if (selId >= 1) {
 			selId -= 1;
-			uint16_t ret= loadFromFlash(selId, DIR_NONE);
+			uint16_t ret= loadFromFlash(selId, DIR_NONE, &flashId);
 			if(ret != OK)
 			{
 				hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
@@ -390,6 +406,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
 			WM_EnableWindow(hItem);
 		}
+
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+		if((selId >=0) && (selId<=3))
+			TEXT_SetText(hItem, displayText[selId]);
+		else
+			TEXT_SetText(hItem, "历        史");
+
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -408,7 +431,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
 		if ((selId >= 0) && (selId <= 3)) {
 
-			uint16_t ret= loadFromFlash(selId, DIR_INC);
+			uint16_t ret= loadFromFlash(selId, DIR_INC, &flashId);
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
 			WM_EnableWindow(hItem);
 			if(ret != OK)
@@ -422,10 +445,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 				WM_EnableWindow(hItem);
 			}
 
-		} else
-
-		{
-			//disbale window
 		}
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -440,10 +459,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
     	  if ((selId >= 0) && (selId <= 3)) {
-		uint16_t ret= loadFromFlash(selId, DIR_DEC);
+		uint16_t ret= loadFromFlash(selId, DIR_DEC, &flashId);
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
 		WM_EnableWindow(hItem);
-		if(ret != OK)
+		if((ret != OK) || (flashId == 0))
 		{
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
 			WM_DisableWindow(hItem);
@@ -453,11 +472,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
 			WM_EnableWindow(hItem);
 		}
-
-	} else
-
-	{
-		//disbale window
 	}
         break;
 
@@ -490,7 +504,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 WM_HWIN Createhistory(void);
 WM_HWIN Createhistory(void) {
   WM_HWIN hWin;
-  WM_SetCreateFlags(WM_CF_HIDE);
+  WM_SetCreateFlags(WM_CF_HIDE|WM_CF_MEMDEV);
   allUI[2] = hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
   WM_HideWindow(hWin);
   return hWin;

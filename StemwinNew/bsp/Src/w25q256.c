@@ -298,12 +298,14 @@ void W25QXX_Erase_Sector(uint32_t Dst_Addr)
   	W25QXX_CS=0;                            //使能器件
   	SPI_WriteCmdAdr(W25X_SectorErase, Dst_Addr);
 	W25QXX_CS=1;                            //取消片选
+
     W25QXX_Wait_Busy();   				    //等待擦除完成
 }
 //等待空闲
 void W25QXX_Wait_Busy(void)
 {
-	while((W25QXX_ReadSR(1)&0x01)==0x01);   // 等待BUSY位清空
+	while((W25QXX_ReadSR(1)&0x01)==0x01)
+		osDelay(10);   // 等待BUSY位清空
 }
 //进入掉电模式
 void W25QXX_PowerDown(void)
