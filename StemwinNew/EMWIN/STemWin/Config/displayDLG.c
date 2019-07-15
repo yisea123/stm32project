@@ -35,8 +35,8 @@
 #define ID_FRAMEWIN_0 (GUI_ID_USER + 0x00)
 #define ID_GRAPH_0 (GUI_ID_USER + 0x01)
 #define ID_LISTWHEEL_0 (GUI_ID_USER + 0x02)
-#define ID_EDIT_0 (GUI_ID_USER + 0x03)
-#define ID_EDIT_1 (GUI_ID_USER + 0x04)
+#define ID_TEXT_2 (GUI_ID_USER + 0x03)
+#define ID_TEXT_3 (GUI_ID_USER + 0x04)
 #define ID_GRAPH_1 (GUI_ID_USER + 0x05)
 #define ID_BUTTON_0 (GUI_ID_USER + 0x06)
 #define ID_TEXT_0 (GUI_ID_USER + 0x08)
@@ -45,6 +45,7 @@
 #define ID_BUTTON_2 (GUI_ID_USER + 0x0B)
 
 extern const GUI_FONT GUI_Fontused_U48;
+extern const GUI_FONT GUI_FontCalibri104;
 uint16_t newWindow = 0;
 // USER START (Optionally insert additional defines)
 // USER END
@@ -67,8 +68,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "display", ID_FRAMEWIN_0, 0, 0, 1024, 600, 0, 0x0, 0 },
   { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 170, 11, 610, 260, 0, 0x0, 0 },
   { LISTWHEEL_CreateIndirect, "Listwheel", ID_LISTWHEEL_0, 1612, 252, 50, 30, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "Edit", ID_EDIT_0, 10, 130, 150, 80, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "Edit", ID_EDIT_1, 10, 420, 155, 80, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 10, 130, 150, 80, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_3, 10, 420, 155, 80, 0, 0x64, 0 },
   { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 170, 279, 610, 310, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 810, 50, 190, 100, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_0, 10, 55, 150, 70, 0, 0x64, 0 },
@@ -106,13 +107,13 @@ void DISPLAY_DATA_DHT11(void)
     snprintf(temperature_s,5, "%.1f", temp);
     snprintf(humidity_s,5, "%.1f", hum);
 
-    hItem = WM_GetDialogItem(hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, temperature_s);
+    hItem = WM_GetDialogItem(hWin, ID_TEXT_2);
+    TEXT_SetText(hItem, temperature_s);
    // EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
    // EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
-    hItem = WM_GetDialogItem(hWin, ID_EDIT_1);
+    hItem = WM_GetDialogItem(hWin, ID_TEXT_3);
     /*****				湿度数据				*******/
-    EDIT_SetText(hItem, humidity_s);
+    TEXT_SetText(hItem, humidity_s);
    // EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
   //  EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
 
@@ -124,7 +125,25 @@ void DISPLAY_DATA_DHT11(void)
 // USER START (Optionally insert additional static code)
 // USER END
 
+void SetIOState(uint16_t state)
+{
+	WM_HWIN hItem = WM_GetDialogItem(gHwn, ID_BUTTON_0);
+	if(state == 1)
+	{
+		BUTTON_SetFrameColor(hItem, GUI_RED);
 
+		BUTTON_SetTextColor(hItem, BUTTON_CI_DISABLED, GUI_RED);
+		BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
+		BUTTON_SetTextColor(hItem, BUTTON_CI_PRESSED, GUI_RED);
+	}
+	else
+	{
+		BUTTON_SetFrameColor(hItem, GUI_GREEN);
+		BUTTON_SetTextColor(hItem, BUTTON_CI_DISABLED, GUI_LIGHTGREEN);
+		BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
+		BUTTON_SetTextColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
+	}
+}
 
 /*********************************************************************
 *
@@ -160,7 +179,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SetGridDistX(hItem,50);
     GRAPH_SetVSizeY(hItem,100);
     GRAPH_SetVSizeX(hItem, 50);
-    GRAPH_SetColor (hItem, GUI_LIGHTGREEN,   GRAPH_CI_GRID);
+    GRAPH_SetColor (hItem, GUI_DARKGREEN,   GRAPH_CI_GRID);
     hScaleV =GRAPH_SCALE_Create(40, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 50);
     GRAPH_SCALE_SetTextColor(hScaleV,GUI_RED);
     GRAPH_SCALE_SetFont(hScaleV,GUI_FONT_24_ASCII);
@@ -177,7 +196,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SCALE_SetFactor(hScaleH,0.1f);
     GRAPH_AttachScale(hItem,hScaleH);
 
-    pdataTemp =GRAPH_DATA_YT_Create(GUI_MAGENTA, 560, 0, 0);
+    pdataTemp =GRAPH_DATA_YT_Create(GUI_LIGHTGREEN, 560, 0, 0);
     GRAPH_AttachData(hItem,pdataTemp);
 
     //GRAPH_DATA_XY_SetPenSize(hItem, 3);
@@ -190,7 +209,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SetGridDistX(hItem,50);
     GRAPH_SetVSizeY(hItem,100);
     GRAPH_SetVSizeX(hItem, 50);
-    GRAPH_SetColor (hItem, GUI_LIGHTGREEN,   GRAPH_CI_GRID);
+    GRAPH_SetColor (hItem, GUI_DARKGREEN,   GRAPH_CI_GRID);
     hScaleV =GRAPH_SCALE_Create(40, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 50);
     GRAPH_SCALE_SetTextColor(hScaleV,GUI_RED);
     GRAPH_SCALE_SetFont(hScaleV,GUI_FONT_24_ASCII);
@@ -205,24 +224,24 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SCALE_SetFont(hScaleH,GUI_FONT_24_ASCII);
     GRAPH_SCALE_SetFactor(hScaleH,0.1f);
     GRAPH_AttachScale(hItem,hScaleH);
-    pdataHumidity =GRAPH_DATA_YT_Create(GUI_BLUE, 560/*最大数据个数*/, 0, 0);
+    pdataHumidity =GRAPH_DATA_YT_Create(GUI_LIGHTGREEN, 560/*最大数据个数*/, 0, 0);
     GRAPH_AttachData(hItem,pdataHumidity);
     //
     // Initialization of 'Edit'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, "123");
-    EDIT_SetFont(hItem, &GUI_Fontused_U48);
-    EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_MAKE_COLOR(0x00FF00FF));
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
+    TEXT_SetText(hItem, "123");
+    TEXT_SetFont(hItem, &GUI_FontCalibri104);
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FF00FF));
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Edit'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_1);
-    EDIT_SetText(hItem, "123");
-    EDIT_SetFont(hItem, &GUI_Fontused_U48);
-    EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_MAKE_COLOR(0x00FF0000));
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+    TEXT_SetText(hItem, "123");
+    TEXT_SetFont(hItem, &GUI_FontCalibri104);
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FF0000));
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Button'
     //
@@ -281,7 +300,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_EDIT_0: // Notifications sent by 'Edit'
+    case ID_TEXT_2: // Notifications sent by 'Edit'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
@@ -299,7 +318,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_EDIT_1: // Notifications sent by 'Edit'
+    case ID_TEXT_3: // Notifications sent by 'Edit'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
@@ -329,14 +348,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	   hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     	   if(cuiShaoState == 0)
     	   {
-    		   BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
+    		//   BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
     		   cuiShaoState = 1;
     		   osMessagePut(MB_MAINSTEP, (uint32_t) IO_STATE_ON, 0);
     	   }
     	   else
 		   {
-    		   WM_HWIN hItem1 = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
-    		   BUTTON_SetBkColor(hItem,BUTTON_CI_UNPRESSED, BUTTON_GetBkColor(hItem1, BUTTON_CI_UNPRESSED));
+    		 //  WM_HWIN hItem1 = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    		//   BUTTON_SetBkColor(hItem,BUTTON_CI_UNPRESSED, BUTTON_GetBkColor(hItem1, BUTTON_CI_UNPRESSED));
     		   cuiShaoState = 0;
     		   osMessagePut(MB_MAINSTEP, (uint32_t) IO_STATE_OFF, 0);
 		   }

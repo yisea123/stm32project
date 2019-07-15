@@ -295,6 +295,9 @@ static uint16_t ChkInput(void)
 	}
 	return ret;
 }
+
+void SetIOState(uint16_t state);
+
 void ctrlTask(void* p_arg)
 {
 #define TICK_EACH_TIME		100
@@ -410,13 +413,15 @@ void ctrlTask(void* p_arg)
 		}
 		if(IOState != 0)
 		{
-			relayOutput[0] = relayOutput[1] = 1;
-			relayOutput[2] = relayOutput[3] = 0;
+			relayOutput[0] = relayOutput[1] = 0;
+			relayOutput[2] = relayOutput[3] = 1;
+			SetIOState(IOState);
 		}
 		else
 		{
 			relayOutput[0] = relayOutput[1] = 1;
 			relayOutput[2] = relayOutput[3] = 0;
+			SetIOState(IOState);
 		}
 
 	}

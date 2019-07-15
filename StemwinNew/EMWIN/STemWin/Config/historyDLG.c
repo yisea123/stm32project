@@ -184,7 +184,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SetGridDistX(hItem,50);
     GRAPH_SetVSizeY(hItem,100);
     GRAPH_SetVSizeX(hItem, 50);
-    GRAPH_SetColor (hItem, GUI_LIGHTGREEN,   GRAPH_CI_GRID);
+    GRAPH_SetColor (hItem, GUI_DARKGREEN,   GRAPH_CI_GRID);
     hScaleV =GRAPH_SCALE_Create(40, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 50);
     GRAPH_SCALE_SetTextColor(hScaleV,GUI_RED);
     GRAPH_SCALE_SetFont(hScaleV,GUI_FONT_24_ASCII);
@@ -201,7 +201,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SCALE_SetFactor(hScaleH,0.1f);
     GRAPH_AttachScale(hItem,hScaleH);
 
-    pdataTemp =GRAPH_DATA_YT_Create(GUI_MAGENTA, 650, 0, 0);
+    pdataTemp =GRAPH_DATA_YT_Create(GUI_LIGHTGREEN, 650, 0, 0);
     GRAPH_AttachData(hItem,pdataTemp);
 
     //GRAPH_DATA_XY_SetPenSize(hItem, 3);
@@ -214,7 +214,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SetGridDistX(hItem,50);
     GRAPH_SetVSizeY(hItem,100);
     GRAPH_SetVSizeX(hItem, 50);
-    GRAPH_SetColor (hItem, GUI_LIGHTGREEN,   GRAPH_CI_GRID);
+    GRAPH_SetColor (hItem, GUI_DARKGREEN,   GRAPH_CI_GRID);
     hScaleV =GRAPH_SCALE_Create(40, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 50);
     GRAPH_SCALE_SetTextColor(hScaleV,GUI_RED);
     GRAPH_SCALE_SetFont(hScaleV,GUI_FONT_24_ASCII);
@@ -230,7 +230,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     GRAPH_SCALE_SetFont(hScaleH,GUI_FONT_24_ASCII);
     GRAPH_SCALE_SetFactor(hScaleH,0.1f);
     GRAPH_AttachScale(hItem,hScaleH);
-    pdataHumidity =GRAPH_DATA_YT_Create(GUI_BLUE, 650/*鏈�澶ф暟鎹釜鏁�*/, 0, 0);
+    pdataHumidity =GRAPH_DATA_YT_Create(GUI_LIGHTGREEN, 650/*鏈�澶ф暟鎹釜鏁�*/, 0, 0);
     GRAPH_AttachData(hItem,pdataHumidity);
     //
     // Initialization of 'Button'
@@ -248,13 +248,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+ //   TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'To'
     //
