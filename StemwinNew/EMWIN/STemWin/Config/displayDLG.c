@@ -43,9 +43,11 @@
 #define ID_TEXT_1 (GUI_ID_USER + 0x09)
 #define ID_BUTTON_1 (GUI_ID_USER + 0x0A)
 #define ID_BUTTON_2 (GUI_ID_USER + 0x0B)
-
+#define ID_BUTTON_3 (GUI_ID_USER + 0x0C)
 extern const GUI_FONT GUI_Fontused_U48;
 extern const GUI_FONT GUI_FontCalibri104;
+
+extern const GUI_FONT GUI_Fontyahei;
 uint16_t newWindow = 0;
 // USER START (Optionally insert additional defines)
 // USER END
@@ -71,11 +73,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "Text", ID_TEXT_2, 10, 130, 150, 80, 0, 0x64, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_3, 10, 420, 155, 80, 0, 0x64, 0 },
   { GRAPH_CreateIndirect, "Graph", ID_GRAPH_1, 170, 279, 610, 310, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 810, 50, 190, 100, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_0, 10, 55, 150, 70, 0, 0x64, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_1, 10, 340, 150, 70, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 810, 220, 190, 100, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 810, 390, 190, 100, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 810, 30, 190, 100, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 810, 180, 190, 100, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 810, 330, 190, 100, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 810, 480, 190, 100, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -122,6 +125,26 @@ void DISPLAY_DATA_DHT11(void)
 }
 
 
+void SetWarningState(uint16_t state)
+{
+	WM_HWIN hItem = WM_GetDialogItem(gHwn, ID_BUTTON_3);
+	if(state == 1)
+	{
+		BUTTON_SetFrameColor(hItem, GUI_RED);
+		//BUTTON_SetTextColor
+		BUTTON_SetBkColor(hItem, BUTTON_CI_DISABLED, GUI_RED);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_RED);
+	}
+	else
+	{
+		BUTTON_SetFrameColor(hItem, GUI_GREEN);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_DISABLED, GUI_LIGHTGREEN);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
+	}
+}
+
 // USER START (Optionally insert additional static code)
 // USER END
 
@@ -131,17 +154,17 @@ void SetIOState(uint16_t state)
 	if(state == 1)
 	{
 		BUTTON_SetFrameColor(hItem, GUI_RED);
-
-		BUTTON_SetTextColor(hItem, BUTTON_CI_DISABLED, GUI_RED);
-		BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
-		BUTTON_SetTextColor(hItem, BUTTON_CI_PRESSED, GUI_RED);
+		//BUTTON_SetTextColor
+		BUTTON_SetBkColor(hItem, BUTTON_CI_DISABLED, GUI_RED);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_RED);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_RED);
 	}
 	else
 	{
 		BUTTON_SetFrameColor(hItem, GUI_GREEN);
-		BUTTON_SetTextColor(hItem, BUTTON_CI_DISABLED, GUI_LIGHTGREEN);
-		BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
-		BUTTON_SetTextColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_DISABLED, GUI_LIGHTGREEN);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
+		BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
 	}
 }
 
@@ -275,6 +298,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
     BUTTON_SetText(hItem, "设  置");
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+    BUTTON_SetFont(hItem, &GUI_Fontyahei);
+    BUTTON_SetText(hItem, "报 警");
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -398,6 +425,22 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // USER END
     }
     break;
+    case ID_BUTTON_3: // Notifications sent by 'Button'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            // USER START (Optionally insert code for reacting on notification message)
+            // USER END
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            // USER START (Optionally insert code for reacting on notification message)
+            // USER END
+            break;
+          // USER START (Optionally insert additional code for further notification handling)
+          // USER END
+          }
+          break;
+        // USER START (Optionally insert additional code for further Ids)
+        // USER END
   // USER START (Optionally insert additional message handling)
   // USER END
   default:

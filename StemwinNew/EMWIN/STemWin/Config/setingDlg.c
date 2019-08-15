@@ -50,6 +50,8 @@
 #define ID_BUTTON_3 (GUI_ID_USER + 0x51)
 extern const GUI_FONT GUI_Fontused_U48;
 extern uint16_t newWindow;
+extern const GUI_FONT GUI_Fontyahei;
+
 // USER START (Optionally insert additional defines)
 // USER END
 
@@ -81,7 +83,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 670, 470, 200, 90, 0, 0x0, 0 },
   { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 533, 1, 4, 583, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_4, 5, 5, 526, 70, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 300, 100, 200, 80, 0, 0x0, 0 },
+//  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 300, 100, 200, 80, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "Checkbox", ID_CHECKBOX_0, 60, 99, 230, 80, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 670, 345, 200, 80, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
@@ -145,22 +147,22 @@ void ChkBox(WM_MESSAGE * pMsg, U16 type)
 	if(CHECKBOX_IsChecked(hItem))
 	{
 		  //
-		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+//		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
 
-		WM_EnableWindow(hItem);
-		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
-		WM_EnableWindow(hItem);
+//		WM_EnableWindow(hItem);
+//		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+//		WM_EnableWindow(hItem);
 
-		WM_ValidateWindow(hItem);
+//		WM_ValidateWindow(hItem);
 	}
 	else
 	{
 
 
-		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
-		WM_DisableWindow(hItem);
-		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
-		WM_DisableWindow(hItem);
+//		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_1);
+//		WM_DisableWindow(hItem);
+//		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+//		WM_DisableWindow(hItem);
 	}
 }
 
@@ -272,8 +274,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
-    TEXT_SetFont(hItem, &GUI_Fontused_U48);
-    TEXT_SetText(hItem, "吹扫间隔");
+    TEXT_SetFont(hItem, &GUI_Fontyahei);
+    TEXT_SetText(hItem, "湿度下限");
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Spinbox'
@@ -284,8 +286,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
-    TEXT_SetFont(hItem, &GUI_Fontused_U48);
-    TEXT_SetText(hItem, "吹扫时间");
+    TEXT_SetFont(hItem, &GUI_Fontyahei);
+    TEXT_SetText(hItem, "湿度上限");
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'Button'
@@ -311,8 +313,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     // Initialization of 'Button'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
-    BUTTON_SetText(hItem, "同步零点");
     BUTTON_SetFont(hItem, &GUI_Fontused_U48);
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
     CHECKBOX_SetText(hItem, "手  动");
@@ -451,6 +451,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
+#if 0
     case ID_BUTTON_2: // Notifications sent by 'Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -466,6 +467,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
+#endif
+
     case ID_CHECKBOX_0: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:

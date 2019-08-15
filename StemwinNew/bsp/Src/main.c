@@ -154,6 +154,9 @@ int main(void)
 	GUI_Init();  					//STemWin初始化
 	GUI_UC_SetEncodeUTF8();
 
+	BUTTON_SetDefaultSkinClassic();
+	WIDGET_SetDefaultEffect(&WIDGET_Effect_3D);	//Enable 3D
+
 	WM_MULTIBUF_Enable(1);  		//开启STemWin多缓冲,RGB屏可能会用到
 //	my_mem_init(SRAMEX);		    //初始化外部内存池
 //	my_mem_init(SRAMCCM);		    //初始化CCM内存池
@@ -281,17 +284,14 @@ enum
 
 extern uint16_t relayInput[4];
 extern uint16_t relayOutput[4];
+extern int16_t tempTh[2];
 
 static uint16_t ChkInput(void)
 {
-	uint16_t ret = 0;
-	if((relayInput[0] == 0) && (relayInput[1] == 0))
+	uint16_t ret = 1;
+	if((relayInput[0] == 1) && (relayInput[1] == 0))
 	{
-		ret = 1;
-	}
-	else if((relayInput[2] == 1) && (relayInput[3] == 1))
-	{
-		ret = 1;
+		ret = 0;
 	}
 	return ret;
 }
@@ -310,7 +310,7 @@ void ctrlTask(void* p_arg)
 	uint32_t newTick;
 	uint16_t IOState = 0;
 	osEvent event;
-
+	uint32_t controlLimit[2] = {0,0};
 	uint32_t timeExecReq[2] = {0,0};
 	for(uint16_t index = 0; index < 3;index++)
 	{
@@ -351,21 +351,17 @@ void ctrlTask(void* p_arg)
 		{
 			if(event.value.v == IO_STATE_ON)
 			{
-
 				IOState = 1;
-				startTick = HAL_GetTick();
 			}
 			else if(event.value.v == IO_STATE_OFF)
 			{
-				relayOutput[0] = relayOutput[1] = 0;
-				relayOutput[2] = relayOutput[3] = 1;
 				IOState = 0;
-				startTick = HAL_GetTick();
 			}
 		}
-		timeExecReq[0] = prvReadBackupRegister(INTERVAL_SET);
-		timeExecReq[1] = prvReadBackupRegister(TIME_EXEC);
+		controlLimit[0] = timeExecReq[0] = prvReadBackupRegister(INTERVAL_SET);
+		controlLimit[1] = timeExecReq[1] = prvReadBackupRegister(TIME_EXEC);
 		newTick = HAL_GetTick();
+#if 0
 		if( prvReadBackupRegister(MANUAL_STATE) != 0)
 		{
 			//manual
@@ -389,27 +385,38 @@ void ctrlTask(void* p_arg)
 		else
 		{
 			//auto
-			if(IOState == 0)
+			if()
+			if(ChkInput() == 1)
 			{
-				if(ChkInput() == 1)
-				{
-					IOState = 1;
-					startTick = newTick;
-				}
+				IOState = 1;
+			}
+
+		}
+#endif
+		//humidity <= lowlimit
+		if( prvReadBackupRegister(MANUAL_STATE) == 0)
+		{
+			if(controlLimit[0]*10 >= tempTh[1])
+			{
+				IOState = 0;
 			}
 			else
 			{
-				uint32_t tick = GetTickDeviation(startTick, newTick);
-				if(tick >= timeExecReq[IOState]*1000)
+				IOState = 1;
+				if(ChkInput() == 0)
 				{
-					//finish?
-					startTick = newTick;
-					if(IOState)	IOState = 0;
-					else IOState=1;
+					IOState = 0;
 				}
 			}
 
-
+		}
+		if(controlLimit[1]*10 <= tempTh[1])
+		{
+			SetWarningState(1);
+		}
+		else
+		{
+			SetWarningState(0);
 		}
 		if(IOState != 0)
 		{
