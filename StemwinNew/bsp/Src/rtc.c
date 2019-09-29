@@ -23,6 +23,91 @@ static void prvRTC_EnableClk(void);
 static void prvRTC_Config(void);
 
 
+
+static void prvRTC_EnableClk(void);
+static void prvRTC_Config(void);
+
+/* RTC init function */
+void MX_RTC_Init(void)
+{
+
+  /**Initialize RTC Only 
+  */
+  sRtcHandle.Instance = RTC;
+  sRtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+  sRtcHandle.Init.AsynchPrediv = 127;
+  sRtcHandle.Init.SynchPrediv = 255;
+  sRtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
+  sRtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  sRtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&sRtcHandle) != HAL_OK)
+  {
+    Error_Handler();
+  }
+	if (prvReadBackupRegister(RTC_BKP_DR0) != RTC_DEFAULT_VAL)
+	{
+		RTC_DateTypeDef RTC_DateStruct;
+
+		/* RTC configuration  */
+		prvRTC_Config();
+
+
+
+		if (HAL_RTC_Init(&sRtcHandle) == 0)
+		{
+			/* Configure the time register */
+
+			RTC_DateStruct.WeekDay = 1;
+			RTC_DateStruct.Month = 10;
+			RTC_DateStruct.Date = 16;
+			RTC_DateStruct.Year = 2017-2000;
+
+			HAL_RTC_SetDate(&sRtcHandle, &RTC_DateStruct, RTC_FORMAT_BIN);
+			//iRtcIsOk = true;
+		}
+		prvWriteBackupRegister(RTC_BKP_DR0, RTC_DEFAULT_VAL);
+	}
+	else
+	{
+		/* Allow access to RTC */
+		HAL_PWR_EnableBkUpAccess(); //PWR_BackupAccessCmd(ENABLE);
+		//iRtcIsOk = true;
+	}
+}
+
+
+
+void HAL_RTC_MspInit(RTC_HandleTypeDef* rtcHandle)
+{
+
+  if(rtcHandle->Instance==RTC)
+  {
+  /* USER CODE BEGIN RTC_MspInit 0 */
+
+  /* USER CODE END RTC_MspInit 0 */
+    /* RTC clock enable */
+    __HAL_RCC_RTC_ENABLE();
+  /* USER CODE BEGIN RTC_MspInit 1 */
+
+  /* USER CODE END RTC_MspInit 1 */
+  }
+}
+
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef* rtcHandle)
+{
+
+  if(rtcHandle->Instance==RTC)
+  {
+  /* USER CODE BEGIN RTC_MspDeInit 0 */
+
+  /* USER CODE END RTC_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_RTC_DISABLE();
+  /* USER CODE BEGIN RTC_MspDeInit 1 */
+
+  /* USER CODE END RTC_MspDeInit 1 */
+  }
+} 
 uint16_t RTC_GetCalibration(uint16_t* val)
 {
 	*val = (uint16_t)sRtcHandle.Instance->CALR;

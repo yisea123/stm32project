@@ -126,7 +126,7 @@ void Tsk(void*p);
 int main(void)
 {
 	HAL_Init();                     //初始化HAL库
-
+	Init_RTC();
 #if 1
     delay_init(180);                //初始化延时函数
     uart_init(115200);              //初始化USART
@@ -137,7 +137,7 @@ int main(void)
 				        //触摸屏初始化
     CreateAllQid();
 #if 1
-    Init_RTC();
+    //
     TFTLCD_Init();  		        //LCD初始化
     TP_Init();
     W25QXX_Init();
@@ -311,6 +311,7 @@ void ctrlTask(void* p_arg)
 	uint16_t IOState = 0;
 	osEvent event;
 	uint32_t controlLimit[2] = {0,0};
+	uint32_t requestValHigh = 0;
 	uint32_t timeExecReq[2] = {0,0};
 	for(uint16_t index = 0; index < 3;index++)
 	{
@@ -360,6 +361,7 @@ void ctrlTask(void* p_arg)
 		}
 		controlLimit[0] = timeExecReq[0] = prvReadBackupRegister(INTERVAL_SET);
 		controlLimit[1] = timeExecReq[1] = prvReadBackupRegister(TIME_EXEC);
+		requestValHigh = controlLimit[0]*5 + controlLimit[1]*5;
 		newTick = HAL_GetTick();
 #if 0
 		if( prvReadBackupRegister(MANUAL_STATE) != 0)
@@ -394,15 +396,18 @@ void ctrlTask(void* p_arg)
 		}
 #endif
 		//humidity <= lowlimit
-		if( prvReadBackupRegister(MANUAL_STATE) == 0)
+		uint32_t manual = prvReadBackupRegister(MANUAL_STATE);
+		if( manual == 0)
 		{
-			if(controlLimit[0]*10 >= tempTh[1])
+			if(requestValHigh >= tempTh[1])
 			{
 				IOState = 0;
 			}
 			else
 			{
 				IOState = 1;
+
+
 				if(ChkInput() == 0)
 				{
 					IOState = 0;
@@ -410,7 +415,7 @@ void ctrlTask(void* p_arg)
 			}
 
 		}
-		if(controlLimit[1]*10 <= tempTh[1])
+		if((controlLimit[1]*10 <= tempTh[1]) || (controlLimit[0]*10 >= tempTh[1]))
 		{
 			SetWarningState(1);
 		}
@@ -420,14 +425,14 @@ void ctrlTask(void* p_arg)
 		}
 		if(IOState != 0)
 		{
-			relayOutput[0] = relayOutput[1] = 0;
-			relayOutput[2] = relayOutput[3] = 1;
+			relayOutput[0] = relayOutput[1] = 1;
+			relayOutput[2] = relayOutput[3] = 0;
 			SetIOState(IOState);
 		}
 		else
 		{
-			relayOutput[0] = relayOutput[1] = 1;
-			relayOutput[2] = relayOutput[3] = 0;
+			relayOutput[0] = relayOutput[1] = 0;
+			relayOutput[2] = relayOutput[3] = 1;
 			SetIOState(IOState);
 		}
 

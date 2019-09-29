@@ -151,7 +151,7 @@ void SetWarningState(uint16_t state)
 void SetIOState(uint16_t state)
 {
 	WM_HWIN hItem = WM_GetDialogItem(gHwn, ID_BUTTON_0);
-	if(state == 1)
+	if(state == 0)
 	{
 		BUTTON_SetFrameColor(hItem, GUI_RED);
 		//BUTTON_SetTextColor

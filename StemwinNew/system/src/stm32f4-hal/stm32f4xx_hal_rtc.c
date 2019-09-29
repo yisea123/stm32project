@@ -1425,7 +1425,7 @@ HAL_StatusTypeDef HAL_RTC_PollForAlarmAEvent(RTC_HandleTypeDef *hrtc, uint32_t T
 HAL_StatusTypeDef HAL_RTC_WaitForSynchro(RTC_HandleTypeDef* hrtc)
 {
   uint32_t tickstart = 0U;
-
+  uint32_t tickCnt = 0U;
   /* Clear RSF flag */
   hrtc->Instance->ISR &= (uint32_t)RTC_RSF_MASK;
 
@@ -1435,7 +1435,8 @@ HAL_StatusTypeDef HAL_RTC_WaitForSynchro(RTC_HandleTypeDef* hrtc)
   /* Wait the registers to be synchronised */
   while((hrtc->Instance->ISR & RTC_ISR_RSF) == (uint32_t)RESET)
   {
-    if((HAL_GetTick() - tickstart ) > RTC_TIMEOUT_VALUE)
+	  if(tickCnt++ > 180000)
+    //if((HAL_GetTick() - tickstart ) > RTC_TIMEOUT_VALUE)
     {       
       return HAL_TIMEOUT;
     } 
