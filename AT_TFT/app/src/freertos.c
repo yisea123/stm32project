@@ -79,17 +79,17 @@ void StartArcLinkTask(void const * argument)
 static const TaskConfiguration_t TaskConfiguration[] =
 {
 		{{"eep ctrl",		StartEEPTask,		osPriorityNormal, 	0,		256},		TSK_ID_EEP, NULL},
-		{{"gui task",		StartGuiTask,		osPriorityNormal, 	0,		768},		TSK_ID_GUI, NULL},
-		{{"file task",		StartFileTask,		osPriorityHigh, 	0,		768},		TSK_ID_FILE, NULL},
+		{{"gui task",		StartGuiTask,		osPriorityNormal, 	0,		1024},		TSK_ID_GUI, NULL},
+		{{"file task",		StartFileTask,		osPriorityHigh, 	0,		1024},		TSK_ID_FILE, NULL},
 
 		{{"can rx1",		StartCanRXTask,		osPriorityHigh, 	0,		384},		TSK_ID_CAN_RX1, NULL},
-		{{"can error",		StartCanErrTask,	osPriorityBelowNormal, 	0,		128},		TSK_ID_CAN_ERR, NULL},
+		{{"can error",		StartCanErrTask,	osPriorityBelowNormal, 	0,		384},		TSK_ID_CAN_ERR, NULL},
 		{{"can tx1",		StartCanTXTask,		osPriorityBelowNormal, 	0,		384},		TSK_ID_CAN_TX1, NULL},
 
-		{{"AD monitor",		MonitorADTask,		osPriorityNormal, 		0,		256},		TSK_ID_AD_MONITOR, NULL},
-		{{"Gpio task",		StartGpioTask,		osPriorityNormal, 		0,		128},		TSK_ID_GPIO, NULL},
+		{{"AD monitor",		MonitorADTask,		osPriorityNormal, 		0,		384},		TSK_ID_AD_MONITOR, NULL},
+		{{"Gpio task",		StartGpioTask,		osPriorityNormal, 		0,		384},		TSK_ID_GPIO, NULL},
 
-		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			256},			TSK_ID_SHELL_TX, NULL},
+		{{"shell tx",		StartShellTXTask,		osPriorityLow, 	0,			384},			TSK_ID_SHELL_TX, NULL},
 		{{"shell rx",		StartShellRXTask,		osPriorityLow, 	0,			384},			TSK_ID_SHELL_RX, NULL},
 //		{{"arcLink",		StartArcLinkTask,		osPriorityLow, 	0,			384},			TSK_ID_TST, NULL},
 

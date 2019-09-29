@@ -14,7 +14,9 @@
 #include "t_unit.h"
 #include "unit_parameter.h"
 #include "parameter_idx.h"
-
+#include "adc.h"
+#include "gpio.h"
+#include "stm32f4xx_it.h"
 #define ADC_TIMEOUT			10
 
 
@@ -42,6 +44,18 @@ static uint16_t GetADC1_Value(void)
 	ADC_ChannelConfTypeDef sConfig;
 	osEvent evt;
 	static uint16_t adValueOld = 0;
+	osEvent event;
+
+	sConfig.Channel = AllADCChn;//ADC_CHANNEL_9;
+	sConfig.Rank = 1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+
+
+
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
 	if (HAL_ADC_Start_IT(&hadc1) != HAL_OK)
 	{

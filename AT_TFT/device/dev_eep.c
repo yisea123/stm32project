@@ -857,7 +857,7 @@ uint16_t Init_EEPData(void)
 		eepStatus = OK;
 		TraceMsg(TSK_ID_EEP,"EEP init OK! \n");
 	}
-	if(NVRestore)
+	if(NVRestore )
 	{
 		ResetNVData();
 		eepStatus = OK;
