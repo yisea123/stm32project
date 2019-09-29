@@ -1049,13 +1049,13 @@
  *  that looks up the IP address and returns ERR_OK if found (LWIP_DNS_ADDRTYPE_xxx is passed in dns_addrtype).
  */
 #if !defined DNS_LOCAL_HOSTLIST || defined __DOXYGEN__
-#define DNS_LOCAL_HOSTLIST              0
+#define DNS_LOCAL_HOSTLIST              1
 #endif /* DNS_LOCAL_HOSTLIST */
 
 /** If this is turned on, the local host-list can be dynamically changed
  *  at runtime. */
 #if !defined DNS_LOCAL_HOSTLIST_IS_DYNAMIC || defined __DOXYGEN__
-#define DNS_LOCAL_HOSTLIST_IS_DYNAMIC   0
+#define DNS_LOCAL_HOSTLIST_IS_DYNAMIC   1
 #endif /* DNS_LOCAL_HOSTLIST_IS_DYNAMIC */
 /**
  * @}

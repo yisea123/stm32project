@@ -140,7 +140,7 @@ a lot of data that needs to be copied, this should be set high. */
 /* ---------- UDP options ---------- */
 #define LWIP_UDP                1
 #define UDP_TTL                 255
-
+#define LWIP_DNS                1
 
 /* ---------- Statistics options ---------- */
 #define LWIP_STATS 0
